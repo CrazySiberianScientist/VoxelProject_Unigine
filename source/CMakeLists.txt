@@ -44,11 +44,12 @@ add_executable(${target}
 		${CMAKE_CURRENT_LIST_DIR}/AppWorldLogic.cpp
 		${CMAKE_CURRENT_LIST_DIR}/AppWorldLogic.h
 		${CMAKE_CURRENT_LIST_DIR}/main.cpp
-	 "Module.ixx")
+	 "Module.ixx" "VoxelProject/utils/MathUtils.ixx" "VoxelProject/voxels/VoxelStorage.ixx" "VoxelProject/utils/MathUtils.ixx" "VoxelProject/utils/Utils.ixx")
 
 target_include_directories(${target}
 	PRIVATE
 	${UNIGINE_INCLUDE_DIR}
+	$ENV{GLM_DIR}
 	)
 
 target_link_libraries(${target}
