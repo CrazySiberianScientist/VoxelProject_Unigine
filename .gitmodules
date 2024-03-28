@@ -1,0 +1,3 @@
+[submodule "VoxelProject"]
+	path = VoxelProject
+	url = https://github.com/CrazySiberianScientist/VoxelProject.git
