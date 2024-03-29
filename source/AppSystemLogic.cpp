@@ -1,4 +1,5 @@
 #include "AppSystemLogic.h"
+#include <UnigineComponentSystem.h>
 
 using namespace Unigine;
 
@@ -14,7 +15,8 @@ AppSystemLogic::~AppSystemLogic()
 }
 
 int AppSystemLogic::init()
-{
+{: public Unigine::ComponentBas: public Unigine::Com
+	Unigine::ComponentSystem::get()->initialize();
 	// Write here code to be called on engine initialization.
 	return 1;
 }

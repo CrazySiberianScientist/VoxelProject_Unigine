@@ -1,7 +1,8 @@
 #include "AppWorldLogic.h"
 #include <UnigineMathLib.h>
+#include <UnigineComponentSystem.h>
 
-import Module;
+using namespace Unigine;
 
 // World logic, it takes effect only when the world is loaded.
 // These methods are called right after corresponding world script's (UnigineScript) methods.
@@ -16,8 +17,8 @@ int AppWorldLogic::init()
 {
 	// Write here code to be called on world initialization: initialize resources for your world scene during the world start.
 
-	TestModule::Kaka();
-
+	
+	
 
 	return 1;
 }
