@@ -16,9 +16,10 @@ public:																																			\
 	{																																			\
 		Unigine::ComponentSystem::get()->unregisterComponent<CLASS_NAME>();																		\
 	}																																			\
-} inline static const bool __component_registrator_##CLASS_NAME;
+} inline static const __component_registrator_##CLASS_NAME;
 
 #define PROJECT_UTILS_COMPONENT_DEFINE(CLASS_NAME, PARENT_NAME)\
 COMPONENT(CLASS_NAME, PARENT_NAME);\
 PROP_NAME(#CLASS_NAME);\
 PROJECT_UTILS_REGISTER_COMPONENT(CLASS_NAME)
+
