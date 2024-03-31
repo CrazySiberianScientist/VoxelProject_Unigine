@@ -1,5 +1,5 @@
 #include <UnigineComponentSystem.h>
-#include "Utils/ProjectUtils.h"
+#include "Utils/ProjectUtilsMacros.h"
 
 export module VoxelVisualizer;
 
