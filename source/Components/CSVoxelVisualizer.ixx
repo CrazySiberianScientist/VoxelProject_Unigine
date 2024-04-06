@@ -7,11 +7,11 @@ import VoxelStorage;
 
 using namespace Unigine;
 
-export namespace VoxelProject
+export namespace VoxelProjectUnigine
 {
-	class VoxelVisualizer : public Unigine::ComponentBase
+	class CSVoxelVisualizer : public Unigine::ComponentBase
 	{
-		PROJECT_UTILS_COMPONENT_DEFINE(VoxelVisualizer, Unigine::ComponentBase);
+		PROJECT_UTILS_COMPONENT_DEFINE(CSVoxelVisualizer, Unigine::ComponentBase);
 
 		COMPONENT_INIT(Init);
 		void Init()
