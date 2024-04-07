@@ -1,7 +1,7 @@
 #include <UnigineComponentSystem.h>
 #include "Utils/ProjectUtilsMacros.h"
 
-export module VoxelVisualizer;
+export module CSVoxelVisualizer;
 
 import VoxelStorage;
 
