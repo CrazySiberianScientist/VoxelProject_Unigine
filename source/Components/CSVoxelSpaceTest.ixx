@@ -6,6 +6,7 @@
 export module CSVoxelSpaceTest;
 
 import VoxelStorage;
+import VoxelSpace;
 import Utils;
 
 using namespace Unigine;
@@ -30,6 +31,6 @@ export namespace VoxelProjectUnigine
 		PROJECT_UTILS_COMPONENT_DEFINE(CSVoxelSpaceTest, Unigine::ComponentBase);
 
 	public:
-
+		VoxelSpace<VoxelStorageRole::Pack> voxelSpace{ 1 };
 	};
 }
