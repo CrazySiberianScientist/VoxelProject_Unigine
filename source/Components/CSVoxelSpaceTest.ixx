@@ -18,11 +18,12 @@ export namespace VoxelProjectUnigine
 	{
 		enum
 		{
-			TEST
+			TEST_0,
+			TEST_1,
 		};
-		using t = Utils::TypeTableElement<std::integral_constant<decltype(TEST), TEST>, VoxelStorage<VoxelBlockBitset>>;
 		using Pack = Utils::TypesPack<
-			Utils::IntegralTypeTableElement<TEST, VoxelStorage<VoxelBlockBitset>>
+			Utils::IntegralTypeTableElement<TEST_0, VoxelStorage<VoxelBlockBitset>>,
+			Utils::IntegralTypeTableElement<TEST_1, VoxelStorage<VoxelBlockBitset>>
 		>;
 	};
 
@@ -32,5 +33,12 @@ export namespace VoxelProjectUnigine
 
 	public:
 		VoxelSpace<VoxelStorageRole::Pack> voxelSpace{ 1 };
+
+	private:
+		COMPONENT_UPDATE(Update);
+		void Update()
+		{
+			int kakan = 666;
+		}
 	};
 }

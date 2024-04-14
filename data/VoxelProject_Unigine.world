@@ -802,7 +802,7 @@
 			<surface name="material_ball_mat_lod_1" intersection="1" min_visible_distance="3" max_visible_distance="9" min_fade_distance="0.5" max_fade_distance="1" physics_friction="1" physics_restitution="1" material="2d2814767f25015d91f013182a937b973ae9640a"/>
 			<surface name="material_ball_mat_lod_2" intersection="1" min_visible_distance="9" min_fade_distance="1" physics_friction="1" physics_restitution="1" material="2d2814767f25015d91f013182a937b973ae9640a"/>
 			<properties>
-				<property/>
+				<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="f74438799391d86f13729a4e043271d8c9c85beb"/>
 			</properties>
 			<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 0.192020202063 -0.155127313459 0 1.0</transform>
 		</node>
@@ -824,6 +824,12 @@
 			<is_listener>1</is_listener>
 			<controlled>1</controlled>
 			<transform>-1 -6.2672036e-08 0 0.0 1.9366729e-08 -0.30901706 0.95105648 0.0 -5.9604652e-08 0.9510566 0.30901709 0.0 0 3.4000001 1.5 1.0</transform>
+		</node>
+		<node type="NodeDummy" id="1969446264" name="VoxelSpace">
+			<properties>
+				<property parent="4141d5feefe5940f759561108751b54ca9760251" guid="d524a8868fe777340bbbc56b999c0292b559af89"/>
+			</properties>
+			<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 0.145767807961 -1.37746548653 0 1.0</transform>
 		</node>
 	</editor>
 	<console>

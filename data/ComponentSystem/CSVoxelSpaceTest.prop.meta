@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<asset version="2.18.0.1">
+	<guid>4141d5feefe5940f759561108751b54ca9760251</guid>
+	<type>property</type>
+	<hash>1ddf3fa5</hash>
+	<runtimes>
+		<runtime id="4141d5feefe5940f759561108751b54ca9760251" name="CSVoxelSpaceTest" link="0" type="4"/>
+	</runtimes>
+</asset>

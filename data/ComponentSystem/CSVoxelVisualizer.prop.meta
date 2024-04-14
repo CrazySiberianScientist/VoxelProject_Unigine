@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<asset version="2.18.0.1">
+	<guid>3dd4fa383868a6c53228dd3413ecc2011827bdc9</guid>
+	<type>property</type>
+	<hash>b23f24fd</hash>
+	<runtimes>
+		<runtime id="3dd4fa383868a6c53228dd3413ecc2011827bdc9" name="CSVoxelVisualizer" link="0" type="4"/>
+	</runtimes>
+</asset>

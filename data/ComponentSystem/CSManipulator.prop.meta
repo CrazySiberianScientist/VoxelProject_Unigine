@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<asset version="2.18.0.1">
+	<guid>fc5ad76dab7187daf7cc461e62de288f23bd09d3</guid>
+	<type>property</type>
+	<hash>e6814753</hash>
+	<runtimes>
+		<runtime id="fc5ad76dab7187daf7cc461e62de288f23bd09d3" name="CSManipulator" link="0" type="4"/>
+	</runtimes>
+</asset>
