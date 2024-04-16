@@ -38,7 +38,9 @@ export namespace VoxelProjectUnigine
 		COMPONENT_UPDATE(Update);
 		void Update()
 		{
-			int kakan = 666;
+			constexpr auto v = Utils::AutoIntegralConstant<VoxelStorageRole::TEST_0>::value;
+			const auto s = voxelSpace.GetStorage<Utils::AutoIntegralConstant<VoxelStorageRole::TEST_0>>().blockSideSize_meters;
+			//voxelSpace.storages.
 		}
 	};
 }
