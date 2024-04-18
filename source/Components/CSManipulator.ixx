@@ -1,4 +1,4 @@
-#include <UnigineComponentSystem.h>
+﻿#include <UnigineComponentSystem.h>
 #include <UnigineWidgets.h>
 #include <UnigineGame.h>
 #include "Utils/ProjectUtilsMacros.h"

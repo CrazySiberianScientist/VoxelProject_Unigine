@@ -1,4 +1,4 @@
-#include <UnigineComponentSystem.h>
+﻿#include <UnigineComponentSystem.h>
 #include "Utils/ProjectUtilsMacros.h"
 
 export module CSVoxelVisualizer;
