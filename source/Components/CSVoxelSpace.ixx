@@ -1,7 +1,8 @@
-﻿#include <type_traits>
+#include <type_traits>
 #include <UnigineComponentSystem.h>
 #include "Utils/ProjectUtilsMacros.h"
 #include "VoxelProject/utils/UtilsMacros.h"
+#include <any>
 
 export module CSVoxelSpaceTest;
 
@@ -24,21 +25,18 @@ export namespace VoxelProjectUnigine
 		VoxelSpace<VoxelStorageRoles::Pack> voxelSpace{ 1 };
 
 	private:
+		COMPONENT_UPDATE(Init);
+		void Init()
+		{
+			voxelSpace.storages.Emplace<uint8_t(0)>(VoxelSizeType(1), 1.0f);
+		}
+
 		COMPONENT_UPDATE(Update);
 		void Update()
 		{
-			constexpr auto v = IntegralConstant<VoxelStorageRoles::TEST_0>::value;
 			const auto s = voxelSpace.GetStorage<VoxelStorageRoles::TEST_0>().blockSideSize_meters;
-			//voxelSpace.storages.
 
-			const int* cptr;
-			auto ptr = ConstCast(cptr);
-
-			TypeTableBase tableb;
-			TypeTable<VoxelStorageRoles::Pack> table;
-			const auto &vt = table.Get<VoxelStorageRoles::TEST_2>();
-			//TypeTable<VoxelStorageRole::Pack>::
-			tableb.As<VoxelStorageRoles::Pack>();
+			
 		}
 	};
 }

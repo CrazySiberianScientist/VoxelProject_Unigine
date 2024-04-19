@@ -1,4 +1,4 @@
-﻿export module VoxelStorageRoles;
+export module VoxelStorageRoles;
 
 import VoxelStorage;
 import Utils;
@@ -24,9 +24,9 @@ export namespace VoxelProjectUnigine
 		};
 
 		using Pack = Utils::TypesPack<
-			Utils::TypeTableEntry<TEST_0, VoxelProject::VoxelStorage<VoxelProject::VoxelBlockBitset>>,
-			Utils::TypeTableEntry<TEST_1, VoxelProject::VoxelStorage<VoxelProject::VoxelBlockBitset>>,
-			Utils::TypeTableEntry<TEST_2, VoxelProject::VoxelStorage<VoxelProject::VoxelBlockBitset>>
+			TypeTableEntry<TEST_0, VoxelStorage<VoxelBlockBitset>>,
+			TypeTableEntry<TEST_1, VoxelStorage<VoxelBlockBitset>>,
+			TypeTableEntry<TEST_2, VoxelStorage<VoxelBlockBitset>>
 		>;
 	};
 	
