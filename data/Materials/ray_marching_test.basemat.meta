@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<asset version="2.18.0.1">
+	<guid>cadad205f523d3ef2c3d66761201a627dba64847</guid>
+	<type>material</type>
+	<hash>ec274f4c</hash>
+	<runtimes>
+		<runtime id="cadad205f523d3ef2c3d66761201a627dba64847" name="ray_marching_test" link="0" type="5"/>
+	</runtimes>
+</asset>

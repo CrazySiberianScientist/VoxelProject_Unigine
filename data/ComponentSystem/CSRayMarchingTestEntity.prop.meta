@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<asset version="2.18.0.1">
+	<guid>9ea509c78e85552926842c2407ccc4a8da10b696</guid>
+	<type>property</type>
+	<hash>f05fd27</hash>
+	<runtimes>
+		<runtime id="9ea509c78e85552926842c2407ccc4a8da10b696" name="CSRayMarchingTestEntity" link="0" type="4"/>
+	</runtimes>
+</asset>

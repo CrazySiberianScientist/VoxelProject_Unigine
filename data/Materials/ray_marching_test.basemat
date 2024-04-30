@@ -1,0 +1,26 @@
+BaseMaterial <parent=Unigine::mesh>
+{
+	Color albedo = [1 1 1 1]
+	
+	// optimization
+	State static_shadow = true
+	State vertex_velocity = false
+	
+	Shader vertex_struct =
+	#{
+		INIT_BASE_DATA
+	#}
+	
+	Shader common =
+	#{
+		#include <ray_marching_test.frag>
+	#}
+	
+	Shader fragment =
+	#{
+		OUT_FRAG_ALBEDO = sample_albedo(DATA_UV.xy);
+		OUT_FRAG_SPECULAR = 0.5f;
+		OUT_FRAG_ROUGHNESS = 1.0f;
+		OUT_FRAG_METALNESS = 0.0f;
+	#}
+}

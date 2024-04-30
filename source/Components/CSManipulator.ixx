@@ -1,9 +1,11 @@
-﻿#include <UnigineComponentSystem.h>
+#include <UnigineComponentSystem.h>
 #include <UnigineWidgets.h>
 #include <UnigineGame.h>
 #include "Utils/ProjectUtilsMacros.h"
 
 export module CSManipulator;
+
+import LogicOrders;
 
 using namespace Unigine;
 
@@ -42,7 +44,7 @@ export namespace VoxelProjectUnigine
 		}
 
 	private:
-		COMPONENT_INIT(Init);
+		COMPONENT_INIT(Init, GlobalInitOrder::COMMON_LOGIC);
 		void Init()
 		{
 			currentType = type;

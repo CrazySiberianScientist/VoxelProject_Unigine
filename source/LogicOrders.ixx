@@ -1,4 +1,4 @@
-﻿export module LogicOrders;
+export module LogicOrders;
 
 export namespace VoxelProjectUnigine
 {
@@ -8,13 +8,6 @@ export namespace VoxelProjectUnigine
 		{
 			COMPONENT_FIELDS = -1
 			, COMMON_LOGIC = 0
-			, VOXEL_SPACE
-			, VOXEL_MAXIMUMS
-			, VOXEL_MAXIMUMS_GRADIENTS
-			, LANDSCAPE_MODIFICATOR
-			, VOXEL_PARTICLES_SYSTEM
-			, VOXEL_FLUID_CONTAINER
-			, PARTICLES_FLOW
 		};
 	};
 
@@ -23,14 +16,6 @@ export namespace VoxelProjectUnigine
 		enum
 		{
 			COMMON_LOGIC = 0
-			, VOXEL_SPACE = COMMON_LOGIC
-			, LANDSCAPE_MODIFICATOR = COMMON_LOGIC
-			, VOXEL_FLUID_CONTAINER = COMMON_LOGIC
-			, VOXEL_SPACE_CHANGED
-			, VOXEL_MAXIMUMS_CHANGED
-			, VOXEL_MAXIMUMS_GRADIENTS_CHANGED
-			, LANDSCAPE_MODIFICATOR_CHANGED
-			, PARTICLES_FLOW
 		};
 	};
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<asset version="2.18.0.1">
+	<guid>0fe39130a8bbfe749e3d9b17edcdfa99cb845f61</guid>
+	<type>file</type>
+	<hash>a3ec4d48</hash>
+	<runtimes>
+		<runtime id="0fe39130a8bbfe749e3d9b17edcdfa99cb845f61" name="ray_marching_test.vert" link="0"/>
+	</runtimes>
+</asset>
