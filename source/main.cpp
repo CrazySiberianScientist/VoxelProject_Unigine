@@ -13,7 +13,7 @@ int wmain(int argc, wchar_t *argv[])
 int main(int argc, char *argv[])
 #endif
 {
-	//getchar();
+	getchar();
 
 	// UnigineLogic
 	AppSystemLogic system_logic;

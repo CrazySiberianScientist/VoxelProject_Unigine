@@ -1,26 +1,55 @@
-BaseMaterial <parent=Unigine::mesh>
+// More information on ULON format - https://developer.unigine.com/docs/code/formats/ulon_format
+// More information on scriptable materials - https://developer.unigine.com/docs/content/materials/scriptable
+BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 {
-	Color albedo = [1 1 1 1]
+	// Texture to be used in a shader (see Fragment shader below). Will be displayed in the Editor UI.
+	Texture2D screen_texture <source=procedural internal=true>
 	
-	// optimization
-	State static_shadow = true
-	State vertex_velocity = false
+	// Custom parameter to be used in a shader (see Fragment shader below). Will be displayed in the Editor UI.
+	Color my_color = [0.5 0.5 0.5 1.0]
 	
-	Shader vertex_struct =
+	// Declaration of a custom rendering pass named 'my_pass'. You can add as many passes as necessary.
+	Pass my_pass
+	{
+		// Shader declaration (you can add multiple shaders for a single pass)
+		Fragment =
+		#{
+			#include <core/materials/shaders/render/common.h>
+			
+			STRUCT_FRAG_BEGIN
+				INIT_COLOR(float4)
+			STRUCT_FRAG_END
+			
+			MAIN_FRAG_BEGIN(FRAGMENT_IN)
+				
+				// my_color parameter is referred to as 'tex_screen_texture' ( <texture_prefix> + <texture_name>)
+				float4 color = TEXTURE_BIAS_ZERO(tex_screen_texture, IN_UV);
+				
+				// my_color parameter is referred to as 'var_my_color' ( <var_prefix> + <var_name> )
+				OUT_COLOR = color * var_my_color;
+			MAIN_FRAG_END
+		#}
+	}
+	
+	// Expression written in Unigine Script to be called after the specified stage of the rendering sequence 
+	// the name should be the same as the corresponding callback of the Render class
+	// (here RENDER_CALLBACK_END_POST_MATERIALS to execute it after rendering Post Materials)
+	Expression RENDER_CALLBACK_END_POST_MATERIALS =
 	#{
-		INIT_BASE_DATA
-	#}
-	
-	Shader common =
-	#{
-		#include <ray_marching_test.frag>
-	#}
-	
-	Shader fragment =
-	#{
-		OUT_FRAG_ALBEDO = sample_albedo(DATA_UV.xy);
-		OUT_FRAG_SPECULAR = 0.5f;
-		OUT_FRAG_ROUGHNESS = 1.0f;
-		OUT_FRAG_METALNESS = 0.0f;
+		// Get the screen color texture rendered for the current frame
+		Texture screen_texture = engine.render_state.getScreenColorTexture();
+		
+		Texture source = engine.render.getTemporaryTexture(screen_texture);
+		source.copy(screen_texture);
+		
+		// Set the source texture to be used as the 'screen_texture' in the shader
+		setTexture("screen_texture", source);
+		
+		// Render the pass named 'my_pass' and put the result to the screen color texture of the current frame
+		renderPassToTexture("my_pass", screen_texture);
+		
+		// Release the temporary texture
+		engine.render.releaseTemporaryTexture(source);
 	#}
 }
+

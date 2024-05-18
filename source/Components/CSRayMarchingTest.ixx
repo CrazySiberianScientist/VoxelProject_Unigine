@@ -1,5 +1,6 @@
 #include <UnigineComponentSystem.h>
 #include <UnigineVisualizer.h>
+#include <UnigineRender.h>
 #include "Utils/ProjectUtilsMacros.h"
 
 export module CSRayMarchingTest;
@@ -15,6 +16,8 @@ export namespace VoxelProjectUnigine
 	{
 		PROJECT_UTILS_COMPONENT_DEFINE(CSRayMarchingTest, Unigine::ComponentBase);
 
+		PROP_PARAM(Material, material);
+
 		inline static CSRayMarchingTest* instance;
 		bool _ = (instance = this, false);
 
@@ -23,6 +26,7 @@ export namespace VoxelProjectUnigine
 		COMPONENT_INIT(Init, GlobalInitOrder::COMMON_LOGIC);
 		void Init()
 		{
+			Render::getEventEndPostMaterials().connect(this, &CSRayMarchingTest::RenderCallback);
 		}
 
 		COMPONENT_UPDATE(Update, GlobalUpdateOrder::COMMON_LOGIC);
@@ -33,6 +37,11 @@ export namespace VoxelProjectUnigine
 			{
 				Visualizer::renderPoint3D(e->getNode()->getWorldPosition(), 0.1, Math::vec4_red);
 			}
+		}
+
+		void RenderCallback()
+		{
+			material->runExpression("RENDER_CALLBACK_END_POST_MATERIALS", 1, 1);
 		}
 
 	public:
