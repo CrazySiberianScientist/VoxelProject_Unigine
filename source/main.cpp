@@ -13,7 +13,7 @@ int wmain(int argc, wchar_t *argv[])
 int main(int argc, char *argv[])
 #endif
 {
-	getchar();
+	//getchar();
 
 	// UnigineLogic
 	AppSystemLogic system_logic;
@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
 
 	// init engine
 	Unigine::EnginePtr engine(argc, argv);
+	engine->setBackgroundUpdate(Unigine::Engine::BACKGROUND_UPDATE::BACKGROUND_UPDATE_RENDER_ALWAYS);
 
 	// enter main loop
 	engine->main(&system_logic, &world_logic, &editor_logic);
