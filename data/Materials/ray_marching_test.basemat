@@ -23,7 +23,9 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 			STRUCT_FRAG_END
 			
 			MAIN_FRAG_BEGIN(FRAGMENT_IN)
-				const int num = 4;
+				uint numStructs;
+				uint stride;
+				positions.GetDimensions(numStructs, stride);
 
 				// my_color parameter is referred to as 'tex_screen_texture' ( <texture_prefix> + <texture_name>)
 				float4 color = TEXTURE_BIAS_ZERO(tex_screen_texture, IN_UV);

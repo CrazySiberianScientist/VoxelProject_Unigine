@@ -2,6 +2,7 @@
 #include <UnigineVisualizer.h>
 #include <UnigineRender.h>
 #include <UnigineTextures.h>
+#include <UnigineGame.h>
 
 #include "Utils/ProjectUtilsMacros.h"
 
@@ -52,7 +53,6 @@ export namespace VoxelProjectUnigine
 		Vector<CSRayMarchingTestEntity*> entities;
 
 		StructuredBufferPtr positionsBuffer = StructuredBuffer::create();
-		TexturePtr renderTexture = Texture::create();
 
 
 		Vector<Math::vec4> positions;
@@ -62,8 +62,6 @@ export namespace VoxelProjectUnigine
 		COMPONENT_INIT(Init, GlobalInitOrder::COMMON_LOGIC);
 		void Init()
 		{
-			renderTexture->create2D(600, 600, Texture::FORMAT_RGB8);
-
 			Render::getEventEndPostMaterials().connect(this, &CSRayMarchingTest::RenderCallback);
 
 			{
@@ -81,6 +79,23 @@ export namespace VoxelProjectUnigine
 			{
 				Visualizer::renderPoint3D(e->getNode()->getWorldPosition(), 0.1, Math::vec4_red);
 			}
+
+
+			RefreshPositionsBuffer();
+		}
+
+		void RefreshPositionsBuffer()
+		{
+			const auto &modelviewMatrix = Game::getPlayer()->getCamera()->getModelview();
+
+			positions.clear();
+			for (const auto& entity : entities)
+			{
+				const auto viewPos = modelviewMatrix * entity->getNode()->getPosition();
+				positions.emplace_back(Math::vec3(viewPos), entity->size.get());
+			}
+
+			positionsBuffer->create(StructuredBuffer::USAGE_CPU_RESOURCE, positions.get(), sizeof(Math::vec4), positions.size());
 		}
 
 		void RenderCallback()
