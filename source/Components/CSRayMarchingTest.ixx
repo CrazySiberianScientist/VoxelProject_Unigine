@@ -95,6 +95,7 @@ export namespace VoxelProjectUnigine
 				auto screen_texture = RenderState::getScreenColorTexture();
 				auto source = Render::getTemporaryTexture(screen_texture);
 				source->copy(screen_texture);
+				material->setTexture("screen_texture", source);
 
 				{
 					auto rt = Render::getTemporaryRenderTarget();

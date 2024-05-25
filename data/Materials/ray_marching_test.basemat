@@ -26,15 +26,14 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				const int num = 4;
 
 				// my_color parameter is referred to as 'tex_screen_texture' ( <texture_prefix> + <texture_name>)
-				//float4 color = TEXTURE_BIAS_ZERO(tex_screen_texture, IN_UV);
+				float4 color = TEXTURE_BIAS_ZERO(tex_screen_texture, IN_UV);
 
 				const float2 uv = IN_UV * 2;
 				const int index = uv.x + (int)uv.y * 2;
 				float4 color_mul = positions[index];
-				//float4 color_mul = float4(IN_UV.x, IN_UV.y, 0, 0);
 				
 				// my_color parameter is referred to as 'var_my_color' ( <var_prefix> + <var_name> )
-				OUT_COLOR = color_mul;
+				OUT_COLOR = color_mul * color;
 			MAIN_FRAG_END
 		#}
 	}
