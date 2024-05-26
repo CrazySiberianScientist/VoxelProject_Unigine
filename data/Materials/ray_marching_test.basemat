@@ -30,12 +30,19 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				// my_color parameter is referred to as 'tex_screen_texture' ( <texture_prefix> + <texture_name>)
 				float4 color = TEXTURE_BIAS_ZERO(tex_screen_texture, IN_UV);
 
-				const float2 uv = IN_UV * 2;
-				const int index = uv.x + (int)uv.y * 2;
-				float4 color_mul = positions[index];
+				//const float2 uv = IN_UV * 2;
+				//const int index = uv.x + (int)uv.y * 2;
+				//float4 color_mul = positions[index];
+
+				for (uint i = 0; i < numStructs; ++i)
+				{
+					const float2 screenPos = positions[i].xy;
+					const float length2Val = length2(IN_UV - screenPos);
+					color = (length2Val > 0.001f) ? color : float4(0,1,0,1);
+				}
 				
 				// my_color parameter is referred to as 'var_my_color' ( <var_prefix> + <var_name> )
-				OUT_COLOR = color_mul * color;
+				OUT_COLOR = color;
 			MAIN_FRAG_END
 		#}
 	}

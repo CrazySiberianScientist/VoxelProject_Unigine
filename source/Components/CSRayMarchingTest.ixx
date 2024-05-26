@@ -8,6 +8,7 @@
 
 export module CSRayMarchingTest;
 
+import ProjectUtils;
 import LogicOrders;
 import CSRayMarchingTestEntity;
 
@@ -55,7 +56,7 @@ export namespace VoxelProjectUnigine
 		StructuredBufferPtr positionsBuffer = StructuredBuffer::create();
 
 
-		Vector<Math::vec4> positions;
+		std::vector<Math::vec4> positions;
 
 		////////////////
 
@@ -63,22 +64,18 @@ export namespace VoxelProjectUnigine
 		void Init()
 		{
 			Render::getEventEndPostMaterials().connect(this, &CSRayMarchingTest::RenderCallback);
-
-			{
-				positions = { Math::vec4_red, Math::vec4_green, Math::vec4_blue, Math::vec4_white };
-				//positions.push_back(Math::vec4_white);
-				positionsBuffer->create(StructuredBuffer::USAGE_CPU_RESOURCE, positions.get(), sizeof(Math::vec4), positions.size());
-			}
 		}
 
 		COMPONENT_UPDATE(Update, GlobalUpdateOrder::COMMON_LOGIC);
 		void Update()
 		{
+			/*
 			Visualizer::setEnabled(true);
 			for (const auto& e : entities)
 			{
 				Visualizer::renderPoint3D(e->getNode()->getWorldPosition(), 0.1, Math::vec4_red);
 			}
+			*/
 
 
 			RefreshPositionsBuffer();
@@ -87,18 +84,25 @@ export namespace VoxelProjectUnigine
 		void RefreshPositionsBuffer()
 		{
 			const auto &modelviewMatrix = Game::getPlayer()->getCamera()->getModelview();
+			const auto &projectionMatrix = Game::getPlayer()->getCamera()->getProjection();
 
 			positions.clear();
 			for (const auto& entity : entities)
 			{
-				const auto viewPos = modelviewMatrix * entity->getNode()->getPosition();
-				positions.emplace_back(Math::vec3(viewPos), entity->size.get());
+				const Math::vec3 viewPos(modelviewMatrix * entity->getNode()->getPosition());
+				if (viewPos.z > 0.0)
+					continue;
+				//positions.emplace_back(viewPos, entity->size.get());
+
+				//const auto projectedPos = projectionMatrix * viewPos;
+				const auto screenPos = Math::vec4(ProjectUtils::GetScreenPosition(entity->getNode()->getPosition(), Game::getPlayer()->getCamera()), entity->size.get(), 0);
+				positions.emplace_back(screenPos);
 			}
 
-			positionsBuffer->create(StructuredBuffer::USAGE_CPU_RESOURCE, positions.get(), sizeof(Math::vec4), positions.size());
+			positionsBuffer->create(StructuredBuffer::USAGE_CPU_RESOURCE, positions.data(), sizeof(Math::vec4), positions.size());
 		}
 
-		void RenderCallback()
+		void RenderCallback() 
 		{
 
 			RenderState::saveState();

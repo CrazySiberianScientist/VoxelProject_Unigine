@@ -856,29 +856,33 @@
 				</property>
 			</properties>
 			<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 0 0 0 1.0</transform>
-			<node type="NodeDummy" id="1326304023" name="NodeDummy">
+			<node type="NodeDummy" id="896213282" name="RayMarchingTestEntity_0">
 				<properties>
-					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="0eafb4019c15ab3bc3c414b9dccab2307dd00d54"/>
+					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="0d13d8e228d30c647c7fe26e4b2385b56c4cdb54"/>
+					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="bd3ce8a5d54a78067006bf096518543cc6ed8ea3"/>
 				</properties>
 				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 -1.62489330769 -0.500266313553 0 1.0</transform>
 			</node>
-			<node type="NodeDummy" id="340553098" name="NodeDummy_1">
+			<node type="NodeDummy" id="1583689241" name="RayMarchingTestEntity_1">
 				<properties>
-					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="a2d3f4d4144e7edbc72ba47cce472f0ad28318a3"/>
+					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="dd998ce48ca2a2ead68f49500369aef4eb3f23a6"/>
+					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="2f861c5f98f8a113c8fe61634a5646fdd20de6cd"/>
 				</properties>
-				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 1.26854316756 -0.500266313553 0.783977800711 1.0</transform>
+				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 1.72130173456 0.143373225455 -0.418816590595 1.0</transform>
 			</node>
-			<node type="NodeDummy" id="1785692001" name="NodeDummy_2">
+			<node type="NodeDummy" id="1482768548" name="RayMarchingTestEntity_2">
 				<properties>
-					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="2cd8ef1b81f4143a2c82be939a9de91290d325a6"/>
+					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="910dbcb63da5d8309158a7028f95b27ffb1e59c8"/>
+					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="4b00e2a9e9aeb26e255df74d4c9eb901d9473287"/>
 				</properties>
-				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 1.26854316756 1.12305411814 0.783977800711 1.0</transform>
+				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 -1.62489330769 -1.74792199546 1.13667812353 1.0</transform>
 			</node>
-			<node type="NodeDummy" id="22155596" name="NodeDummy_3">
+			<node type="NodeDummy" id="1227133875" name="RayMarchingTestEntity_3">
 				<properties>
-					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="367cf626e8552c29a6deee0ea2b52af6655e00cd"/>
+					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="f26c2cd8270d13e0af5e38043f5fc67a925d4e3a"/>
+					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="53155e0365024f1b78628b47f02d8a8b7c010851"/>
 				</properties>
-				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 -1.40773559947 -1.87960726325 0.783977800711 1.0</transform>
+				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 1.79318457809 -2.5883191062 0.582814111777 1.0</transform>
 			</node>
 		</node>
 	</editor>
