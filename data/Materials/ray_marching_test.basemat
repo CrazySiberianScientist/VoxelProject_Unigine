@@ -2,20 +2,26 @@
 // More information on scriptable materials - https://developer.unigine.com/docs/content/materials/scriptable
 BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 {
-	// Texture to be used in a shader (see Fragment shader below). Will be displayed in the Editor UI.
 	Texture2D screen_texture <source=procedural internal=true>
 	
-	// Custom parameter to be used in a shader (see Fragment shader below). Will be displayed in the Editor UI.
 	Color my_color = [0.5 0.5 0.5 1.0]
+
+	Int max_steps = 100
+	Float max_dist = 100.0
+	Float surface_dist = 0.1
+	Float sphere_radius = 1.0
 	
-	// Declaration of a custom rendering pass named 'my_pass'. You can add as many passes as necessary.
 	Pass my_pass
 	{
-		// Shader declaration (you can add multiple shaders for a single pass)
 		Fragment =
 		#{
 			#include <core/materials/shaders/render/common.h>
 			
+			float sdfSphere2(float3 currentPos, float3 spherePos, float radius2)
+			{
+				return length2(spherePos - currentPos) - radius2;
+			}
+
 			INIT_STRUCTURED_BUFFER(0, float4, positions);
 
 			STRUCT_FRAG_BEGIN
@@ -23,49 +29,35 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 			STRUCT_FRAG_END
 			
 			MAIN_FRAG_BEGIN(FRAGMENT_IN)
-				uint numStructs;
-				uint stride;
-				positions.GetDimensions(numStructs, stride);
+				uint positionsNum;
+				uint positionsStride;
+				positions.GetDimensions(positionsNum, positionsStride);
+				
+				const float3 viewDirection = screenUVToViewDirection(IN_UV);
 
-				// my_color parameter is referred to as 'tex_screen_texture' ( <texture_prefix> + <texture_name>)
-				float4 color = TEXTURE_BIAS_ZERO(tex_screen_texture, IN_UV);
+				float currentDistance = 0.0f;
+				for (uint step = 0; step < var_max_steps; ++steps)
+				{
+					for (uint posIndex = 0; posIndex < positionsNum; ++posIndex)
+					{
 
-				//const float2 uv = IN_UV * 2;
-				//const int index = uv.x + (int)uv.y * 2;
-				//float4 color_mul = positions[index];
+					}
+				}
 
+				/*
 				for (uint i = 0; i < numStructs; ++i)
 				{
 					const float2 screenPos = positions[i].xy;
 					const float length2Val = length2(IN_UV - screenPos);
 					color = (length2Val > 0.001f) ? color : float4(0,1,0,1);
 				}
+				*/
 				
-				// my_color parameter is referred to as 'var_my_color' ( <var_prefix> + <var_name> )
+				float4 color = TEXTURE_BIAS_ZERO(tex_screen_texture, IN_UV);
+
 				OUT_COLOR = color;
 			MAIN_FRAG_END
 		#}
 	}
-	
-	// Expression written in Unigine Script to be called after the specified stage of the rendering sequence 
-	// the name should be the same as the corresponding callback of the Render class
-	// (here RENDER_CALLBACK_END_POST_MATERIALS to execute it after rendering Post Materials)
-	Expression RENDER_CALLBACK_END_POST_MATERIALS =
-	#{
-		// Get the screen color texture rendered for the current frame
-		Texture screen_texture = engine.render_state.getScreenColorTexture();
-		
-		Texture source = engine.render.getTemporaryTexture(screen_texture);
-		source.copy(screen_texture);
-		
-		// Set the source texture to be used as the 'screen_texture' in the shader
-		setTexture("screen_texture", source);
-		
-		// Render the pass named 'my_pass' and put the result to the screen color texture of the current frame
-		renderPassToTexture("my_pass", screen_texture);
-		
-		// Release the temporary texture
-		engine.render.releaseTemporaryTexture(source);
-	#}
 }
 

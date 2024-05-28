@@ -92,11 +92,11 @@ export namespace VoxelProjectUnigine
 				const Math::vec3 viewPos(modelviewMatrix * entity->getNode()->getPosition());
 				if (viewPos.z > 0.0)
 					continue;
-				//positions.emplace_back(viewPos, entity->size.get());
+				positions.emplace_back(viewPos, entity->size.get());
 
 				//const auto projectedPos = projectionMatrix * viewPos;
-				const auto screenPos = Math::vec4(ProjectUtils::GetScreenPosition(entity->getNode()->getPosition(), Game::getPlayer()->getCamera()), entity->size.get(), 0);
-				positions.emplace_back(screenPos);
+				//const auto screenPos = Math::vec4(ProjectUtils::GetScreenPosition(entity->getNode()->getPosition(), Game::getPlayer()->getCamera()), entity->size.get(), 0);
+				//positions.emplace_back(screenPos);
 			}
 
 			positionsBuffer->create(StructuredBuffer::USAGE_CPU_RESOURCE, positions.data(), sizeof(Math::vec4), positions.size());
