@@ -8,7 +8,7 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 
 	Int max_steps = 100
 	Float max_dist = 100.0
-	Float surface_dist = 0.1
+	Float surface_dist = 0.01
 	Float sphere_radius = 1.0
 	
 	Pass my_pass
@@ -16,11 +16,6 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 		Fragment =
 		#{
 			#include <core/materials/shaders/render/common.h>
-			
-			float sdfSphere2(float3 currentPos, float3 spherePos, float radius2)
-			{
-				return length2(spherePos - currentPos) - radius2;
-			}
 
 			INIT_STRUCTURED_BUFFER(0, float4, positions);
 
@@ -28,34 +23,49 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				INIT_COLOR(float4)
 			STRUCT_FRAG_END
 			
-			MAIN_FRAG_BEGIN(FRAGMENT_IN)
+			float sdfSphere(float3 currentPos, float3 spherePos, float radius)
+			{
+				return length(spherePos - currentPos) - radius;
+			}
+
+			float getSdfValue(const float2 uv)
+			{
 				uint positionsNum;
 				uint positionsStride;
 				positions.GetDimensions(positionsNum, positionsStride);
 				
-				const float3 viewDirection = screenUVToViewDirection(IN_UV);
+				const float3 viewDirection = screenUVToViewDirection(uv);
 
-				float currentDistance = 0.0f;
-				for (uint step = 0; step < var_max_steps; ++steps)
+				float currentDistance = var_surface_dist;
+				for (int step = 0; step < var_max_steps; ++step)
 				{
+					const float3 currentPos = viewDirection * currentDistance;
+					float currentMinDist = FLT_MAX;
 					for (uint posIndex = 0; posIndex < positionsNum; ++posIndex)
 					{
+						const float dist = sdfSphere(currentPos, positions[posIndex].xyz, var_sphere_radius);
+						currentMinDist = min(dist, currentMinDist);
 
+						if (currentMinDist < var_surface_dist)
+						{
+							return currentDistance;
+						}
 					}
+
+					currentDistance += currentMinDist;
+					if (currentDistance > var_max_dist)
+						break;
 				}
 
-				/*
-				for (uint i = 0; i < numStructs; ++i)
-				{
-					const float2 screenPos = positions[i].xy;
-					const float length2Val = length2(IN_UV - screenPos);
-					color = (length2Val > 0.001f) ? color : float4(0,1,0,1);
-				}
-				*/
+				return -1.0f;
+			}
+			
+			MAIN_FRAG_BEGIN(FRAGMENT_IN)
+				const float4 color = TEXTURE_BIAS_ZERO(tex_screen_texture, IN_UV);
 				
-				float4 color = TEXTURE_BIAS_ZERO(tex_screen_texture, IN_UV);
+				const float sdfValue = getSdfValue(IN_UV);
 
-				OUT_COLOR = color;
+				OUT_COLOR = sdfValue >=0.0f ? var_my_color : color;
 			MAIN_FRAG_END
 		#}
 	}
