@@ -28,7 +28,12 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				return length(spherePos - currentPos) - radius;
 			}
 
-			float getSdfValue(const float2 uv)
+			float3 sdfSphereNormal(float3 surfacePos, float3 spherePos)
+			{
+				return normalize(surfacePos - spherePos);
+			}
+
+			float4 getRayIntersectionSdfPoint(const float2 uv)
 			{
 				uint positionsNum;
 				uint positionsStride;
@@ -43,12 +48,16 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 					float currentMinDist = FLT_MAX;
 					for (uint posIndex = 0; posIndex < positionsNum; ++posIndex)
 					{
-						const float dist = sdfSphere(currentPos, positions[posIndex].xyz, var_sphere_radius);
+						const float3 spherePos = positions[posIndex].xyz;
+						const float dist = sdfSphere(currentPos, spherePos, var_sphere_radius);
 						currentMinDist = min(dist, currentMinDist);
 
 						if (currentMinDist < var_surface_dist)
 						{
-							return currentDistance;
+							const float3 sdfNormal = sdfSphereNormal(currentPos, spherePos);
+							const float3 lightVector = normalize(-currentPos);
+							const float lightV = max(0.0, dot(sdfNormal, lightVector));
+							return float4(float3(lightV, lightV, lightV), currentDistance);
 						}
 					}
 
@@ -57,15 +66,15 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 						break;
 				}
 
-				return -1.0f;
+				return float4(0,0,0, -1.0f);
 			}
 			
 			MAIN_FRAG_BEGIN(FRAGMENT_IN)
 				const float4 color = TEXTURE_BIAS_ZERO(tex_screen_texture, IN_UV);
 				
-				const float sdfValue = getSdfValue(IN_UV);
+				const float4 sdfValue = getRayIntersectionSdfPoint(IN_UV);
 
-				OUT_COLOR = sdfValue >=0.0f ? var_my_color : color;
+				OUT_COLOR = sdfValue.w >=0.0f ? (var_my_color * float4(sdfValue.xyz, 1)) : color;
 			MAIN_FRAG_END
 		#}
 	}
