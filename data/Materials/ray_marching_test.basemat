@@ -23,6 +23,33 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				INIT_COLOR(float4)
 			STRUCT_FRAG_END
 			
+			// https://www.shadertoy.com/view/Ml3Gz8
+			// Polynomial smooth min (commented version)
+			// @input a: first value
+			// @input b: second value
+			// @float k: 'Smoothness value', usually in the range (0,1].
+			//           Values close to zero makes smin converge to min.
+			//           Warning: the function is NOT defined at k = 0!
+			//           Tip: negative values turn the funtion into smooth max!
+			float smin(float a, float b, float k) {
+			
+			    // Compute the difference between the two values.
+			    // This is used to interpolate both values inside the range (-k, k).
+			    // Smaller ranges give a better approximation of the min function.
+			    float h = a - b;
+
+			    // The interval [-k, k] is mapped to [0, 1],
+			    // and clamping takes place only after this transformation.
+
+			    // Map [-k, k] to [0, 1] and clamp if outside the latter.
+			    h = clamp(0.5 + 0.5*h/k, 0.0, 1.0);    
+
+			    // Linearly interpolate the input values using h inside (0, 1).
+			    // The second term ensures continuous derivatives at the boundaries of [0,1],
+			    // but this is not completely obvious! See my blog post for details.
+			    return lerp(a, b, h) - k*h*(1.0-h);    
+			}
+
 			float sdfSphere(float3 currentPos, float3 spherePos, float radius)
 			{
 				return length(spherePos - currentPos) - radius;
@@ -50,7 +77,8 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 					{
 						const float3 spherePos = positions[posIndex].xyz;
 						const float dist = sdfSphere(currentPos, spherePos, var_sphere_radius);
-						currentMinDist = min(dist, currentMinDist);
+						//currentMinDist = min(dist, currentMinDist);
+						currentMinDist = smin(dist, currentMinDist, 2.0f);
 
 						if (currentMinDist < var_surface_dist)
 						{
