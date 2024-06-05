@@ -55,7 +55,6 @@ export namespace VoxelProjectUnigine
 
 		StructuredBufferPtr positionsBuffer = StructuredBuffer::create();
 
-
 		std::vector<Math::vec4> positions;
 
 		////////////////
@@ -108,31 +107,76 @@ export namespace VoxelProjectUnigine
 			RenderState::saveState();
 			RenderState::clearStates();
 
-			RenderState::setStructuredBuffer(0, positionsBuffer);
 			
 			{
-				auto screen_texture = RenderState::getScreenColorTexture();
-				auto source = Render::getTemporaryTexture(screen_texture);
-				source->copy(screen_texture);
-				material->setTexture("screen_texture", source);
+				auto currentScreenColorTexture = RenderState::getScreenColorTexture();
+				auto currentScreenDepthTexture = RenderState::getScreenDepthTexture();
+
+				const auto format = currentScreenDepthTexture->getFormat();
+
+				auto colorTexture = Render::getTemporaryTexture(currentScreenColorTexture);
+
+				//auto depthTexture = Render::getTemporaryTexture(currentScreenDepthTexture);
+				auto depthTexture = Texture::create();
+				depthTexture->create2D(currentScreenDepthTexture->getWidth(), currentScreenDepthTexture->getHeight(), Texture::FORMAT_R32F, Texture::FORMAT_USAGE_UNORDERED_ACCESS | Texture::FORMAT_USAGE_RENDER);
+
+				auto screenDepthTexture = Render::getTemporaryTexture(currentScreenDepthTexture);
+
+				auto tmpTexture = Render::getTemporaryTexture(currentScreenColorTexture);
+				//tmpTexture->copy(currentScreenColorTexture);
+
+				colorTexture->copy(currentScreenColorTexture);
+				screenDepthTexture->copy(currentScreenDepthTexture);
 
 				{
+					RenderState::setStructuredBuffer(0, positionsBuffer);
+
 					auto rt = Render::getTemporaryRenderTarget();
-					rt->bindColorTexture(0, screen_texture);
+					rt->bindColorTexture(0, tmpTexture);
+					//rt->bindDepthTexture(depthTexture);
+					rt->bindColorTexture(1, depthTexture);
 					rt->enable();
 
-					material->renderScreen("my_pass");
+					material->renderScreen("depth");
 
 					rt->disable();
 					rt->unbindAll();
+
+
 					Render::releaseTemporaryRenderTarget(rt);
 				}
 
-				Render::releaseTemporaryTexture(source);
+				{
+					material->setTexture("color_texture", colorTexture);
+					material->setTexture("depth_texture", depthTexture);
+					material->setTexture("screen_depth_texture", screenDepthTexture);
+
+					auto rt = Render::getTemporaryRenderTarget();
+					rt->bindColorTexture(0, currentScreenColorTexture);
+					rt->enable();
+
+					material->renderScreen("color");
+
+					rt->disable();
+					rt->unbindAll();
+
+					material->setTexture("color_texture", nullptr);
+					material->setTexture("depth_texture", nullptr);
+					material->setTexture("screen_depth_texture", nullptr);
+
+					Render::releaseTemporaryRenderTarget(rt);
+				}
+				
+
+				Render::releaseTemporaryTexture(colorTexture);
+				Render::releaseTemporaryTexture(depthTexture);
+				Render::releaseTemporaryTexture(screenDepthTexture);
+
+				depthTexture->destroy();
+				depthTexture.clear();
 				
 			}
-
-			//material->runExpression("RENDER_CALLBACK_END_POST_MATERIALS", 1, 1);
+			
 			RenderState::restoreState();
 		}
 

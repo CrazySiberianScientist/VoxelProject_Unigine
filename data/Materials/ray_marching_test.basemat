@@ -2,7 +2,9 @@
 // More information on scriptable materials - https://developer.unigine.com/docs/content/materials/scriptable
 BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 {
-	Texture2D screen_texture <source=procedural internal=true>
+	Texture2D depth_texture <source=procedural internal=true>
+	Texture2D color_texture <source=procedural internal=true>
+	Texture2D screen_depth_texture <source=procedural internal=true>
 	
 	Color my_color = [0.5 0.5 0.5 1.0]
 
@@ -11,7 +13,7 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 	Float surface_dist = 0.01
 	Float sphere_radius = 1.0
 	
-	Pass my_pass
+	Pass depth
 	{
 		Fragment =
 		#{
@@ -20,9 +22,11 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 			INIT_STRUCTURED_BUFFER(0, float4, positions);
 
 			STRUCT_FRAG_BEGIN
-				INIT_COLOR(float4)
+				INIT_COLOR(float)
+				//INIT_CUSTOM_DEPTH(float)
+				INIT_MRT(float, 1)
 			STRUCT_FRAG_END
-			
+
 			// https://www.shadertoy.com/view/Ml3Gz8
 			// Polynomial smooth min (commented version)
 			// @input a: first value
@@ -31,7 +35,8 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 			//           Values close to zero makes smin converge to min.
 			//           Warning: the function is NOT defined at k = 0!
 			//           Tip: negative values turn the funtion into smooth max!
-			float smin(float a, float b, float k) {
+			float smin(float a, float b, float k)
+			{
 			
 			    // Compute the difference between the two values.
 			    // This is used to interpolate both values inside the range (-k, k).
@@ -47,7 +52,7 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 			    // Linearly interpolate the input values using h inside (0, 1).
 			    // The second term ensures continuous derivatives at the boundaries of [0,1],
 			    // but this is not completely obvious! See my blog post for details.
-			    return lerp(a, b, h) - k*h*(1.0-h);    
+			    return lerp(a, b, h) - k*h*(1.0-h);
 			}
 
 			float sdfSphere(float3 currentPos, float3 spherePos, float radius)
@@ -55,12 +60,8 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				return length(spherePos - currentPos) - radius;
 			}
 
-			float3 sdfSphereNormal(float3 surfacePos, float3 spherePos)
-			{
-				return normalize(surfacePos - spherePos);
-			}
 
-			float4 getRayIntersectionSdfPoint(const float2 uv)
+			float getRayIntersectionSdfPoint(const float2 uv)
 			{
 				uint positionsNum;
 				uint positionsStride;
@@ -82,10 +83,7 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 
 						if (currentMinDist < var_surface_dist)
 						{
-							const float3 sdfNormal = sdfSphereNormal(currentPos, spherePos);
-							const float3 lightVector = normalize(-currentPos);
-							const float lightV = max(0.0, dot(sdfNormal, lightVector));
-							return float4(float3(lightV, lightV, lightV), currentDistance);
+							return currentDistance;
 						}
 					}
 
@@ -94,15 +92,40 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 						break;
 				}
 
-				return float4(0,0,0, -1.0f);
+				return FLT_MAX;
 			}
 			
 			MAIN_FRAG_BEGIN(FRAGMENT_IN)
-				const float4 color = TEXTURE_BIAS_ZERO(tex_screen_texture, IN_UV);
-				
-				const float4 sdfValue = getRayIntersectionSdfPoint(IN_UV);
+				const float sdfValue = getRayIntersectionSdfPoint(IN_UV);
+				OUT_COLOR = sdfValue;
+				//OUT_DEPTH = 1.0f;
+				OUT_MRT(1) = sdfValue;
+			MAIN_FRAG_END
+		#}
+	}
 
-				OUT_COLOR = sdfValue.w >=0.0f ? (var_my_color * float4(sdfValue.xyz, 1)) : color;
+	Pass color
+	{
+		Fragment =
+		#{
+			#include <core/materials/shaders/render/common.h>
+
+			STRUCT_FRAG_BEGIN
+				INIT_COLOR(float4)
+			STRUCT_FRAG_END
+
+			MAIN_FRAG_BEGIN(FRAGMENT_IN)
+				const float4 color = TEXTURE_BIAS_ZERO(tex_color_texture, IN_UV);
+				const float4 depth = TEXTURE_BIAS_ZERO(tex_depth_texture, IN_UV);
+				const float screen_depth = nativeDepthToLinearDepth(TEXTURE_BIAS_ZERO(tex_screen_depth_texture, IN_UV).r, IN_UV);
+
+				//OUT_COLOR = sdfValue.w >=0.0f ? (var_my_color * float4(sdfValue.xyz, 1)) : color;
+				bool isOverlap = depth.r < screen_depth;
+				OUT_COLOR = color * !isOverlap + var_my_color * isOverlap;
+				//OUT_COLOR = screen_depth;
+				//OUT_COLOR = depth.a < 0.01f;
+				//OUT_COLOR = TEXTURE_BIAS_ZERO(tex_screen_depth_texture, IN_UV);
+				//OUT_COLOR = depth;
 			MAIN_FRAG_END
 		#}
 	}
