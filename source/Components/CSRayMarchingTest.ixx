@@ -169,7 +169,6 @@ export namespace VoxelProjectUnigine
 				
 
 				Render::releaseTemporaryTexture(colorTexture);
-				Render::releaseTemporaryTexture(depthTexture);
 				Render::releaseTemporaryTexture(screenDepthTexture);
 
 				depthTexture->destroy();
