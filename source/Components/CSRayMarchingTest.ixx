@@ -85,12 +85,18 @@ export namespace VoxelProjectUnigine
 			const auto &modelviewMatrix = Game::getPlayer()->getCamera()->getModelview();
 			const auto &projectionMatrix = Game::getPlayer()->getCamera()->getProjection();
 
+			//Game::getPlayer()->getCamera()->get
+
 			positions.clear();
 			for (const auto& entity : entities)
 			{
 				const Math::vec3 viewPos(modelviewMatrix * entity->getNode()->getPosition());
+
+				/*
 				if (viewPos.z > 0.0)
 					continue;
+				*/
+
 				positions.emplace_back(viewPos, entity->size.get());
 
 				//const auto projectedPos = projectionMatrix * viewPos;
@@ -132,7 +138,7 @@ export namespace VoxelProjectUnigine
 					RenderState::setStructuredBuffer(0, positionsBuffer);
 
 					auto rt = Render::getTemporaryRenderTarget();
-					rt->bindColorTexture(0, tmpTexture);
+					//rt->bindColorTexture(0, tmpTexture);
 					//rt->bindDepthTexture(depthTexture);
 					rt->bindColorTexture(1, depthTexture);
 					rt->enable();
