@@ -3,6 +3,7 @@
 #include <UnigineRender.h>
 #include <UnigineTextures.h>
 #include <UnigineGame.h>
+#include <UnigineMathLib.h>
 
 #include "Utils/ProjectUtilsMacros.h"
 
@@ -109,6 +110,16 @@ export namespace VoxelProjectUnigine
 
 		void RenderCallback() 
 		{
+			{
+				const auto camera = Game::getPlayer()->getCamera();
+				const auto fovV = camera->getFov();
+
+				// FOV_h = 2 × atan ( (width / height) × tan(FOV_v / 2))
+				const auto fovH = Math::Consts::RAD2DEG * 2 * Math::atan((float)Renderer::getWidth() / Renderer::getHeight() * Math::tan(Math::Consts::DEG2RAD * fovV / 2));
+
+				material->setParameterFloat("fov_h", fovH);
+			}
+
 
 			RenderState::saveState();
 			RenderState::clearStates();
