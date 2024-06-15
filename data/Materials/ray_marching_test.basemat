@@ -106,18 +106,21 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				uint positionsStride;
 				positions.GetDimensions(positionsNum, positionsStride);
 				
+				const float3 viewDirection = normalize(screenUVToViewDirection(uv));
 				//const float3 viewDirection = screenUVToViewDirection(uv);
-				const float3 viewDirection = getAngleViewDirection(uv);
+				//const float3 viewDirection = getAngleViewDirection(uv);
 
 				/*
 				float3 distToNearPlane = float3(0,0,-0.1f);
 				float currentDistance = sqrt(dot(viewDirection, distToNearPlane));
 				*/
-				float currentDistance = var_surface_dist;
+				float currentDistance = 0;
+
+				const float viewDirectionL = length(viewDirection);
 
 				for (int step = 0; step < var_max_steps; ++step)
 				{
-					const float3 currentPos = viewDirection * currentDistance;
+					const float3 currentPos = viewDirection * currentDistance  /*/ (viewDirectionL)*/;
 					float currentMinDist = FLT_MAX;
 					for (uint posIndex = 0; posIndex < positionsNum; ++posIndex)
 					{
@@ -129,7 +132,8 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 
 						if (currentMinDist < var_surface_dist)
 						{
-							return currentDistance;
+							//return currentDistance;
+							return -currentPos.z;
 						}
 					}
 
@@ -183,7 +187,7 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 			MAIN_FRAG_BEGIN(FRAGMENT_IN)
 				const float4 color = TEXTURE_BIAS_ZERO(tex_color_texture, IN_UV);
 				const float4 depth = TEXTURE_BIAS_ZERO(tex_depth_texture, IN_UV);
-				//const float4 depth = float4(-nativeDepthToLinearDepth(TEXTURE_BIAS_ZERO(tex_depth_texture, IN_UV).r, IN_UV), 0, 0, 1);
+				//const float4 screen_depth = float4(nativeDepthToLinearDepth(TEXTURE_BIAS_ZERO(tex_depth_texture, IN_UV).r, IN_UV), 0, 0, 1);
 				const float screen_depth = -nativeDepthToPositionVS(TEXTURE_BIAS_ZERO(tex_screen_depth_texture, IN_UV).r, IN_UV).z;
 
 				//OUT_COLOR = sdfValue.w >=0.0f ? (var_my_color * float4(sdfValue.xyz, 1)) : color;
@@ -194,8 +198,9 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				//OUT_COLOR = TEXTURE_BIAS_ZERO(tex_screen_depth_texture, IN_UV);
 				//OUT_COLOR = float4(0,0, log(depth.r), 1.0f);
 				//OUT_COLOR = TEXTURE_GRAD(tex_depth_texture, IN_UV, ddx(IN_UV), ddy(IN_UV));
-				OUT_COLOR = float4(sqrt(abs(calcNormalByDepth(IN_UV))) , 1);
-				//OUT_COLOR = float4(screenUVToViewDirection(IN_UV) , 1);
+				//OUT_COLOR = float4(abs(screenUVToViewDirection(IN_UV)) , 1) + float4(sqrt(abs(calcNormalByDepth(IN_UV))) , 1);
+				//OUT_COLOR = float4((normalize(screenUVToViewDirection(IN_UV)) - screenUVToViewDirection(IN_UV)) , 1);
+				//OUT_COLOR = float4(sqrt(abs(calcNormalByDepth(IN_UV))) , 1);
 				//OUT_COLOR = float4(IN_UV, 0, 1);
 			MAIN_FRAG_END
 		#}
