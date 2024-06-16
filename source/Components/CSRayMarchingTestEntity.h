@@ -1,12 +1,13 @@
+#pragma once
+
 #include <UnigineComponentSystem.h>
 #include <UnigineGame.h>
+
 #include "Utils/ProjectUtilsMacros.h"
+#include "LogicOrders.h"
 
-export module CSRayMarchingTestEntity;
 
-import LogicOrders;
-
-export namespace VoxelProjectUnigine
+namespace VoxelProjectUnigine
 {
 	class CSRayMarchingTestEntity : public Unigine::ComponentBase
 	{

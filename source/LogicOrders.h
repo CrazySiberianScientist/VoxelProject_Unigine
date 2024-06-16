@@ -1,6 +1,6 @@
-export module LogicOrders;
+#pragma once
 
-export namespace VoxelProjectUnigine
+namespace VoxelProjectUnigine
 {
 	struct GlobalInitOrder
 	{

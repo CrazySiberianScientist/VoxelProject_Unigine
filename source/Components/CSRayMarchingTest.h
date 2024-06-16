@@ -1,3 +1,5 @@
+#pragma once
+
 #include <UnigineComponentSystem.h>
 #include <UnigineVisualizer.h>
 #include <UnigineRender.h>
@@ -6,43 +8,16 @@
 #include <UnigineMathLib.h>
 
 #include "Utils/ProjectUtilsMacros.h"
-
-export module CSRayMarchingTest;
+#include "CSRayMarchingTestEntity.h"
+#include "LogicOrders.h"
 
 import ProjectUtils;
-import LogicOrders;
-import CSRayMarchingTestEntity;
 
-using namespace Unigine;
 
-/*
-
-void EngineExpression::renderPass(const char *pass)
+namespace VoxelProjectUnigine
 {
-	if (material == NULL)
-		return;
-	if (!material->renderScreen(pass))
-		Log::error("MaterialExpression::renderPass(): can't find \"%s\" pass in \"%asset\" material\n", pass, material->getPath());
-}
-void EngineExpression::renderPassToTexture(const char pass, Texture texture)
-{
-	if (!material)
-		return;
-	RenderTarget *rt = engine.render->getTemporaryRenderTarget();
-	rt->bindColorTexture(0, texture);
-	rt->enable();
-	{
-		renderPass(pass);
-	}
-	rt->disable();
-	rt->unbindAll();
-	engine.render->releaseTemporaryRenderTarget(rt);
-}
+	using namespace Unigine;
 
-*/
-
-export namespace VoxelProjectUnigine
-{
 	class CSRayMarchingTest : public Unigine::ComponentBase
 	{
 		PROJECT_UTILS_COMPONENT_DEFINE(CSRayMarchingTest, Unigine::ComponentBase);
@@ -86,7 +61,6 @@ export namespace VoxelProjectUnigine
 			const auto &modelviewMatrix = Game::getPlayer()->getCamera()->getModelview();
 			const auto &projectionMatrix = Game::getPlayer()->getCamera()->getProjection();
 
-			//Game::getPlayer()->getCamera()->get
 
 			positions.clear();
 			for (const auto& entity : entities)
@@ -110,17 +84,6 @@ export namespace VoxelProjectUnigine
 
 		void RenderCallback() 
 		{
-			{
-				const auto camera = Game::getPlayer()->getCamera();
-				const auto fovV = camera->getFov();
-
-				// FOV_h = 2 × atan ( (width / height) × tan(FOV_v / 2))
-				const auto fovH = Math::Consts::RAD2DEG * 2 * Math::atan((float)Renderer::getWidth() / Renderer::getHeight() * Math::tan(Math::Consts::DEG2RAD * fovV / 2));
-
-				material->setParameterFloat("fov_h", fovH);
-			}
-
-
 			RenderState::saveState();
 			RenderState::clearStates();
 
