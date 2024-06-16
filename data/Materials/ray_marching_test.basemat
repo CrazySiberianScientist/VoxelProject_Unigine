@@ -76,28 +76,8 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 
 				const float3 currentLocalPos = mul(inverse(viewTransform), float4(currentPos, 1));
 
-				//float3 viewOrigin = mul(s_modelview, float4(0,0,2,1));
-
-				//return length(currentPos - currentLocalPos) - 1.0f;
-				//return length(currentPos - colW(viewTransform).xyz) - 1.0f;
-				//return length(currentLocalPos) - 1.0f;
-
 				float3 delta = abs(currentLocalPos) - size;
 				return length(max(delta,0.0)) + min(max(delta.x,max(delta.y,delta.z)),0.0);
-			}
-
-			float3 getAngleViewDirection(const float2 uv)
-			{
-				const float halfFovV_deg = s_camera_fov / 2;
-				const float halfFovH_deg = var_fov_h / 2;
-				const float2 fovRange_deg = float2(halfFovH_deg, halfFovV_deg);
-				const float2 anglePos_deg = 2.0 * (uv - float2(0.5,0.5)) * fovRange_deg;
-
-				float3x3 basis = float3x3(1, 0, 0,
-											0, 1, 0,
-											0, 0, 1);
-				basis = mul(mul(basis, rotateY(anglePos_deg.x)), rotateX(anglePos_deg.y));
-				return -rowZ(basis);
 			}
 
 			float getRayIntersectionSdfPoint(const float2 uv)
@@ -107,13 +87,7 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				positions.GetDimensions(positionsNum, positionsStride);
 				
 				const float3 viewDirection = normalize(screenUVToViewDirection(uv));
-				//const float3 viewDirection = screenUVToViewDirection(uv);
-				//const float3 viewDirection = getAngleViewDirection(uv);
 
-				/*
-				float3 distToNearPlane = float3(0,0,-0.1f);
-				float currentDistance = sqrt(dot(viewDirection, distToNearPlane));
-				*/
 				float currentDistance = 0;
 
 				const float viewDirectionL = length(viewDirection);
