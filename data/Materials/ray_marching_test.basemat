@@ -8,9 +8,9 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 	
 	Color my_color = [0.5 0.5 0.5 1.0]
 
-	Int max_steps = 100
-	Float max_dist = 100.0
-	Float surface_dist = 0.001
+	Int max_steps = 10
+	Float max_dist = 20000.0
+	Float surface_dist = 0.0001
 	Float sphere_radius = 1.0
 	
 	Pass depth
@@ -78,6 +78,24 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				return length(max(delta,0.0)) + min(max(delta.x,max(delta.y,delta.z)),0.0);
 			}
 
+			float3 getAngleViewDirection(const float2 uv)
+			{
+				//const float halfFovV_deg = s_camera_fov / 2;
+				//const float halfFovH_deg = var_fov_h / 2;
+
+				const float halfFovV_deg = 60 / 2;
+				const float halfFovH_deg = 120 / 2;
+
+				const float2 fovRange_deg = float2(halfFovH_deg, halfFovV_deg);
+				const float2 anglePos_deg = 2.0 * (uv - float2(0.5,0.5)) * fovRange_deg;
+
+				float3x3 basis = float3x3(1, 0, 0,
+											0, 1, 0,
+											0, 0, 1);
+				basis = mul(mul(basis, rotateY(anglePos_deg.x)), rotateX(anglePos_deg.y));
+				return -rowZ(basis);
+			}
+
 			float3 getRayIntersectionSdfPoint(const float2 uv)
 			{
 				uint positionsNum;
@@ -85,14 +103,16 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				positions.GetDimensions(positionsNum, positionsStride);
 				
 				const float3 viewDirection = normalize(screenUVToViewDirection(uv));
+				//const float3 viewDirection = normalize(getAngleViewDirection(uv));
 
-				float currentDistance = 0;
+				float currentDistance = var_surface_dist;
+				float3 currentPos = float3(FLT_MAX, FLT_MAX, FLT_MAX);
 
 				const float viewDirectionL = length(viewDirection);
 
 				for (int step = 0; step < var_max_steps; ++step)
 				{
-					const float3 currentPos = viewDirection * currentDistance  /*/ (viewDirectionL)*/;
+					currentPos = viewDirection * currentDistance;
 					float currentMinDist = FLT_MAX;
 					for (uint posIndex = 0; posIndex < positionsNum; ++posIndex)
 					{
@@ -109,11 +129,19 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 					}
 
 					currentDistance += currentMinDist;
+
+					/*
 					if (currentDistance > var_max_dist)
+					{
 						break;
+					}
+					*/
+					
 				}
 
-				return float3(FLT_MAX, FLT_MAX, FLT_MAX);
+				//return currentPos;
+				return float3(currentPos.xy, -currentPos.z);
+				//return float3(FLT_MAX, FLT_MAX, FLT_MAX);
 			}
 			
 			MAIN_FRAG_BEGIN(FRAGMENT_IN)
@@ -143,22 +171,38 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				float3 pos1 = TEXTURE_BIAS_ZERO(tex_depth_texture, uv + float2(uv_dx, 0)).xyz;
 				float3 pos2 = TEXTURE_BIAS_ZERO(tex_depth_texture, uv + float2(0, uv_dy)).xyz;
 				float3 pos3 = TEXTURE_BIAS_ZERO(tex_depth_texture, uv + float2(uv_dx, uv_dy)).xyz;
-				//float3 normal = normalize(cross(pos1 - pos0, pos2 - pos0)) * 1000;
-				float3 normal = sqrt(pow2(pos3 - pos0) + pow2(pos2 - pos0) + pow2(pos1 - pos0));
 
-				return normal;
+				float3 normal0 = normalize(cross(pos1 - pos0, pos3 - pos0));
+				float3 normal1 = normalize(cross(pos3 - pos0, pos2 - pos0));
+				float3 normal = normal0 + normal1;
+
+				//float3 normal = sqrt(pow2(pos3 - pos0) + pow2(pos2 - pos0) + pow2(pos1 - pos0));
+
+				return normalize(normal);
+			}
+
+			float4 calcLight(const float3 normal, const float3 lightDirection)
+			{
+				return 1.0 - float4(dot(-lightDirection, normal).rrr, 1);
+				//return float4(1,1,1, 1);
 			}
 
 			MAIN_FRAG_BEGIN(FRAGMENT_IN)
+				const float3 normal = calcNormalByDepth(IN_UV);
+				const float3 lightDirection = float3(0,0,-1);
+
 				const float4 color = TEXTURE_BIAS_ZERO(tex_color_texture, IN_UV);
 				const float4 depth = TEXTURE_BIAS_ZERO(tex_depth_texture, IN_UV);
 				//const float4 screen_depth = float4(nativeDepthToLinearDepth(TEXTURE_BIAS_ZERO(tex_depth_texture, IN_UV).r, IN_UV), 0, 0, 1);
 				const float screen_depth = -nativeDepthToPositionVS(TEXTURE_BIAS_ZERO(tex_screen_depth_texture, IN_UV).r, IN_UV).z;
 
+				const float4 overlapColor = var_my_color * calcLight(normal, lightDirection);
+
 				bool isOverlap = depth.z < screen_depth;
-				OUT_COLOR = color * !isOverlap + var_my_color * isOverlap;
-				OUT_COLOR = float4(sqrt(abs(calcNormalByDepth(IN_UV))) , 1);
+				OUT_COLOR = isOverlap ? overlapColor : color;
+				//OUT_COLOR = float4(sqrt(abs(calcNormalByDepth(IN_UV))) , 1);
 				//OUT_COLOR = float4(IN_UV, 0, 1);
+				//OUT_COLOR = float4(0, 1.0 / depth.z, 0,1);
 			MAIN_FRAG_END
 		#}
 	}
