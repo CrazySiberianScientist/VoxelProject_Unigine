@@ -1,10 +1,10 @@
-﻿#include <UnigineComponentSystem.h>
+#include <UnigineComponentSystem.h>
 #include "Utils/ProjectUtilsMacros.h"
+#include "LogicOrders.h"
 
 export module CSVoxelVisualizer;
 
 import VoxelStorage;
-import LogicOrders;
 
 using namespace Unigine;
 

@@ -98,12 +98,9 @@ namespace VoxelProjectUnigine
 
 				//auto depthTexture = Render::getTemporaryTexture(currentScreenDepthTexture);
 				auto depthTexture = Texture::create();
-				depthTexture->create2D(currentScreenDepthTexture->getWidth(), currentScreenDepthTexture->getHeight(), Texture::FORMAT_R32F, Texture::FORMAT_USAGE_UNORDERED_ACCESS | Texture::FORMAT_USAGE_RENDER);
+				depthTexture->create2D(currentScreenDepthTexture->getWidth(), currentScreenDepthTexture->getHeight(), Texture::FORMAT_RGB32F, Texture::FORMAT_USAGE_UNORDERED_ACCESS | Texture::FORMAT_USAGE_RENDER);
 
 				auto screenDepthTexture = Render::getTemporaryTexture(currentScreenDepthTexture);
-
-				auto tmpTexture = Render::getTemporaryTexture(currentScreenColorTexture);
-				//tmpTexture->copy(currentScreenColorTexture);
 
 				colorTexture->copy(currentScreenColorTexture);
 				screenDepthTexture->copy(currentScreenDepthTexture);
@@ -112,7 +109,6 @@ namespace VoxelProjectUnigine
 					RenderState::setStructuredBuffer(0, positionsBuffer);
 
 					auto rt = Render::getTemporaryRenderTarget();
-					//rt->bindColorTexture(0, tmpTexture);
 					//rt->bindDepthTexture(depthTexture);
 					rt->bindColorTexture(1, depthTexture);
 					rt->enable();

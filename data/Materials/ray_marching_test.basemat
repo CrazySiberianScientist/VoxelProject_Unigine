@@ -12,8 +12,6 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 	Float max_dist = 100.0
 	Float surface_dist = 0.001
 	Float sphere_radius = 1.0
-
-	Float fov_h = 120
 	
 	Pass depth
 	{
@@ -26,7 +24,7 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 			STRUCT_FRAG_BEGIN
 				//INIT_COLOR(float)
 				//INIT_CUSTOM_DEPTH(float)
-				INIT_MRT(float, 1)
+				INIT_MRT(float3, 1)
 			STRUCT_FRAG_END
 
 			// https://www.shadertoy.com/view/Ml3Gz8
@@ -80,7 +78,7 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				return length(max(delta,0.0)) + min(max(delta.x,max(delta.y,delta.z)),0.0);
 			}
 
-			float getRayIntersectionSdfPoint(const float2 uv)
+			float3 getRayIntersectionSdfPoint(const float2 uv)
 			{
 				uint positionsNum;
 				uint positionsStride;
@@ -106,8 +104,7 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 
 						if (currentMinDist < var_surface_dist)
 						{
-							//return currentDistance;
-							return -currentPos.z;
+							return float3(currentPos.xy, -currentPos.z);
 						}
 					}
 
@@ -116,14 +113,11 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 						break;
 				}
 
-				return FLT_MAX;
+				return float3(FLT_MAX, FLT_MAX, FLT_MAX);
 			}
 			
 			MAIN_FRAG_BEGIN(FRAGMENT_IN)
-				const float sdfValue = getRayIntersectionSdfPoint(IN_UV);
-				//OUT_COLOR = sdfValue;
-				//OUT_DEPTH = 1.0f;
-				OUT_MRT(1) = sdfValue;
+				OUT_MRT(1) = getRayIntersectionSdfPoint(IN_UV);
 			MAIN_FRAG_END
 		#}
 	}
@@ -142,11 +136,8 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 
 			float3 calcNormalByDepth(const float2 uv)
 			{
-				//const float uv_dx = 1 / s_show_texture_resolution_parameters.x;
-				//const float uv_dy = 1 / s_show_texture_resolution_parameters.y;
-
-				const float uv_dx = 0.01;
-				const float uv_dy = 0.01;
+				const float uv_dx = s_viewport.z;
+				const float uv_dy = s_viewport.w;
 
 				float3 pos0 = TEXTURE_BIAS_ZERO(tex_depth_texture, uv).xyz;
 				float3 pos1 = TEXTURE_BIAS_ZERO(tex_depth_texture, uv + float2(uv_dx, 0)).xyz;
@@ -164,17 +155,9 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				//const float4 screen_depth = float4(nativeDepthToLinearDepth(TEXTURE_BIAS_ZERO(tex_depth_texture, IN_UV).r, IN_UV), 0, 0, 1);
 				const float screen_depth = -nativeDepthToPositionVS(TEXTURE_BIAS_ZERO(tex_screen_depth_texture, IN_UV).r, IN_UV).z;
 
-				//OUT_COLOR = sdfValue.w >=0.0f ? (var_my_color * float4(sdfValue.xyz, 1)) : color;
-				bool isOverlap = depth.r < screen_depth;
+				bool isOverlap = depth.z < screen_depth;
 				OUT_COLOR = color * !isOverlap + var_my_color * isOverlap;
-				//OUT_COLOR = float4(0, depth.r - screen_depth,screen_depth - depth.r,1);
-				//OUT_COLOR = depth;
-				//OUT_COLOR = TEXTURE_BIAS_ZERO(tex_screen_depth_texture, IN_UV);
-				//OUT_COLOR = float4(0,0, log(depth.r), 1.0f);
-				//OUT_COLOR = TEXTURE_GRAD(tex_depth_texture, IN_UV, ddx(IN_UV), ddy(IN_UV));
-				//OUT_COLOR = float4(abs(screenUVToViewDirection(IN_UV)) , 1) + float4(sqrt(abs(calcNormalByDepth(IN_UV))) , 1);
-				//OUT_COLOR = float4((normalize(screenUVToViewDirection(IN_UV)) - screenUVToViewDirection(IN_UV)) , 1);
-				//OUT_COLOR = float4(sqrt(abs(calcNormalByDepth(IN_UV))) , 1);
+				OUT_COLOR = float4(sqrt(abs(calcNormalByDepth(IN_UV))) , 1);
 				//OUT_COLOR = float4(IN_UV, 0, 1);
 			MAIN_FRAG_END
 		#}
