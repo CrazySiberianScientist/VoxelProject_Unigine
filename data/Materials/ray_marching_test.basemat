@@ -8,8 +8,8 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 	
 	Color my_color = [0.5 0.5 0.5 1.0]
 
-	Int max_steps = 10
-	Float max_dist = 20000.0
+	Int max_steps = 100
+	Float max_dist = 200.0
 	Float surface_dist = 0.0001
 	Float sphere_radius = 1.0
 	
@@ -106,46 +106,87 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				//const float3 viewDirection = normalize(getAngleViewDirection(uv));
 
 				float currentDistance = var_surface_dist;
-				float3 currentPos = float3(FLT_MAX, FLT_MAX, FLT_MAX);
 
-				const float viewDirectionL = length(viewDirection);
-
+				const float kAvgMinDist = 25.5f;
+				float avgMinDist = 0.0f;
+				const int avgStep = 10;
+				int currentAvgStep = 0;
+				
 				for (int step = 0; step < var_max_steps; ++step)
 				{
-					currentPos = viewDirection * currentDistance;
+					float3 currentPos = viewDirection * currentDistance;
 					float currentMinDist = FLT_MAX;
 					for (uint posIndex = 0; posIndex < positionsNum; ++posIndex)
 					{
 						const float3 spherePos = positions[posIndex].xyz;
+
+						/*
+						float3 dVec = currentPos - spherePos;
+						bool isNegative = dot(viewDirection, dVec) > -0.1;
+						if (isNegative) {
+							continue;
+						}
+						*/
+
+
 						const float dist = sdfSphere(currentPos, spherePos, var_sphere_radius);
 						//const float dist = sdfBox(currentPos, spherePos, float3(1,1,1));
 						//currentMinDist = min(dist, currentMinDist);
-						currentMinDist = smin(dist, currentMinDist, 1.0f);
+						currentMinDist = smin(dist, currentMinDist, 0.2f);
+						//currentMinDist =  min(dist, lerp(dist, currentMinDist, 0.5));
+
+						
 
 						if (currentMinDist < var_surface_dist)
 						{
 							return float3(currentPos.xy, -currentPos.z);
 						}
+
+						
 					}
 
-					currentDistance += currentMinDist;
+					avgMinDist += currentMinDist;
+					const float avgSurfDist = avgMinDist / (currentAvgStep + 1);
+					currentAvgStep += 1;
+					if (currentAvgStep % avgStep == 0) {
+						currentAvgStep = 0;
+						avgMinDist = 0;
+					}
 
-					/*
-					if (currentDistance > var_max_dist)
+					if (avgSurfDist < var_surface_dist * kAvgMinDist)
+					{
+						return float3(currentPos.xy, -currentPos.z);
+					}
+					
+					currentDistance += currentMinDist;
+					if (currentPos.z > var_max_dist)
 					{
 						break;
 					}
-					*/
 					
 				}
 
-				//return currentPos;
-				return float3(currentPos.xy, -currentPos.z);
-				//return float3(FLT_MAX, FLT_MAX, FLT_MAX);
+				return float3(FLT_MAX, FLT_MAX, FLT_MAX);
 			}
 			
 			MAIN_FRAG_BEGIN(FRAGMENT_IN)
 				OUT_MRT(1) = getRayIntersectionSdfPoint(IN_UV);
+			MAIN_FRAG_END
+		#}
+	}
+
+	Pass depth_blur
+	{
+		Fragment =
+		#{
+			#include <core/materials/shaders/render/common.h>
+
+			STRUCT_FRAG_BEGIN
+				INIT_MRT(float3, 1)
+			STRUCT_FRAG_END
+
+			MAIN_FRAG_BEGIN(FRAGMENT_IN)
+				OUT_MRT(1) = float4(0,0,1,1);
 			MAIN_FRAG_END
 		#}
 	}
@@ -160,7 +201,36 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				INIT_COLOR(float4)
 			STRUCT_FRAG_END
 
-			
+			static const int KERNEL_SIZE = 9;
+
+			float getTextureKernelValue(TEXTURE_IN(texture), const float2 uv, const int channelIndex, const int kernElement)
+			{
+				static const float2 dxyKernel[KERNEL_SIZE] = {float2(-1, -1), float2(0, -1), float2(1, -1), 
+																float2(-1, 0), float2(0, 0), float2(1, 0),
+																float2(-1, 1), float2(0, 1), float2(1, 1)};
+
+				return TEXTURE_BIAS_ZERO(texture, uv +  s_viewport.zw * dxyKernel[kernElement])[channelIndex];
+			}
+
+			float convolute(TEXTURE_IN(texture), const float2 uv, const int channelIndex, float kernel[KERNEL_SIZE])
+			{
+				float sum = 0.0f;
+				for (int i = 0; i < KERNEL_SIZE; ++i)
+				{
+					sum += getTextureKernelValue(TEXTURE_OUT(texture), uv, channelIndex, i) * kernel[i];
+				}
+
+				return sum;
+			}
+
+			float blur(TEXTURE_IN(texture), const float2 uv, const int channelIndex)
+			{
+				static const float kernel[KERNEL_SIZE] = {1/16.f, 1/8.f, 1/16.f, 
+													1/8.f, 1/4.f, 1/8.f,
+													1/16.f, 1/8.f, 1/16.f};
+
+				return convolute(TEXTURE_OUT(texture), uv, channelIndex, kernel);
+			}
 
 			float3 calcNormalByDepth(const float2 uv)
 			{
@@ -202,7 +272,9 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				OUT_COLOR = isOverlap ? overlapColor : color;
 				//OUT_COLOR = float4(sqrt(abs(calcNormalByDepth(IN_UV))) , 1);
 				//OUT_COLOR = float4(IN_UV, 0, 1);
-				//OUT_COLOR = float4(0, 1.0 / depth.z, 0,1);
+				//OUT_COLOR = float4(0, depth.z, 0,1);
+				//OUT_COLOR = float4(0, blur(TEXTURE_OUT(tex_depth_texture), IN_UV, 2), 0,1);
+				//OUT_COLOR = float4(0, var_max_steps0 / 255.0f, 0, 0);
 			MAIN_FRAG_END
 		#}
 	}
