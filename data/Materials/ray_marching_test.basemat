@@ -107,9 +107,10 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 
 				float currentDistance = var_surface_dist;
 
-				const float kAvgMinDist = 25.5f;
+				const float kAvgMinDist = 35.0f;
 				float avgMinDist = 0.0f;
-				const int avgStep = 10;
+				float firstAvgMinDist = 0.0f;
+				const int avgStep = 20;
 				int currentAvgStep = 0;
 				
 				for (int step = 0; step < var_max_steps; ++step)
@@ -145,18 +146,23 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 						
 					}
 
+					
 					avgMinDist += currentMinDist;
 					const float avgSurfDist = avgMinDist / (currentAvgStep + 1);
 					currentAvgStep += 1;
 					if (currentAvgStep % avgStep == 0) {
+						const float avgSurfDist = avgMinDist / (currentAvgStep + 1);
+						if (avgSurfDist < var_surface_dist * kAvgMinDist)
+						{
+							return float3(currentPos.xy, -currentPos.z);
+						}
+
 						currentAvgStep = 0;
 						avgMinDist = 0;
 					}
 
-					if (avgSurfDist < var_surface_dist * kAvgMinDist)
-					{
-						return float3(currentPos.xy, -currentPos.z);
-					}
+					
+					
 					
 					currentDistance += currentMinDist;
 					if (currentPos.z > var_max_dist)
