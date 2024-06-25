@@ -33,6 +33,7 @@ namespace VoxelProjectUnigine
 
 		std::vector<Math::vec4> positions;
 
+
 		////////////////
 
 		COMPONENT_INIT(Init, GlobalInitOrder::COMMON_LOGIC);
@@ -53,7 +54,7 @@ namespace VoxelProjectUnigine
 			*/
 
 
-			RefreshPositionsBuffer();
+			//RefreshPositionsBuffer();
 		}
 
 		void RefreshPositionsBuffer()
@@ -84,6 +85,8 @@ namespace VoxelProjectUnigine
 
 		void RenderCallback() 
 		{
+			RefreshPositionsBuffer();
+
 			RenderState::saveState();
 			RenderState::clearStates();
 
