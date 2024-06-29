@@ -68,10 +68,10 @@ namespace VoxelProjectUnigine
 			{
 				const Math::vec3 viewPos(modelviewMatrix * entity->getNode()->getPosition());
 
-				/*
+				
 				if (viewPos.z > 0.0)
 					continue;
-				*/
+				
 
 				positions.emplace_back(viewPos, entity->size.get());
 
@@ -80,12 +80,16 @@ namespace VoxelProjectUnigine
 				//positions.emplace_back(screenPos);
 			}
 
-			positionsBuffer->create(StructuredBuffer::USAGE_CPU_RESOURCE, positions.data(), sizeof(Math::vec4), positions.size());
+			if (!positions.empty())
+				positionsBuffer->create(StructuredBuffer::USAGE_CPU_RESOURCE, positions.data(), sizeof(Math::vec4), positions.size());
 		}
 
 		void RenderCallback() 
 		{
 			RefreshPositionsBuffer();
+
+			if (positions.empty())
+				return;
 
 			RenderState::saveState();
 			RenderState::clearStates();
