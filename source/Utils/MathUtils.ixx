@@ -2,7 +2,8 @@
 #include <concepts>
 #include <bit>
 
-import Utils;
+#include "Utils/Utils.h"
+
 export module MathUtils;
 
 

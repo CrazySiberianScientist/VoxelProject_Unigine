@@ -1,9 +1,9 @@
 #include <unordered_map>
 #include <tuple>
 
-#include "VoxelProject/utils/UtilsMacros.h"
+#include "Utils/UtilsMacros.h"
+#include "Utils/Utils.h"
 #include "VoxelTypes.h"
-#include "VoxelProject/utils/Utils.h"
 
 export module VoxelSpace;
 

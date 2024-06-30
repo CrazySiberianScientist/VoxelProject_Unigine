@@ -1,0 +1,10 @@
+/source/out
+.vs
+/data/.thumbnails
+/data/.cache_textures
+/data/.editor2
+/data/.runtimes
+/.thumbnails
+/bin
+/include
+/lib

@@ -1,15 +1,17 @@
 #include <type_traits>
-#include <UnigineComponentSystem.h>
-#include "Utils/ProjectUtilsMacros.h"
-#include "VoxelProject/utils/UtilsMacros.h"
 #include <any>
+
+#include <UnigineComponentSystem.h>
+
+#include "Utils/ProjectUtilsMacros.h"
+#include "Utils/UtilsMacros.h"
+#include "Utils/Utils.h"
 
 export module CSVoxelSpaceTest;
 
 import VoxelStorageRoles;
 import VoxelStorage;
 import VoxelSpace;
-import Utils;
 
 using namespace Unigine;
 using namespace VoxelProject;
