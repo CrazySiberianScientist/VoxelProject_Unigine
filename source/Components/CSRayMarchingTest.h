@@ -57,6 +57,15 @@ namespace VoxelProjectUnigine
 			//RefreshPositionsBuffer();
 		}
 
+		void SortPositionsForRays()
+		{
+			/*
+			1. Разбить пирамиду зрения на 4 части (так можно делать вплоть до размера одного пикселя)
+			2. Каждому сектору пирамиды соотнести индекс начала и конца позиций входящих в этот сектор
+
+			*/
+		}
+
 		void RefreshPositionsBuffer()
 		{
 			const auto &modelviewMatrix = Game::getPlayer()->getCamera()->getModelview();

@@ -1,11 +1,11 @@
 #include <UnigineComponentSystem.h>
 #include <UnigineWidgets.h>
 #include <UnigineGame.h>
+
 #include "Utils/ProjectUtilsMacros.h"
+#include "LogicOrders.h"
 
 export module CSManipulator;
-
-import LogicOrders;
 
 using namespace Unigine;
 

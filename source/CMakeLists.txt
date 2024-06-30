@@ -44,7 +44,7 @@ add_executable(${target}
 		${CMAKE_CURRENT_LIST_DIR}/AppWorldLogic.cpp
 		${CMAKE_CURRENT_LIST_DIR}/AppWorldLogic.h
 		${CMAKE_CURRENT_LIST_DIR}/main.cpp
-	  "VoxelProject/utils/MathUtils.ixx" "VoxelProject/voxels/VoxelStorage.ixx" "VoxelProject/utils/MathUtils.ixx" "VoxelProject/utils/Utils.ixx" "VoxelProject/voxels/VoxelTypes.ixx" "VoxelProject/voxels/VoxelSpace.ixx" "Components/CSVoxelVisualizer.ixx" "Utils/ProjectUtils.ixx" "Utils/ProjectUtilsMacros.h" "VoxelProject/voxels/VoxelProjectMacros.h" "VoxelProject/utils/UtilsMacros.h" "Components/CSVoxelSpace.ixx" "Components/CSManipulator.ixx" "LogicOrders.h" "VoxelStorageRoles.ixx" "Components/CSRayMarchingTest.h" "Components/CSRayMarchingTestEntity.h" "Components/CSRayMarchingTestEntity.cpp")
+	  "Components/CSVoxelVisualizer.ixx" "Utils/ProjectUtils.ixx" "Utils/ProjectUtilsMacros.h" "Components/CSVoxelSpace.ixx" "Components/CSManipulator.ixx" "LogicOrders.h" "VoxelStorageRoles.ixx" "Components/CSRayMarchingTest.h" "Components/CSRayMarchingTestEntity.h" "Components/CSRayMarchingTestEntity.cpp" "Voxels/VoxelProjectMacros.h" "Voxels/VoxelSpace.ixx" "Voxels/VoxelStorage.ixx" "Voxels/VoxelTypes.h" "Utils/MathUtils.ixx" "Utils/StructOfVectors.h" "Utils/Utils.h" "Utils/UtilsMacros.h")
 
 target_include_directories(${target}
 	PRIVATE
