@@ -44,12 +44,11 @@ export namespace VoxelProject
 			return storages.Get<_key>();
 		}
 		
-		/*
 		template<KeyType _key>
 		auto& AddStorage()
 		{
 			return storages.Emplace<_key>(spaceSideSize_blocks, voxelSideSize_meters);
 		}
-		*/
+		
 	};
 }
