@@ -27,7 +27,7 @@ namespace VoxelProjectUnigine
 		COMPONENT_UPDATE(Init);
 		void Init()
 		{
-			voxelSpace.AddStorage<uint8_t(0)>();
+			voxelSpace.AddStorage<VoxelStorageRoles::TEST_0>();
 		}
 
 		COMPONENT_UPDATE(Update);
