@@ -2,7 +2,7 @@
 
 namespace VoxelProjectUnigine
 {
-	void CSVoxelSpace::Test()
+	void CSVoxelSpace::RenderBlock(const VoxelProject::VoxelBlockBitset& voxelBlockBitset)
 	{
 	}
 }

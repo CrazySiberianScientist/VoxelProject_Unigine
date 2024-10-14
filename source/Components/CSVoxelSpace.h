@@ -14,10 +14,6 @@
 #include "Voxels/VoxelSpace.h"
 
 
-using namespace Unigine;
-using namespace VoxelProject;
-using namespace Utils;
-
 namespace VoxelProjectUnigine
 {
 	class CSVoxelSpace : public Unigine::ComponentBase
@@ -25,13 +21,13 @@ namespace VoxelProjectUnigine
 		PROJECT_UTILS_COMPONENT_DEFINE(CSVoxelSpace, Unigine::ComponentBase);
 
 	public:
-		VoxelSpace<VoxelStorageRoles::Pack> voxelSpace{ 1 };
+		VoxelProject::VoxelSpace<VoxelStorageRoles::Pack> voxelSpace{ 1, 1.0f };
 
 	private:
 		COMPONENT_UPDATE(Init);
 		void Init()
 		{
-			voxelSpace.storages.Emplace<uint8_t(0)>(VoxelSizeType(1), 1.0f);
+			voxelSpace.AddStorage<uint8_t(0)>();
 		}
 
 		COMPONENT_UPDATE(Update);
@@ -42,6 +38,6 @@ namespace VoxelProjectUnigine
 			
 		}
 
-		void Test();
+		void RenderBlock(const VoxelProject::VoxelBlockBitset & voxelBlockBitset);
 	};
 }
