@@ -1,3 +1,5 @@
+#pragma once
+
 #include <unordered_map>
 #include <tuple>
 
@@ -5,11 +7,8 @@
 #include "Utils/Utils.h"
 #include "VoxelTypes.h"
 
-export module VoxelSpace;
-
-export namespace VoxelProject
+namespace VoxelProject
 {
-	
 	template<typename> 
 	struct VoxelSpace {};
 

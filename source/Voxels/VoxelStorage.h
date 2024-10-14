@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 #include <array>
 #include <variant>
@@ -7,12 +9,9 @@
 #include <memory>
 
 #include "VoxelTypes.h"
+#include "Utils/MathUtils.h"
 
-export module VoxelStorage;
-
-import MathUtils;
-
-export namespace VoxelProject
+namespace VoxelProject
 {
 	// Размер кеш-линии обычного процессора в 64 байта
 	//constexpr VoxelSizeType VOXEL_BLOCK_OPTIMAL_SIZE__BYTES = 64;

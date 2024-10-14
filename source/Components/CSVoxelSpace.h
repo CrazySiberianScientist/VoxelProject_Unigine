@@ -1,3 +1,5 @@
+#pragma once
+
 #include <type_traits>
 #include <any>
 
@@ -7,9 +9,10 @@
 #include "Utils/UtilsMacros.h"
 #include "Utils/Utils.h"
 
-import VoxelStorageRoles;
-import VoxelStorage;
-import VoxelSpace;
+#include "Voxels/VoxelStorage.h"
+#include "Voxels/VoxelStorageRoles.h"
+#include "Voxels/VoxelSpace.h"
+
 
 using namespace Unigine;
 using namespace VoxelProject;

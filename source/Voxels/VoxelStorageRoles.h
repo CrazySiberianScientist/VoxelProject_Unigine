@@ -1,10 +1,9 @@
+#pragma once
+
 #include "Utils/Utils.h"
+#include "Voxels/VoxelStorage.h"
 
-export module VoxelStorageRoles;
-
-import VoxelStorage;
-
-export namespace VoxelProjectUnigine
+namespace VoxelProjectUnigine
 {
 	// Если использовать все namespace, то тупит intellisence в модулях, где есть import этого
 	using Utils::TypeTableEntry;

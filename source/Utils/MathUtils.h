@@ -1,13 +1,13 @@
+#pragma once
+
 #include <stdint.h>
 #include <concepts>
 #include <bit>
 
 #include "Utils/Utils.h"
 
-export module MathUtils;
 
-
-export namespace MathUtils
+namespace MathUtils
 {
 	/*export template<std::integral _T>
 	constexpr _T CeilToPowerOfTwo(const _T v)
