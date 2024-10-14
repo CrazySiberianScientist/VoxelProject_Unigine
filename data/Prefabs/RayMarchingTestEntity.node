@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<nodes version="2.18.0.1">
+	<node type="NodeDummy" id="1326304023" name="RayMarchingTestEntity">
+		<properties>
+			<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="0eafb4019c15ab3bc3c414b9dccab2307dd00d54"/>
+			<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="16df868389e1bd82699bb4b6fd4604bf78953ce7"/>
+		</properties>
+		<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 0 0 0 1.0</transform>
+	</node>
+</nodes>

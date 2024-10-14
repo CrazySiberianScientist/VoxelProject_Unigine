@@ -15,7 +15,10 @@ import MathUtils;
 export namespace VoxelProject
 {
 	// Размер кеш-линии обычного процессора в 64 байта
-	constexpr VoxelSizeType VOXEL_BLOCK_OPTIMAL_SIZE__BYTES = 64;
+	//constexpr VoxelSizeType VOXEL_BLOCK_OPTIMAL_SIZE__BYTES = 64;
+
+	// Примерный размер кеша L1 в байтах
+	constexpr VoxelSizeType VOXEL_BLOCK_OPTIMAL_SIZE__BYTES = 32 * 1024;
 
 	template<typename _VoxelBlock>
 	struct VoxelMonilith
@@ -193,7 +196,7 @@ export namespace VoxelProject
 		}
 	};
 
-	/*
+	
 	template<VoxelBlock _VoxelBlock>
 	struct VoxelTree
 	{
@@ -286,17 +289,17 @@ export namespace VoxelProject
 		}
 		
 		// TODO: Доделать это, добавить проверку размера текущего блока меньше-больше BLOCK_SIZE__METERS
-		void SetVoxel(const typename _VoxelBlock::DataType &voxel_value, const Vec3_voxels &pos__voxels, Node &node, const int32_t tree_level)
+		void SetVoxel(const typename _VoxelBlock::DataType &voxelValue, const Vec3_voxels &pos_voxels, Node &node, const int32_t treeLevel)
 		{
 			if (auto* const v = std::get_if<Node::BranchNode>(node.data)) 
 			{
-				const auto next_tree_level = tree_level + 1;
-				const auto branch_child_index = CalcBranchChildIndex(pos__voxels, CalcBranchSideSize_voxels(next_tree_level));
+				const auto next_tree_level = treeLevel + 1;
+				const auto branch_child_index = CalcBranchChildIndex(pos_voxels, CalcBranchSideSize_voxels(next_tree_level));
 
 				auto &branch = *v;
 				auto &child_node = branch[branch_child_index];
 				
-				SetVoxel(voxel_value, pos__voxels, child_node, next_tree_level);
+				SetVoxel(voxelValue, pos_voxels, child_node, next_tree_level);
 				
 				return;
 			}
@@ -305,15 +308,15 @@ export namespace VoxelProject
 			{
 				node.data = typename Node::BranchNode(new typename Node::Branch);
 				
-				SetVoxel(voxel_value, pos__voxels, node, tree_level);
+				SetVoxel(voxelValue, pos_voxels, node, treeLevel);
 				
 				return;
 			}
 
 			if (auto* const v = std::get_if<Node::Voxels>(node.data)) 
 			{
-				const auto local_pos__voxels = CalcBranchLocalPos_Voxels(pos__voxels, CalcBranchSideSize_voxels(tree_level));
-				v->SetVoxel(voxel_value, local_pos__voxels);
+				const auto local_pos__voxels = CalcBranchLocalPos_Voxels(pos_voxels, CalcBranchSideSize_voxels(treeLevel));
+				v->SetVoxel(voxelValue, local_pos__voxels);
 				return;
 			}
 		}
@@ -353,5 +356,4 @@ export namespace VoxelProject
 			return voxelSideSize_meters;
 		}
 	};
-	*/
 }

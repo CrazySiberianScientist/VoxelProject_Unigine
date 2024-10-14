@@ -7,8 +7,6 @@
 #include "Utils/UtilsMacros.h"
 #include "Utils/Utils.h"
 
-export module CSVoxelSpaceTest;
-
 import VoxelStorageRoles;
 import VoxelStorage;
 import VoxelSpace;
@@ -17,7 +15,7 @@ using namespace Unigine;
 using namespace VoxelProject;
 using namespace Utils;
 
-export namespace VoxelProjectUnigine
+namespace VoxelProjectUnigine
 {
 	class CSVoxelSpace : public Unigine::ComponentBase
 	{
@@ -40,5 +38,7 @@ export namespace VoxelProjectUnigine
 
 			
 		}
+
+		void Test();
 	};
 }
