@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<property version="2.18.0.1" name="CSManipulator" manual="1" parent_name="node_base">
+<property version="2.19.0.2" name="CSManipulator" manual="1" parent_name="node_base">
 	<parameter name="type" type="switch" items="TRANSLATE,ROTATE,SCALE">0</parameter>
 </property>

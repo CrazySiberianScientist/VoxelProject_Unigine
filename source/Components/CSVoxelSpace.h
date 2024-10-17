@@ -24,19 +24,18 @@ namespace VoxelProjectUnigine
 		VoxelProject::VoxelSpace<VoxelStorageRoles::Pack> voxelSpace{ 1, 1.0f };
 
 	private:
-		COMPONENT_UPDATE(Init);
-		void Init()
-		{
-			voxelSpace.AddStorage<VoxelStorageRoles::TEST_0>();
-		}
+		COMPONENT_UPDATE(Init, GlobalInitOrder::COMMON_LOGIC);
+		void Init();
 
-		COMPONENT_UPDATE(Update);
+		COMPONENT_UPDATE(Update, GlobalUpdateOrder::COMMON_LOGIC);
 		void Update()
 		{
 			const auto s = voxelSpace.GetStorage<VoxelStorageRoles::TEST_0>().blockSideSize_meters;
 
 			
 		}
+
+		void RenderCallback();
 
 		void RenderBlock(const VoxelProject::VoxelBlockBitset & voxelBlockBitset);
 	};

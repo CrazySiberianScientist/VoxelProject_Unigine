@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<property version="2.18.0.1" name="CSVoxelVisualizer" manual="1" parent_name="node_base">
+<property version="2.19.0.2" name="CSVoxelVisualizer" manual="1" parent_name="node_base">
 	<parameter name="valid_voxel_color" type="color">0.000000 1.000000 0.000000 1.000000</parameter>
 	<parameter name="invalid_voxel_color" type="color">0.000000 0.000000 0.000000 1.000000</parameter>
 	<parameter name="visualizer_distance" type="vec3">4.000000 4.000000 4.000000</parameter>
