@@ -15,6 +15,14 @@ namespace VoxelProjectUnigine
 
 	void CSVoxelSpace::RenderCallback()
 	{
+		RenderState::saveState();
+		RenderState::clearStates();
+
+		{
+
+		}
+
+		RenderState::restoreState();
 	}
 
 	void CSVoxelSpace::RenderBlock(const VoxelProject::VoxelBlockBitset& voxelBlockBitset)

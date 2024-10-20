@@ -14,10 +14,10 @@
 namespace VoxelProject
 {
 	// Размер кеш-линии обычного процессора в 64 байта
-	//constexpr VoxelSizeType VOXEL_BLOCK_OPTIMAL_SIZE__BYTES = 64;
+	constexpr VoxelSizeType VOXEL_BLOCK_OPTIMAL_SIZE__BYTES = 64;
 
 	// Примерный размер кеша L1 в байтах
-	constexpr VoxelSizeType VOXEL_BLOCK_OPTIMAL_SIZE__BYTES = 32 * 1024;
+	//constexpr VoxelSizeType VOXEL_BLOCK_OPTIMAL_SIZE__BYTES = 32 * 1024;
 
 	template<typename _VoxelBlock>
 	struct VoxelMonilith

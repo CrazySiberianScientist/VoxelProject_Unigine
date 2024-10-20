@@ -19,7 +19,17 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 		#{
 			#include <core/materials/shaders/render/common.h>
 
-			INIT_STRUCTURED_BUFFER(0, float4, positions);
+			// byteIndex - для прямого порядка байтов, но байты в value лежат в обратном порядке
+			uint UIntToByte(const uint value, const uint byteIndex)
+			{
+				const uint maxByteIndex = sizeof(v) - 1;
+				const uint revertByteIndex = maxByteIndex - byteIndex;
+				const uint mask = 0xff;
+				const uint shiftedValue = value >> byteIndex * 8;
+				return shiftedValue & mask;
+			}
+
+			INIT_STRUCTURED_BUFFER(0, uint, voxelBlockData);
 
 			STRUCT_FRAG_BEGIN
 				//INIT_COLOR(float)
@@ -177,22 +187,6 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 			
 			MAIN_FRAG_BEGIN(FRAGMENT_IN)
 				OUT_MRT(1) = getRayIntersectionSdfPoint(IN_UV);
-			MAIN_FRAG_END
-		#}
-	}
-
-	Pass depth_blur
-	{
-		Fragment =
-		#{
-			#include <core/materials/shaders/render/common.h>
-
-			STRUCT_FRAG_BEGIN
-				INIT_MRT(float3, 1)
-			STRUCT_FRAG_END
-
-			MAIN_FRAG_BEGIN(FRAGMENT_IN)
-				OUT_MRT(1) = float4(0,0,1,1);
 			MAIN_FRAG_END
 		#}
 	}
