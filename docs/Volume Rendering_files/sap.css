@@ -1,0 +1,277 @@
+:root
+{
+	--content-max-width: 780px;
+	--font-normal-desktop: 1em;
+	--line-height: 1.6em;
+	--border-style: none;
+	--link-color: #1565C0;
+	--h2-font-size: 1.5em;
+}
+
+html, body
+{
+	margin: 0;
+	padding: 0;
+	background: white;
+	font-family: system-ui, sans-serif;
+	font-size: var(--font-normal-desktop);
+	line-height: var(--line-height);
+	box-sizing: border-box;
+	color: #333;
+	font-weight: 400;
+}
+
+body
+{
+	overflow-y: scroll; // fix scroller shift issue
+}
+
+h1
+{
+	font-size: 2em;
+	line-height: 2.4rem;
+	font-weight: 700;
+	border: 1px var(--border-style) lightblue;
+	padding: 0;
+	margin: 0;
+}
+
+h2 {
+	font-size: var(--h2-font-size);
+	line-height: 2rem;
+	font-weight: 700;
+	border: 1px var(--border-style) cyan;
+}
+
+main
+{
+	diplay: flex;
+	box-sizing: border-box;
+	flex-direction: column;
+	flex: 1;
+	border: 1px var(--border-style) red;
+	padding: 0 1em; /* adding some padding left & right from small screens */
+	max-width: var(--content-max-width);
+	margin: 1em auto;
+}
+
+blockquote
+{
+	border-left: .2rem solid #ddd;
+	color: #999;
+	margin-left: 0;
+	padding-left: 1rem;
+	position: relative;
+}
+
+.important
+{
+	border-left: .2rem solid #333;
+	margin-left: 0;
+	padding-left: 1rem;
+	position: relative;
+}
+
+details
+{
+	border-left: 4px solid lightgrey;
+	padding: 0.5em;
+	background: rgb(245,245,245);
+	-webkit-tap-highlight-color: transparent;
+	/* margin-bottom: var(--line-height); */
+	cursor: pointer;
+	margin-block-start: 1em;
+	margin-block-end: 1em;
+}
+
+pre 
+{
+	background: #f9f9f9; /*#f3f3f3;*/
+	font-family: 'Roboto Mono', monospace;
+	margin-bottom: var(--line-height);
+	padding: calc(.5 * var(--line-height)) 1.2rem;
+	tab-size: 4;
+	overflow-x: auto;
+	font-size: .95em;
+	line-height: 1.5em;
+}
+code {
+	background: #f9f9f9; /*#f3f3f3;*/
+	border-radius: 2px;
+	color: #444;
+	font-family: 'Roboto Mono', monospace;
+	font-size: .85em;
+	margin: 0 .2em;
+	padding: .1em .5em;
+}
+figure {
+	margin: auto;
+	display: table;
+	margin-left: 0;
+}
+
+figcaption
+{
+	display: table-caption;
+	min-width: 100%;
+	caption-side: bottom;
+	font-style: italic;
+}
+
+img
+{
+	max-width: 100%;
+}
+
+/* TOC and links styling */
+
+.toc
+{
+	border: 1px var(--border-style) blue;
+}
+
+.toc > ol
+{
+	list-style-type: none;
+	border: 1px var(--border-style) green;
+	padding: 0;
+	margin: 0;
+}
+
+.toc > ol li
+{
+	margin: 0.5em 0;
+	border: 1px var(--border-style) lightgreen;
+}
+
+main a, .toc a
+{
+	color: var(--link-color);
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.toc a:visited
+{
+	color: var(--link-color);
+}
+
+/* video */
+
+.container
+{
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+}
+
+.video
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* table */
+
+table, th, td
+{
+	border: 1px solid #333;
+}
+
+table
+{
+	border-collapse: collapse;
+	width: 100%;
+	table-layout: fixed; /* optional, for equal spacing */
+	margin-block-start: 1em;
+	margin-block-end: 1em;
+}
+
+th, td
+{
+	padding: 0 0.25em;
+}
+
+td
+{
+	vertical-align: top;
+}
+/* banner for donation */
+.banner-title  {
+	display: flex; 
+	flex-direction: column;
+	justify-content: center; 
+	align-items: center;
+	border: 1px none red; 
+	border-radius: 0.5em; 
+	background-color: rgb(60,60,60); 
+	color: white; 
+}
+.banner-title-text {
+	font-weight: 700; 
+	font-size: 2em;
+	margin: 0.4em;
+}
+.banner-box {
+	display: flex; 
+	flex-direction: column;
+	flex: 1;
+	justify-content: stretch; 
+	align-items: stretch;
+	border: 1px none red; 
+	border-radius: 0.5em; 
+	background-color: #f0edeb; 
+	color: rgb(30,30,30); 
+	font-weight: 500; 
+	font-size: 1em;
+}
+.banner-box-content {
+	padding: 0.5em 1em 0.25em 1em;
+	text-align: center;
+}
+.donate-button-container {
+	display: flex;
+	flex: 1;
+	justify-content: center;
+	align-items: center;
+	border: 1px none green;
+	padding: 1em;
+}
+.donate-button {
+	display: inline-flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background-color: #088ad2;
+	color: white;
+	font-size: 1.25em;
+	font-weight: 500;
+	border: 1px none red;
+	border-radius: 2em;
+	padding: 0.5em 1em; 
+}
+.banner-sub-section {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	border: 1px none green;
+	justify-content: space-between;
+}
+.banner-sub-section > div {
+	border: 1px none cyan;
+	margin: 0.5em 0;
+	text-align: center;
+}
+.banner-sub-section-button {
+	display: inline-flex;
+	border: 1px none cyan;
+	text-align: center;
+	background-color: rgb(60,60,60);
+	color: white;
+	padding: 0.5em 1em ;
+	border-radius: 2em;
+}
