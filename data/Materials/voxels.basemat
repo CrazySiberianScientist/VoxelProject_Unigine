@@ -19,14 +19,23 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 		#{
 			#include <core/materials/shaders/render/common.h>
 
-			// byteIndex - для прямого порядка байтов, но байты в value лежат в обратном порядке
-			uint UIntToByte(const uint value, const uint byteIndex)
+			uint UIntGetBit(const uint value, const uint bitIndex)
 			{
-				const uint maxByteIndex = sizeof(v) - 1;
-				const uint revertByteIndex = maxByteIndex - byteIndex;
-				const uint mask = 0xff;
-				const uint shiftedValue = value >> byteIndex * 8;
-				return shiftedValue & mask;
+				static const uint maxBitIndex = sizeof(uint) * 8 - 1;
+				const uint shiftedValue = value >> (maxBitIndex - bitIndex);
+				return shiftedValue & 1;
+			}
+
+			uint BitsetGetBit(StructuredBuffer<uint> bitset, const uint bitIndex)
+			{
+				uint chunksNum;
+				uint chunksStride;
+				bitset.GetDimensions(positionsNum, positionsStride);
+
+				static const chunkSizeBits = sizeof(uint) * 8;
+				const uint chunkIndex = bitIndex / chunkSizeBits;
+				const uint bitIndexInChunk = bitIndex % chunkSizeBits;
+				return UIntGetBit(bitset[chunkIndex], bitIndexInChunk);
 			}
 
 			INIT_STRUCTURED_BUFFER(0, uint, voxelBlockData);
