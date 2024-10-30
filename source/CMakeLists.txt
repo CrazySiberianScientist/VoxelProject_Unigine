@@ -62,7 +62,7 @@ add_executable(${target}
 	  "Utils/MathUtils.h"
 	  "Utils/StructOfVectors.h"
 	  "Utils/Utils.h"
-	  "Utils/UtilsMacros.h")
+	  "Utils/UtilsMacros.h" )
 
 target_include_directories(${target}
 	PRIVATE

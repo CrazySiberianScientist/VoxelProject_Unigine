@@ -9,6 +9,7 @@
 #include "Utils/UtilsMacros.h"
 #include "Utils/Utils.h"
 
+#include "LogicOrders.h"
 #include "Voxels/VoxelStorage.h"
 #include "Voxels/VoxelStorageRoles.h"
 #include "Voxels/VoxelSpace.h"

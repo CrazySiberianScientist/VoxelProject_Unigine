@@ -827,7 +827,7 @@
 			</lens_flare_billboards>
 			<transform>-0.43301237 0.43559623 -0.78914917 0.0 -0.75000048 -0.6597392 0.047366858 0.0 -0.49999967 0.61237252 0.6123724 0.0 0 0 0 1.0</transform>
 		</node>
-		<node type="ObjectMeshStatic" id="1800376072" name="material_ball">
+		<node type="ObjectMeshStatic" id="1800376072" enabled="0" name="material_ball">
 			<mesh_name>guid://d66c38d3cb2ce8161c55807d4a2d47b80c46e7b7</mesh_name>
 			<surface name="material_ball_mat_lod_0" intersection="1" max_visible_distance="3" max_fade_distance="0.5" physics_friction="1" physics_restitution="1" material="2d2814767f25015d91f013182a937b973ae9640a"/>
 			<surface name="material_ball_mat_lod_1" intersection="1" min_visible_distance="3" max_visible_distance="9" min_fade_distance="0.5" max_fade_distance="1" physics_friction="1" physics_restitution="1" material="2d2814767f25015d91f013182a937b973ae9640a"/>
@@ -855,12 +855,6 @@
 			<is_listener>1</is_listener>
 			<controlled>1</controlled>
 			<transform>-0.999999880791 -2.70150124493e-08 8.31440303273e-08 0.0 8.74227765735e-08 -0.309015631676 0.95105689764 0.0 -3.5527136788e-15 0.95105689764 0.309015750885 0.0 0 3.55792208705 1.5 1.0</transform>
-		</node>
-		<node type="NodeDummy" id="1969446264" name="VoxelSpace">
-			<properties>
-				<property parent="4141d5feefe5940f759561108751b54ca9760251" guid="d524a8868fe777340bbbc56b999c0292b559af89"/>
-			</properties>
-			<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 0.145767807961 -1.37746548653 0 1.0</transform>
 		</node>
 		<node type="NodeDummy" id="1617626333" name="LOGIC">
 			<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 0 0 0 1.0</transform>
@@ -1012,6 +1006,13 @@
 				</properties>
 				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 5.93176032056 5.09519297252 0.582814111777 1.0</transform>
 			</node>
+		</node>
+		<node type="NodeDummy" id="1321201936" name="VoxelsTest">
+			<properties>
+				<property parent="3dd4fa383868a6c53228dd3413ecc2011827bdc9" guid="cc150a31f2b985f47989bc9fb2893d7b9f0095e0"/>
+				<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="a5bb9242f5e5407bc1ad9aec6b11fea72e0dcfbf"/>
+			</properties>
+			<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 0 0 0 1.0</transform>
 		</node>
 	</editor>
 	<console>

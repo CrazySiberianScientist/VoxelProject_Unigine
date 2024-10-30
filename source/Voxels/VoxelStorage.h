@@ -71,6 +71,11 @@ namespace VoxelProject
 			return data[index];
 		}
 
+		void ForEachVoxel(const std::function<bool>& forEachCallback)
+		{
+			
+		}
+
 	public:
 		std::bitset<BLOCK_SIZE__BITS> data;
 	};

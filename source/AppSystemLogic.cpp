@@ -1,6 +1,6 @@
 #include "AppSystemLogic.h"
 #include <UnigineComponentSystem.h>
-
+#include <UnigineVisualizer.h>
 using namespace Unigine;
 
 // System logic, it exists during the application life cycle.
@@ -17,6 +17,8 @@ AppSystemLogic::~AppSystemLogic()
 int AppSystemLogic::init()
 {
 	Unigine::ComponentSystem::get()->initialize();
+	Visualizer::setEnabled(true);
+	
 	// Write here code to be called on engine initialization.
 	return 1;
 }

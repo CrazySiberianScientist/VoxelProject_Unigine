@@ -8,6 +8,7 @@
 #include <bitset>
 #include <any>
 #include <unordered_map>
+#include <concepts>
 
 namespace Utils
 {
@@ -363,6 +364,39 @@ namespace Utils
 			using CurrentType = typename _TypesPack:: template TypeByIndex<index>::ValueType;
 
 			return this->collection.emplace(_key, CurrentType{ std::forward<_ConstructorArgs>(constructorArgs)...}).first->second;
+		}
+	};
+
+
+	template <std::unsigned_integral _T>
+	bool GetBit(const _T & value, const size_t bitIndex)
+	{
+		return shiftedValue & (1u << bitIndex);
+	}
+
+	template <std::unsigned_integral _T>
+	bool SetBit(_T & value, const bool bitValue, const size_t bitIndex)
+	{
+		constexpr _T fullMask = ~_T{};
+		const _T mask = ~(1u << bitIndex);
+		return value & mask | _T(bitValue) << bitIndex;
+	}
+
+	template<typename _BlockType = uint32_t>
+	class Bitset
+	{
+		static constexpr size_t bitsInChunk = 8;
+		static constexpr size_t chunkSizeBits = sizeof(_BlockType) * bitsInChunk;
+
+		std::vector<_BlockType> blocks;
+
+		
+
+		void Set(const bool bitValue, const size_t bitIndex)
+		{
+			const auto chunkIndex = bitIndex / chunkSizeBits;
+			const auto bitIndexInChunk = bitIndex % chunkSizeBits;
+
 		}
 	};
 }

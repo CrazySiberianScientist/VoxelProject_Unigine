@@ -28,11 +28,7 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 
 			uint BitsetGetBit(StructuredBuffer<uint> bitset, const uint bitIndex)
 			{
-				uint chunksNum;
-				uint chunksStride;
-				bitset.GetDimensions(positionsNum, positionsStride);
-
-				static const chunkSizeBits = sizeof(uint) * 8;
+				static const uint chunkSizeBits = sizeof(uint) * 8;
 				const uint chunkIndex = bitIndex / chunkSizeBits;
 				const uint bitIndexInChunk = bitIndex % chunkSizeBits;
 				return UIntGetBit(bitset[chunkIndex], bitIndexInChunk);
