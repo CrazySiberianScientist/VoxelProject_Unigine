@@ -371,7 +371,7 @@ namespace Utils
 	template <std::unsigned_integral _T>
 	bool GetBit(const _T & value, const size_t bitIndex)
 	{
-		return shiftedValue & (1u << bitIndex);
+		return value & (1u << bitIndex);
 	}
 
 	template <std::unsigned_integral _T>

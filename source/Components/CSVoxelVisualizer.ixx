@@ -54,8 +54,8 @@ export namespace VoxelProjectUnigine
 
 		void RenderBlock(const VoxelProject::VoxelBlockBitset& voxelBlockBitset, const Unigine::Math::Mat4& blockWorldransform)
 		{
-			const float voxelSize_meters = 1.0f / 10;
-			const Vec3_meters blockSize_meters(VoxelBlockBitset::BLOCK_SIZE__VOXELS * voxelSize_meters);
+			const float voxelSize_meters = 1.0f;
+			const Vec3_meters blockSize_meters(VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS * voxelSize_meters);
 			Visualizer::renderBox(vec3(blockSize_meters), blockWorldransform, Math::vec4(1.0f, 1.0f, 0.0f, 0.6f));
 
 			
