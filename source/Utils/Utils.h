@@ -391,17 +391,20 @@ namespace Utils
 		return value & mask | _T(bitValue) << bitIndex;
 	}
 
-	template<size_t _size, typename _BlockType = uint32_t>
-	class Bitset
+	struct BitsetElementAccessMode
 	{
-	public:
-		enum ElementAccessMode
+		using Type = int;
+		enum
 		{
 			READ,
 			WRITE,
 			RW
 		};
+	};
 
+	template<size_t _size, typename _BlockType = uint32_t>
+	class Bitset
+	{
 	public:
 		static constexpr size_t blockSize_bits = sizeof(_BlockType) * 8;
 		using BlockCollection = std::array<_BlockType, _size>;
@@ -438,22 +441,22 @@ namespace Utils
 		}
 
 
-		template<ElementAccessMode _mode, typename _Callback>
+		template<BitsetElementAccessMode::Type _mode, typename _Callback>
 		void ForEach(const _Callback& callback)
 		{
 			for (auto& block : blocks)
 			{
 				for (auto bitIndex = 0u; bitIndex < blockSize_bits; ++bitIndex)
 				{
-					if constexpr (_mode == ElementAccessMode::READ)
+					if constexpr (_mode == BitsetElementAccessMode::READ)
 					{
 						callback(GetBit(block, bitIndex));
 					}
-					else if constexpr (_mode == ElementAccessMode::WRITE)
+					else if constexpr (_mode == BitsetElementAccessMode::WRITE)
 					{
 						SetBit(block, callback(), bitIndex);
 					}
-					else if constexpr (_mode == ElementAccessMode::RW)
+					else if constexpr (_mode == BitsetElementAccessMode::RW)
 					{
 						const auto value = GetBit(block, bitIndex);
 						SetBit(block, callback(value), bitIndex);

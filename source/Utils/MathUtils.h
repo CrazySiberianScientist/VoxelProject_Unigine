@@ -19,9 +19,21 @@ namespace MathUtils
 	}*/
 
 	template<typename _Vec3d, typename _SizeType>
-	constexpr size_t Pos3dToIndex(const _Vec3d& pos_3d, const _SizeType x_size, const _SizeType y_size)
+	constexpr size_t Pos3dToIndex(const _Vec3d& pos3d, const _SizeType xSize, const _SizeType ySize)
 	{
-		return pos_3d[0] + pos_3d[1] * x_size + pos_3d[2] * x_size * y_size;
+		return pos3d[0] + pos3d[1] * xSize + pos3d[2] * xSize * ySize;
+	}
+
+	template<typename _Vec3d, typename _SizeType, typename _IndexType>
+	constexpr _Vec3d IndexToPos3d(const _IndexType index,  const _SizeType xSize, const _SizeType ySize)
+	{
+		const auto xySize = xSize * ySize;
+		const auto z = index / xySize;
+		const auto indexXY = index % xySize;
+		const auto x = indexXY % xSize;
+		const auto y = indexXY / xSize;
+
+		return {x, y, z};
 	}
 	
 	template<typename _T>

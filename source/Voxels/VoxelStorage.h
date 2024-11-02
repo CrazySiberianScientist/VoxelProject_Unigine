@@ -69,8 +69,10 @@ namespace VoxelProject
 			return data.Get(index);
 		}
 
-		void ForEachVoxel(const std::function<bool>& forEachCallback)
+		template<Utils::BitsetElementAccessMode::Type _mode, typename _Callback>
+		void ForEachVoxel(const _Callback& callback)
 		{
+			
 		}
 
 	public:
