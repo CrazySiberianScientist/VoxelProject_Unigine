@@ -10,6 +10,7 @@
 
 #include "VoxelTypes.h"
 #include "Utils/MathUtils.h"
+#include "Utils/Utils.h"
 
 namespace VoxelProject
 {
@@ -47,11 +48,8 @@ namespace VoxelProject
 		static constexpr VoxelSizeType BLOCK_SIDE_SIZE__VOXELS = MathUtils::CalcCubicRoot(BLOCK_SIZE__VOXELS);
 		
 		VoxelBlockBitset(const DataType v = {})
+			: data(v)
 		{
-			if (v)
-			{
-				data.set();
-			}
 		}
 
 		VoxelBlockBitset(const VoxelBlockBitset& other)
@@ -62,22 +60,21 @@ namespace VoxelProject
 		void SetVoxel(const Vec3_voxels& localPos_voxels, const DataType& voxelValue)
 		{
 			const auto index = MathUtils::Pos3dToIndex(localPos_voxels, BLOCK_SIZE__VOXELS, BLOCK_SIZE__VOXELS);
-			data[index] = voxelValue;
+			data.Set(index, voxelValue);
 		}
 
 		DataType GetVoxel(const Vec3_voxels& localPos_voxels) const
 		{
 			const auto index = MathUtils::Pos3dToIndex(localPos_voxels, BLOCK_SIZE__VOXELS, BLOCK_SIZE__VOXELS);
-			return data[index];
+			return data.Get(index);
 		}
 
 		void ForEachVoxel(const std::function<bool>& forEachCallback)
 		{
-			
 		}
 
 	public:
-		std::bitset<BLOCK_SIZE__BITS> data;
+		Utils::Bitset<BLOCK_SIZE__BITS> data;
 	};
 
 	template<>

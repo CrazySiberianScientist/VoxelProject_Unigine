@@ -367,6 +367,15 @@ namespace Utils
 		}
 	};
 
+	template< class R, class... A >
+	struct Func_type_;
+
+	template< class R, class... A >
+	struct Func_type_<R(A...)>
+	{
+		using Return_type = R;
+		using Args_tuple = std::tuple<std::decay_t<A>... >;
+	};
 
 	template <std::unsigned_integral _T>
 	bool GetBit(const _T & value, const size_t bitIndex)
@@ -375,28 +384,82 @@ namespace Utils
 	}
 
 	template <std::unsigned_integral _T>
-	bool SetBit(_T & value, const bool bitValue, const size_t bitIndex)
+	bool SetBit(_T & value, const size_t bitIndex, const bool bitValue)
 	{
 		constexpr _T fullMask = ~_T{};
 		const _T mask = ~(1u << bitIndex);
 		return value & mask | _T(bitValue) << bitIndex;
 	}
 
-	template<typename _BlockType = uint32_t>
+	template<size_t _size, typename _BlockType = uint32_t>
 	class Bitset
 	{
-		static constexpr size_t bitsInChunk = 8;
-		static constexpr size_t chunkSizeBits = sizeof(_BlockType) * bitsInChunk;
-
-		std::vector<_BlockType> blocks;
-
-		
-
-		void Set(const bool bitValue, const size_t bitIndex)
+	public:
+		enum ElementAccessMode
 		{
-			const auto chunkIndex = bitIndex / chunkSizeBits;
-			const auto bitIndexInChunk = bitIndex % chunkSizeBits;
+			READ,
+			WRITE,
+			RW
+		};
 
+	public:
+		static constexpr size_t blockSize_bits = sizeof(_BlockType) * 8;
+		using BlockCollection = std::array<_BlockType, _size>;
+
+
+	public:
+		BlockCollection blocks;
+
+	public:
+		Bitset() = default;
+		Bitset(const bool fillValue)
+		{
+			Fill(fillValue);
+		}
+
+		void Fill(const bool fillValue)
+		{
+			blocks.fill(fillValue ? ~_BlockType{} : _BlockType{});
+		}
+
+
+		void Set(const uint32_t bitIndex, const bool bitValue)
+		{
+			const auto blockIndex = bitIndex / blockSize_bits;
+			const auto bitIndexInBlock = bitIndex % blockSize_bits;
+			SetBit(blocks[blockIndex], bitIndex, bitValue);
+		}
+
+		bool Get(const uint32_t bitIndex) const
+		{
+			const auto blockIndex = bitIndex / blockSize_bits;
+			const auto bitIndexInBlock = bitIndex % blockSize_bits;
+			return GetBit(blocks[blockIndex], bitIndex);
+		}
+
+
+		template<ElementAccessMode _mode, typename _Callback>
+		void ForEach(const _Callback& callback)
+		{
+			for (auto& block : blocks)
+			{
+				for (auto bitIndex = 0u; bitIndex < blockSize_bits; ++bitIndex)
+				{
+					if constexpr (_mode == ElementAccessMode::READ)
+					{
+						callback(GetBit(block, bitIndex));
+					}
+					else if constexpr (_mode == ElementAccessMode::WRITE)
+					{
+						SetBit(block, callback(), bitIndex);
+					}
+					else if constexpr (_mode == ElementAccessMode::RW)
+					{
+						const auto value = GetBit(block, bitIndex);
+						SetBit(block, callback(value), bitIndex);
+					}
+				}
+			}
 		}
 	};
 }
