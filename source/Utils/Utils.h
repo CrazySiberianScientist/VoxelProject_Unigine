@@ -407,7 +407,7 @@ namespace Utils
 	{
 	public:
 		static constexpr size_t blockSize_bits = sizeof(_BlockType) * 8;
-		static constexpr size_t blocksNum = _size / blockSize_bits + _size % blockSize_bits ? 1u : 0u;
+		static constexpr size_t blocksNum = _size / blockSize_bits + (_size % blockSize_bits ? 1u : 0u);
 		using BlockCollection = std::array<_BlockType, blocksNum>;
 
 
