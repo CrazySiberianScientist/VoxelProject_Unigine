@@ -464,5 +464,17 @@ namespace Utils
 				}
 			}
 		}
+
+		template<typename _Callback>
+		void ForEach(const _Callback& callback) const
+		{
+			for (auto& block : blocks)
+			{
+				for (auto bitIndex = 0u; bitIndex < blockSize_bits; ++bitIndex)
+				{
+					callback(GetBit(block, bitIndex));
+				}
+			}
+		}
 	};
 }

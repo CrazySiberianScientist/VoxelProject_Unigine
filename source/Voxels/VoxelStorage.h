@@ -72,8 +72,15 @@ namespace VoxelProject
 		template<Utils::BitsetElementAccessMode::Type _mode, typename _Callback>
 		void ForEachVoxel(const _Callback& callback)
 		{
-			
+			data.ForEach<_mode>(callback);
 		}
+
+		template<typename _Callback>
+		void ForEachVoxel(const _Callback& callback) const
+		{
+			data.ForEach(callback);
+		}
+
 
 	public:
 		Utils::Bitset<BLOCK_SIZE__BITS> data;

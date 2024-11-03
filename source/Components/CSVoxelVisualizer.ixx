@@ -28,7 +28,7 @@ export namespace VoxelProjectUnigine
 		COMPONENT_INIT(Init, GlobalInitOrder::COMMON_LOGIC);
 		void Init()
 		{
-			Log::message("Init KOKOKO!");
+			BlockTestFill(voxelBlock);
 		}
 
 		COMPONENT_UPDATE(Update, GlobalUpdateOrder::COMMON_LOGIC);
@@ -52,14 +52,37 @@ export namespace VoxelProjectUnigine
 			return UIntGetBit(bitset[chunkIndex], bitIndexInChunk);
 		}
 
-		void RenderBlock(const VoxelProject::VoxelBlockBitset& voxelBlockBitset, const Unigine::Math::Mat4& blockWorldransform)
+		void BlockTestFill(VoxelProject::VoxelBlockBitset& voxelBlockBitset)
 		{
-			const float voxelSize_meters = 1.0f;
-			const Vec3_meters blockSize_meters(VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS * voxelSize_meters);
-			Visualizer::renderBox(vec3(blockSize_meters), blockWorldransform, Math::vec4(1.0f, 1.0f, 0.0f, 0.6f));
+			VoxelSizeType voxelIndex = 0;
+			auto forEachCallback = [&voxelIndex]() -> bool
+				{
+					return voxelIndex++ % 2;
+				};
 
-			size_t voxelIndex = 0;
+			voxelBlockBitset.ForEachVoxel<Utils::BitsetElementAccessMode::WRITE>(forEachCallback);
+		}
+
+		void RenderBlock(const VoxelProject::VoxelBlockBitset& voxelBlockBitset, const Unigine::Math::Mat4& blockWorldTransform)
+		{
+			constexpr float voxelSize_meters = 1.0f;
+
+			const Vec3_meters blockSize_meters(VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS * voxelSize_meters);
+			Visualizer::renderBox(vec3(blockSize_meters), blockWorldTransform, Math::vec4(1.0f, 1.0f, 0.0f, 0.6f));
+
 			
+			VoxelSizeType voxelIndex = 0;
+			auto forEachCallback = [blockWorldTransform, voxelSize_meters, &voxelIndex](const bool bitValue)
+				{
+					auto localPos_meters = MathUtils::IndexToPos3d<Vec3_meters>(voxelIndex, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS);
+					localPos_meters *= voxelSize_meters;
+					
+					const auto worldPos = localPos_meters * blockWorldTransform;
+					Visualizer::renderPoint3D(worldPos, 0.1f, vec4_green);
+
+					++voxelIndex;
+				};
+			voxelBlockBitset.ForEachVoxel(forEachCallback);
 		}
 	};
 }

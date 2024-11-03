@@ -33,7 +33,9 @@ namespace MathUtils
 		const auto x = indexXY % xSize;
 		const auto y = indexXY / xSize;
 
-		return {x, y, z};
+		using RetType = std::remove_cvref_t<decltype(_Vec3d{} [0] ) > ;
+
+		return {(RetType)x, (RetType)y, (RetType)z};
 	}
 	
 	template<typename _T>
