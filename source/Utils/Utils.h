@@ -384,11 +384,11 @@ namespace Utils
 	}
 
 	template <std::unsigned_integral _T>
-	bool SetBit(_T & value, const size_t bitIndex, const bool bitValue)
+	void SetBit(_T & value, const size_t bitIndex, const bool bitValue)
 	{
 		constexpr _T fullMask = ~_T{};
 		const _T mask = ~(1u << bitIndex);
-		return value & mask | _T(bitValue) << bitIndex;
+		value = (value & mask) | (_T(bitValue) << bitIndex);
 	}
 
 	struct BitsetElementAccessMode

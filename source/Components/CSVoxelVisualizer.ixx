@@ -19,8 +19,8 @@ export namespace VoxelProjectUnigine
 	{
 		PROJECT_UTILS_COMPONENT_DEFINE(CSVoxelVisualizer, Unigine::ComponentBase);
 
-		PROP_PARAM(Color, valid_voxel_color, Unigine::Math::vec4_green);
-		PROP_PARAM(Color, invalid_voxel_color, Unigine::Math::vec4_black);
+		PROP_PARAM(Color, valid_voxel_color, Unigine::Math::vec4(0.0f, 1.0f, 0.0f, 0.2f));
+		PROP_PARAM(Color, invalid_voxel_color, Unigine::Math::vec4(0.0f, 0.0f, 0.0f, 0.2f));
 		PROP_PARAM(Vec3, visualizer_distance, Unigine::Math::vec3(4.0f));
 
 		VoxelBlockBitset voxelBlock;
@@ -66,19 +66,31 @@ export namespace VoxelProjectUnigine
 		void RenderBlock(const VoxelProject::VoxelBlockBitset& voxelBlockBitset, const Unigine::Math::Mat4& blockWorldTransform)
 		{
 			constexpr float voxelSize_meters = 1.0f;
-
 			const Vec3_meters blockSize_meters(VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS * voxelSize_meters);
-			Visualizer::renderBox(vec3(blockSize_meters), blockWorldTransform, Math::vec4(1.0f, 1.0f, 0.0f, 0.6f));
+
+			{
+				auto localTransform = Mat4_identity;
+				localTransform.setTranslate(blockSize_meters / 2);
+				Visualizer::renderBox(vec3(blockSize_meters), localTransform * blockWorldTransform, Math::vec4(1.0f, 1.0f, 0.0f, 0.6f));
+			}
 
 			
 			VoxelSizeType voxelIndex = 0;
-			auto forEachCallback = [blockWorldTransform, voxelSize_meters, &voxelIndex](const bool bitValue)
+			auto forEachCallback = [this, blockWorldTransform, voxelSize_meters, &voxelIndex](const bool bitValue)
 				{
 					auto localPos_meters = MathUtils::IndexToPos3d<Vec3_meters>(voxelIndex, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS);
 					localPos_meters *= voxelSize_meters;
+
+					auto localTransform = Mat4_identity;
+					localTransform.setTranslate(localPos_meters + voxelSize_meters / 2);
 					
-					const auto worldPos = localPos_meters * blockWorldTransform;
-					Visualizer::renderPoint3D(worldPos, 0.1f, vec4_green);
+					//const auto worldPos = localPos_meters * blockWorldTransform;
+					//Visualizer::renderPoint3D(worldPos, 0.1f, vec4_green);
+					const auto worldTransform = localTransform * blockWorldTransform;
+					
+					//Visualizer::renderSolidBox(worldTransform.getScale(), worldTransform, bitValue ? valid_voxel_color : invalid_voxel_color);
+					if (bitValue)
+						Visualizer::renderSolidBox(worldTransform.getScale(), worldTransform, valid_voxel_color);
 
 					++voxelIndex;
 				};
