@@ -90,7 +90,9 @@ export namespace VoxelProjectUnigine
 					
 					//Visualizer::renderSolidBox(worldTransform.getScale(), worldTransform, bitValue ? valid_voxel_color : invalid_voxel_color);
 					if (bitValue)
+					{
 						Visualizer::renderSolidBox(worldTransform.getScale(), worldTransform, valid_voxel_color);
+					}
 
 					++voxelIndex;
 				};

@@ -455,7 +455,7 @@ namespace Utils
 					}
 					else if constexpr (_mode == BitsetElementAccessMode::WRITE)
 					{
-						SetBit(block, callback(), bitIndex);
+						SetBit(block, bitIndex, callback());
 					}
 					else if constexpr (_mode == BitsetElementAccessMode::RW)
 					{
