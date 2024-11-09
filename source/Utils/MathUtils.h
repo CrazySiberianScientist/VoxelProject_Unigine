@@ -71,4 +71,24 @@ namespace MathUtils
 		auto power = Log2(root);
 		return v - (root << 2 * power);
 	}
+
+	template<typename _VecN, typename _Func, typename _IndexType, size_t ..._indices>
+	constexpr _VecN VecForEach_impl(_VecN &vec, const _Func& func, std::integer_sequence<_IndexType, _indices...>)
+	{
+		return { func(vec[_indices]),... };
+	}
+
+	template<size_t _N, typename _VecN, typename _Func>
+	constexpr _VecN VecForEach(_VecN &vec, const _Func& func)
+	{
+		VecForEach_impl<_VecN>(vec, func, std::make_index_sequence<_N>{});
+	}
+
+	
+	template<size_t _N, typename _VecN>
+	_VecN Floor(const _VecN& vec)
+	{
+		return VecForEach<3>(vec, floorf);
+	}
+	
 }
