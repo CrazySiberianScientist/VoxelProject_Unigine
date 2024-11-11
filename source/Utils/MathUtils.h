@@ -18,6 +18,21 @@ namespace MathUtils
 		return (x & (x - 1)) == 0;
 	}*/
 
+	template<typename _NumericType>
+	concept NumericConcept = std::is_arithmetic<_NumericType>::value;
+
+	template <NumericConcept _T>
+	constexpr _T Sign(const _T& v)
+	{
+		return (v >= 0) ? 1 : -1;
+	}
+
+	template <NumericConcept _T, NumericConcept _SignT>
+	constexpr _T RoundSign(const _T& v, const _SignT& signV)
+	{
+		return (signV >= 0) ? ceil(v) : floor(v);
+	}
+
 	template<typename _Vec3d, typename _SizeType>
 	constexpr size_t Pos3dToIndex(const _Vec3d& pos3d, const _SizeType xSize, const _SizeType ySize)
 	{
@@ -82,13 +97,6 @@ namespace MathUtils
 	constexpr _VecN VecForEach(_VecN &vec, const _Func& func)
 	{
 		VecForEach_impl<_VecN>(vec, func, std::make_index_sequence<_N>{});
-	}
-
-	
-	template<size_t _N, typename _VecN>
-	_VecN Floor(const _VecN& vec)
-	{
-		return VecForEach<3>(vec, floorf);
 	}
 	
 }
