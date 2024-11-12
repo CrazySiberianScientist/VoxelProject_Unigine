@@ -63,7 +63,7 @@ add_executable(${target}
 	  "Utils/StructOfVectors.h"
 	  "Utils/Utils.h"
 	  "Utils/UtilsMacros.h"
-	  "Voxels/VoxelUtils.h")
+	  "Voxels/VoxelUtils.h" "Utils/FunctionUtils.h" "Utils/BitUtils.h")
 
 target_include_directories(${target}
 	PRIVATE
