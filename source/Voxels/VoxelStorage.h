@@ -11,6 +11,7 @@
 #include "VoxelTypes.h"
 #include "Utils/MathUtils.h"
 #include "Utils/Utils.h"
+#include "Utils/BitUtils.h"
 
 namespace VoxelProject
 {
