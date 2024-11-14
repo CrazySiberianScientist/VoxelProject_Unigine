@@ -14,6 +14,7 @@ namespace Utils
 	{
 		using ReturnType = _ReturnType;
 		using ArgsTypes = std::tuple<std::decay_t<_ArgsTypes>... >;
+		static constexpr auto argsNum = std::tuple_size_v<ArgsTypes>;
 	};
 
 	// function pointer

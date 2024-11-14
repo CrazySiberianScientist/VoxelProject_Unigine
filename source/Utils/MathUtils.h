@@ -5,6 +5,7 @@
 #include <bit>
 
 #include "Utils/Utils.h"
+#include "Utils/FunctionUtils.h"
 
 
 namespace MathUtils
@@ -90,7 +91,15 @@ namespace MathUtils
 	template<typename _VecN, typename _Func, typename _IndexType, size_t ..._indices>
 	constexpr _VecN VecForEach_impl(_VecN &vec, const _Func& func, std::integer_sequence<_IndexType, _indices...>)
 	{
-		return { func(vec[_indices]),... };
+		using FuncType = Utils::CallableTypes<_Func>;
+		if constexpr (FuncType::ArgsTypes::argsNum == 1)
+		{
+			return { func(vec[_indices])... };
+		} 
+		else if constexpr (FuncType::ArgsTypes::argsNum == 2)
+		{
+			return { func(vec[_indices], _indices)... };
+		}
 	}
 
 	template<size_t _N, typename _VecN, typename _Func>
