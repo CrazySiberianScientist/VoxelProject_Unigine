@@ -23,3 +23,10 @@ COMPONENT(CLASS_NAME, PARENT_NAME);\
 PROP_NAME(#CLASS_NAME);\
 PROJECT_UTILS_REGISTER_COMPONENT(CLASS_NAME)
 
+
+#define PROJECT_UTILS_COMPONENT_PROP(TYPE, NAME)\
+PROP_PARAM(Node, NAME##_node);\
+TYPE *NAME = nullptr;
+
+#define PROJECT_UTILS_COMPONENT_PROP_INIT(NAME)\
+(NAME = ComponentSystem::get()->getComponent<std::remove_pointer<decltype(NAME)>::type>(NAME##_node), NAME)

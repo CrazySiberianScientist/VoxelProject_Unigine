@@ -5,10 +5,12 @@
 #include "Voxels/VoxelTypes.h"
 #include "Utils/ProjectUtilsMacros.h"
 #include "LogicOrders.h"
+#include "CSLineManipulator.h"
 
 #include <span>
 
 export module CSVoxelVisualizer;
+
 using namespace Unigine;
 using namespace Unigine::Math;
 using namespace VoxelProject;
@@ -19,11 +21,21 @@ export namespace VoxelProjectUnigine
 	{
 		PROJECT_UTILS_COMPONENT_DEFINE(CSVoxelVisualizer, Unigine::ComponentBase);
 
+	public:
+
 		PROP_PARAM(Color, valid_voxel_color, Unigine::Math::vec4(0.0f, 1.0f, 0.0f, 0.2f));
 		PROP_PARAM(Color, invalid_voxel_color, Unigine::Math::vec4(0.0f, 0.0f, 0.0f, 0.2f));
 		PROP_PARAM(Vec3, visualizer_distance, Unigine::Math::vec3(4.0f));
+		PROJECT_UTILS_COMPONENT_PROP(CSLineManipulator, line_manipulator);
+
 
 		VoxelBlockBitset voxelBlock;
+
+		COMPONENT_INIT(InitPropParams, GlobalInitOrder::COMPONENT_FIELDS);
+		void InitPropParams()
+		{
+			PROJECT_UTILS_COMPONENT_PROP_INIT(line_manipulator);
+		}
 
 		COMPONENT_INIT(Init, GlobalInitOrder::COMMON_LOGIC);
 		void Init()
