@@ -1016,6 +1016,27 @@
 			</properties>
 			<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 0 0 0 1.0</transform>
 		</node>
+		<node type="NodeDummy" id="10292280" name="LINE_TESTER">
+			<properties>
+				<property parent="64b6329b3e3bfe561e43965112e17139c541183a" guid="35dc2e34860bca3eb2bbc76ec1d97f37247f8f37">
+					<parameter name="start_point">146727479</parameter>
+					<parameter name="end_point">1403083306</parameter>
+				</property>
+			</properties>
+			<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 0 0 0 1.0</transform>
+			<node type="NodeDummy" id="146727479" name="NodeDummy">
+				<properties>
+					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="455f21a5f0bd26cafe4b74737bd1ab08e658232a"/>
+				</properties>
+				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 0.103833946362 0.159131336042 -2.38418579102e-07 1.0</transform>
+			</node>
+			<node type="NodeDummy" id="1403083306" name="NodeDummy_1">
+				<properties>
+					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="045f0e861018decfebda465016d571d37c057881"/>
+				</properties>
+				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 2.1548893499 1.28733640098 1.82623250909 1.0</transform>
+			</node>
+		</node>
 	</editor>
 	<console>
 		<bake_lighting_bounces>5</bake_lighting_bounces>

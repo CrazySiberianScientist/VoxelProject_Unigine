@@ -66,7 +66,7 @@ add_executable(${target}
 	  "Voxels/VoxelUtils.h" 
 	  "Voxels/VoxelUtils.cpp"
 	  "Utils/FunctionUtils.h"
-	  "Utils/BitUtils.h")
+	  "Utils/BitUtils.h" "Components/CSLineManipulator.ixx")
 
 target_include_directories(${target}
 	PRIVATE

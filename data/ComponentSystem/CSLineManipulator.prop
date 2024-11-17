@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<property version="2.19.0.2" name="CSLineManipulator" manual="1" parent_name="node_base">
+	<parameter name="line_color" type="color">1.000000 0.000000 0.000000 0.900000</parameter>
+	<parameter name="start_color" type="color">0.000000 1.000000 0.000000 0.900000</parameter>
+	<parameter name="end_color" type="color">0.000000 0.000000 1.000000 0.900000</parameter>
+	<parameter name="start_point" type="node">0</parameter>
+	<parameter name="end_point" type="node">0</parameter>
+</property>
