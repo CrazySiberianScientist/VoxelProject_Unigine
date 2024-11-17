@@ -89,23 +89,42 @@ namespace MathUtils
 	}
 
 	template<typename _VecN, typename _Func, typename _IndexType, size_t ..._indices>
-	constexpr _VecN VecForEach_impl(_VecN &vec, const _Func& func, std::integer_sequence<_IndexType, _indices...>)
+	constexpr void ForEachUnroll_impl(_VecN &vec, const _Func& func, std::integer_sequence<_IndexType, _indices...>)
 	{
 		using FuncType = Utils::CallableTypes<_Func>;
-		if constexpr (FuncType::ArgsTypes::argsNum == 1)
+		if constexpr (FuncType::argsNum == 1)
+		{
+			std::initializer_list{ func(vec[_indices])... };
+		} 
+		else if constexpr (FuncType::argsNum == 2)
+		{
+			std::initializer_list{ func(vec[_indices], _indices)... };
+		}
+	}
+
+	template<size_t _N, typename _VecN, typename _Func>
+	constexpr void ForEachUnroll(_VecN &vec, const _Func& func)
+	{
+		ForEachUnroll_impl<_VecN>(vec, func, std::make_index_sequence<_N>{});
+	}
+
+	template<typename _VecN, typename _Func, typename _IndexType, size_t ..._indices>
+	constexpr _VecN MakeVecForEach_impl(_VecN &vec, const _Func& func, std::integer_sequence<_IndexType, _indices...>)
+	{
+		using FuncType = Utils::CallableTypes<_Func>;
+		if constexpr (FuncType::argsNum == 1)
 		{
 			return { func(vec[_indices])... };
 		} 
-		else if constexpr (FuncType::ArgsTypes::argsNum == 2)
+		else if constexpr (FuncType::argsNum == 2)
 		{
 			return { func(vec[_indices], _indices)... };
 		}
 	}
 
 	template<size_t _N, typename _VecN, typename _Func>
-	constexpr _VecN VecForEach(_VecN &vec, const _Func& func)
+	constexpr _VecN MakeVecForEach(_VecN &vec, const _Func& func)
 	{
-		VecForEach_impl<_VecN>(vec, func, std::make_index_sequence<_N>{});
+		return MakeVecForEach_impl<_VecN>(vec, func, std::make_index_sequence<_N>{});
 	}
-	
 }
