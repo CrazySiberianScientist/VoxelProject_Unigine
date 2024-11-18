@@ -3,4 +3,5 @@
 	<parameter name="valid_voxel_color" type="color">0.000000 1.000000 0.000000 0.200000</parameter>
 	<parameter name="invalid_voxel_color" type="color">0.000000 0.000000 0.000000 0.200000</parameter>
 	<parameter name="visualizer_distance" type="vec3">4.000000 4.000000 4.000000</parameter>
+	<parameter name="line_manipulator_node" type="node">0</parameter>
 </property>

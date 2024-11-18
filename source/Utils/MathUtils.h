@@ -98,7 +98,7 @@ namespace MathUtils
 		} 
 		else if constexpr (FuncType::argsNum == 2)
 		{
-			std::initializer_list{ func(vec[_indices], _indices)... };
+			(func(vec[_indices], _indices), ...);
 		}
 	}
 

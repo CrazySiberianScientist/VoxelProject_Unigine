@@ -3,8 +3,10 @@
 
 #include <Voxels/VoxelStorage.h>
 #include "Voxels/VoxelTypes.h"
+#include "Voxels/VoxelUtils.h"
 #include "Utils/ProjectUtilsMacros.h"
 #include "LogicOrders.h"
+
 #include "CSLineManipulator.h"
 
 #include <span>
@@ -47,6 +49,17 @@ export namespace VoxelProjectUnigine
 		void Update()
 		{
 			RenderBlock(voxelBlock, node->getWorldTransform());
+
+			{
+				const auto testLineWP = line_manipulator->GetWorldPoints();
+				const std::array testLineLP = { node->toLocal(testLineWP[0]), node->toLocal(testLineWP[1]) };
+				auto points = RayTrace(Vec3_meters(testLineLP[0]), Vec3_meters(testLineLP[1]));
+				for (auto& p : points)
+				{
+					p = node->toWorld((Math::vec3)p);
+					Visualizer::renderPoint3D(p, 0.01, Math::vec4(1, 1, 0, 1));
+				}
+			}
 		}
 
 		uint32_t UIntGetBit(const uint32_t value, const uint32_t bitIndex)
@@ -104,6 +117,10 @@ export namespace VoxelProjectUnigine
 					if (bitValue)
 					{
 						Visualizer::renderSolidBox(worldTransform.getScale(), worldTransform, valid_voxel_color);
+					}
+					else
+					{
+						Visualizer::renderBox(worldTransform.getScale(), worldTransform, invalid_voxel_color);
 					}
 
 					++voxelIndex;

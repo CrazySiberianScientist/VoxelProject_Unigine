@@ -858,183 +858,184 @@
 		</node>
 		<node type="NodeDummy" id="1617626333" name="LOGIC">
 			<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 0 0 0 1.0</transform>
-		</node>
-		<node type="NodeDummy" id="1063469208" enabled="0" name="TEST_RAYMARCHING">
-			<properties>
-				<property parent="f5ea0bbbce9e729a95aed793de80e879950a6cfc" guid="ecda6b52e850ec6557507cba81eb8a327d053189">
-					<parameter name="material">4c49f7579c635a93bc6719d67f971365857d5525</parameter>
-				</property>
-			</properties>
-			<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 0 0 0 1.0</transform>
-			<node type="NodeDummy" id="896213282" name="RayMarchingTestEntity_0">
+			<node type="NodeDummy" id="1063469208" enabled="0" name="TEST_RAYMARCHING">
 				<properties>
-					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="0d13d8e228d30c647c7fe26e4b2385b56c4cdb54"/>
-					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="bd3ce8a5d54a78067006bf096518543cc6ed8ea3"/>
+					<property parent="f5ea0bbbce9e729a95aed793de80e879950a6cfc" guid="ecda6b52e850ec6557507cba81eb8a327d053189">
+						<parameter name="material">4c49f7579c635a93bc6719d67f971365857d5525</parameter>
+					</property>
 				</properties>
-				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 3.70000005513 -0.500000007451 0 1.0</transform>
+				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 0 0 0 1.0</transform>
+				<node type="NodeDummy" id="896213282" name="RayMarchingTestEntity_0">
+					<properties>
+						<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="0d13d8e228d30c647c7fe26e4b2385b56c4cdb54"/>
+						<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="bd3ce8a5d54a78067006bf096518543cc6ed8ea3"/>
+					</properties>
+					<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 3.70000005513 -0.500000007451 0 1.0</transform>
+				</node>
+				<node type="NodeDummy" id="1583689241" name="RayMarchingTestEntity_1">
+					<properties>
+						<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="dd998ce48ca2a2ead68f49500369aef4eb3f23a6"/>
+						<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="2f861c5f98f8a113c8fe61634a5646fdd20de6cd"/>
+					</properties>
+					<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 7.04619509738 0.143639531557 -0.418816590595 1.0</transform>
+				</node>
+				<node type="NodeDummy" id="1482768548" name="RayMarchingTestEntity_2">
+					<properties>
+						<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="910dbcb63da5d8309158a7028f95b27ffb1e59c8"/>
+						<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="4b00e2a9e9aeb26e255df74d4c9eb901d9473287"/>
+					</properties>
+					<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 3.70000005513 -1.74765568936 1.13667812353 1.0</transform>
+				</node>
+				<node type="NodeDummy" id="1227133875" name="RayMarchingTestEntity_3">
+					<properties>
+						<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="f26c2cd8270d13e0af5e38043f5fc67a925d4e3a"/>
+						<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="53155e0365024f1b78628b47f02d8a8b7c010851"/>
+					</properties>
+					<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 7.11807794091 -2.5880528001 0.582814111777 1.0</transform>
+				</node>
+				<node type="NodeDummy" id="1701946388" name="RayMarchingTestEntity_4">
+					<properties>
+						<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="c3428d0d5a2f04089cf2801114e55eda99ca36b2"/>
+						<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="71757b4cba4d09cf42a4bf980e9b20ccf4e0a669"/>
+					</properties>
+					<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 0.210328829427 -2.5880528001 0.582814111777 1.0</transform>
+				</node>
+				<node type="NodeDummy" id="814235747" name="RayMarchingTestEntity_5">
+					<properties>
+						<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="0ce19707f1e5d4f38474e9ab631184766e663cb4"/>
+						<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="0467715ee37dcc64200e868a302b2dfa8163c083"/>
+					</properties>
+					<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 -3.20774905635 -1.74765568936 1.13667812353 1.0</transform>
+				</node>
+				<node type="NodeDummy" id="1185720934" name="RayMarchingTestEntity_6">
+					<properties>
+						<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="15059d9177f7cd05f28a18d5ac08328559feec06"/>
+						<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="cbf891c0e1d4bb6d33f422ccae88d85a6d0153ad"/>
+					</properties>
+					<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 0.138445985897 0.143639531557 -0.418816590595 1.0</transform>
+				</node>
+				<node type="NodeDummy" id="1125006989" name="RayMarchingTestEntity_7">
+					<properties>
+						<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="0750d32b4ef58869f727680fe038678d78bc2128"/>
+						<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="faaf44f2f82aa0660565f4de423cebe1901a9267"/>
+					</properties>
+					<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 -3.20774905635 -0.500000007451 0 1.0</transform>
+				</node>
+				<node type="NodeDummy" id="1826180744" name="RayMarchingTestEntity_8">
+					<properties>
+						<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="ec03ae55f3df9fc9f444b5d9e48adada702c6c9a"/>
+						<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="40ff277412055029fb02514034e4dce93cffd331"/>
+					</properties>
+					<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 2.60391728193 3.20234776536 0 1.0</transform>
+				</node>
+				<node type="NodeDummy" id="67772487" name="RayMarchingTestEntity_9">
+					<properties>
+						<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="875e898ffea574de5f5804b3c1307d7ae35b32dc"/>
+						<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="446429c61de9ae452d7ea07296c3c0c415d0308b"/>
+					</properties>
+					<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 5.95011232418 3.84598730437 -0.418816590595 1.0</transform>
+				</node>
+				<node type="NodeDummy" id="549314810" name="RayMarchingTestEntity_10">
+					<properties>
+						<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="029c4359c5009eecc5fa1b1d053e74fa08ebcc6e"/>
+						<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="3bb2b0683dbfb66291157ef4e0ee13dd9a9a28f5"/>
+					</properties>
+					<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 2.60391728193 1.95469208346 1.13667812353 1.0</transform>
+				</node>
+				<node type="NodeDummy" id="102824977" name="RayMarchingTestEntity_11">
+					<properties>
+						<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="762dde3319bd9882a7dc2397b88d93e88281a5d0"/>
+						<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="39a4b3da65ed81c7f661dd467c0214aeb6653eef"/>
+					</properties>
+					<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 6.02199516771 1.11429497272 0.582814111777 1.0</transform>
+				</node>
+				<node type="NodeDummy" id="1311999548" name="RayMarchingTestEntity_12">
+					<properties>
+						<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="651f209d8ce0fc6f34764ca173925890fbfd5f82"/>
+						<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="45ebe09ce8f68aa6c66f1fe82ee396a3500c98f9"/>
+					</properties>
+					<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 -1.24187786748 2.3495955465 0.582814111777 1.0</transform>
+				</node>
+				<node type="NodeDummy" id="1482992747" name="RayMarchingTestEntity_13">
+					<properties>
+						<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="6bcc35172a576da8511768bb31949bad4256ee04"/>
+						<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="4e50b72e8e6dfea7f3063f5a0197ee3c7c12a193"/>
+					</properties>
+					<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 -4.65995575326 3.18999265724 1.13667812353 1.0</transform>
+				</node>
+				<node type="NodeDummy" id="749819598" name="RayMarchingTestEntity_14">
+					<properties>
+						<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="60504a21247ed1090c3d8e6507a73514bd1cb9d6"/>
+						<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="84a6ac10ce8bd3d2ab7fe81c1c4641766ed5a73d"/>
+					</properties>
+					<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 -1.31376071101 5.08128787815 -0.418816590595 1.0</transform>
+				</node>
+				<node type="NodeDummy" id="606367701" name="RayMarchingTestEntity_15">
+					<properties>
+						<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="f955323b5b6723b5dd5fb81fa5f3b61552dfbf78"/>
+						<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="bb9d47c2acc3e2dbcfa39aae5352830b4acd7c77"/>
+					</properties>
+					<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 -4.65995575326 4.43764833915 0 1.0</transform>
+				</node>
+				<node type="NodeDummy" id="44334896" name="RayMarchingTestEntity_16">
+					<properties>
+						<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="502c03e5a04bd54f549064692b0327041014af6a"/>
+						<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="13b646c48addad64255bcb90920b013d6cba17c1"/>
+					</properties>
+					<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 2.51368243478 7.18324576516 0 1.0</transform>
+				</node>
+				<node type="NodeDummy" id="1428588751" name="RayMarchingTestEntity_17">
+					<properties>
+						<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="4d56b99f0cf80ff33ba135c30b9cd24b39320e2c"/>
+						<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="9ae8b996d1af053ed34703429394ec2977eb339b"/>
+					</properties>
+					<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 5.85987747703 7.82688530417 -0.418816590595 1.0</transform>
+				</node>
+				<node type="NodeDummy" id="1176330210" name="RayMarchingTestEntity_18">
+					<properties>
+						<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="d2ead1e94fe5468f32af92adb912ae241413543e"/>
+						<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="b4b924b81a36b905e16dfe4407b9af5b2f08ee85"/>
+					</properties>
+					<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 2.51368243478 5.93559008326 1.13667812353 1.0</transform>
+				</node>
+				<node type="NodeDummy" id="1563614681" name="RayMarchingTestEntity_19">
+					<properties>
+						<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="5674ef432f4141f0944245a74f2a310879e90e20"/>
+						<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="05cea0aaaca61d0952a6cd16df8e4180aa056aff"/>
+					</properties>
+					<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 5.93176032056 5.09519297252 0.582814111777 1.0</transform>
+				</node>
 			</node>
-			<node type="NodeDummy" id="1583689241" name="RayMarchingTestEntity_1">
+			<node type="NodeDummy" id="1321201936" name="VOXELS_TEST">
 				<properties>
-					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="dd998ce48ca2a2ead68f49500369aef4eb3f23a6"/>
-					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="2f861c5f98f8a113c8fe61634a5646fdd20de6cd"/>
+					<property parent="3dd4fa383868a6c53228dd3413ecc2011827bdc9" guid="cc150a31f2b985f47989bc9fb2893d7b9f0095e0">
+						<parameter name="valid_voxel_color">0 1 0 0.0784313753</parameter>
+						<parameter name="line_manipulator_node">10292280</parameter>
+					</property>
+					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="a5bb9242f5e5407bc1ad9aec6b11fea72e0dcfbf"/>
 				</properties>
-				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 7.04619509738 0.143639531557 -0.418816590595 1.0</transform>
+				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 0 0 0 1.0</transform>
 			</node>
-			<node type="NodeDummy" id="1482768548" name="RayMarchingTestEntity_2">
+			<node type="NodeDummy" id="10292280" name="LINE_TESTER">
 				<properties>
-					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="910dbcb63da5d8309158a7028f95b27ffb1e59c8"/>
-					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="4b00e2a9e9aeb26e255df74d4c9eb901d9473287"/>
+					<property parent="64b6329b3e3bfe561e43965112e17139c541183a" guid="35dc2e34860bca3eb2bbc76ec1d97f37247f8f37">
+						<parameter name="start_point">146727479</parameter>
+						<parameter name="end_point">1403083306</parameter>
+					</property>
 				</properties>
-				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 3.70000005513 -1.74765568936 1.13667812353 1.0</transform>
-			</node>
-			<node type="NodeDummy" id="1227133875" name="RayMarchingTestEntity_3">
-				<properties>
-					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="f26c2cd8270d13e0af5e38043f5fc67a925d4e3a"/>
-					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="53155e0365024f1b78628b47f02d8a8b7c010851"/>
-				</properties>
-				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 7.11807794091 -2.5880528001 0.582814111777 1.0</transform>
-			</node>
-			<node type="NodeDummy" id="1701946388" name="RayMarchingTestEntity_4">
-				<properties>
-					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="c3428d0d5a2f04089cf2801114e55eda99ca36b2"/>
-					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="71757b4cba4d09cf42a4bf980e9b20ccf4e0a669"/>
-				</properties>
-				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 0.210328829427 -2.5880528001 0.582814111777 1.0</transform>
-			</node>
-			<node type="NodeDummy" id="814235747" name="RayMarchingTestEntity_5">
-				<properties>
-					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="0ce19707f1e5d4f38474e9ab631184766e663cb4"/>
-					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="0467715ee37dcc64200e868a302b2dfa8163c083"/>
-				</properties>
-				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 -3.20774905635 -1.74765568936 1.13667812353 1.0</transform>
-			</node>
-			<node type="NodeDummy" id="1185720934" name="RayMarchingTestEntity_6">
-				<properties>
-					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="15059d9177f7cd05f28a18d5ac08328559feec06"/>
-					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="cbf891c0e1d4bb6d33f422ccae88d85a6d0153ad"/>
-				</properties>
-				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 0.138445985897 0.143639531557 -0.418816590595 1.0</transform>
-			</node>
-			<node type="NodeDummy" id="1125006989" name="RayMarchingTestEntity_7">
-				<properties>
-					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="0750d32b4ef58869f727680fe038678d78bc2128"/>
-					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="faaf44f2f82aa0660565f4de423cebe1901a9267"/>
-				</properties>
-				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 -3.20774905635 -0.500000007451 0 1.0</transform>
-			</node>
-			<node type="NodeDummy" id="1826180744" name="RayMarchingTestEntity_8">
-				<properties>
-					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="ec03ae55f3df9fc9f444b5d9e48adada702c6c9a"/>
-					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="40ff277412055029fb02514034e4dce93cffd331"/>
-				</properties>
-				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 2.60391728193 3.20234776536 0 1.0</transform>
-			</node>
-			<node type="NodeDummy" id="67772487" name="RayMarchingTestEntity_9">
-				<properties>
-					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="875e898ffea574de5f5804b3c1307d7ae35b32dc"/>
-					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="446429c61de9ae452d7ea07296c3c0c415d0308b"/>
-				</properties>
-				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 5.95011232418 3.84598730437 -0.418816590595 1.0</transform>
-			</node>
-			<node type="NodeDummy" id="549314810" name="RayMarchingTestEntity_10">
-				<properties>
-					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="029c4359c5009eecc5fa1b1d053e74fa08ebcc6e"/>
-					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="3bb2b0683dbfb66291157ef4e0ee13dd9a9a28f5"/>
-				</properties>
-				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 2.60391728193 1.95469208346 1.13667812353 1.0</transform>
-			</node>
-			<node type="NodeDummy" id="102824977" name="RayMarchingTestEntity_11">
-				<properties>
-					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="762dde3319bd9882a7dc2397b88d93e88281a5d0"/>
-					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="39a4b3da65ed81c7f661dd467c0214aeb6653eef"/>
-				</properties>
-				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 6.02199516771 1.11429497272 0.582814111777 1.0</transform>
-			</node>
-			<node type="NodeDummy" id="1311999548" name="RayMarchingTestEntity_12">
-				<properties>
-					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="651f209d8ce0fc6f34764ca173925890fbfd5f82"/>
-					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="45ebe09ce8f68aa6c66f1fe82ee396a3500c98f9"/>
-				</properties>
-				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 -1.24187786748 2.3495955465 0.582814111777 1.0</transform>
-			</node>
-			<node type="NodeDummy" id="1482992747" name="RayMarchingTestEntity_13">
-				<properties>
-					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="6bcc35172a576da8511768bb31949bad4256ee04"/>
-					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="4e50b72e8e6dfea7f3063f5a0197ee3c7c12a193"/>
-				</properties>
-				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 -4.65995575326 3.18999265724 1.13667812353 1.0</transform>
-			</node>
-			<node type="NodeDummy" id="749819598" name="RayMarchingTestEntity_14">
-				<properties>
-					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="60504a21247ed1090c3d8e6507a73514bd1cb9d6"/>
-					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="84a6ac10ce8bd3d2ab7fe81c1c4641766ed5a73d"/>
-				</properties>
-				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 -1.31376071101 5.08128787815 -0.418816590595 1.0</transform>
-			</node>
-			<node type="NodeDummy" id="606367701" name="RayMarchingTestEntity_15">
-				<properties>
-					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="f955323b5b6723b5dd5fb81fa5f3b61552dfbf78"/>
-					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="bb9d47c2acc3e2dbcfa39aae5352830b4acd7c77"/>
-				</properties>
-				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 -4.65995575326 4.43764833915 0 1.0</transform>
-			</node>
-			<node type="NodeDummy" id="44334896" name="RayMarchingTestEntity_16">
-				<properties>
-					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="502c03e5a04bd54f549064692b0327041014af6a"/>
-					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="13b646c48addad64255bcb90920b013d6cba17c1"/>
-				</properties>
-				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 2.51368243478 7.18324576516 0 1.0</transform>
-			</node>
-			<node type="NodeDummy" id="1428588751" name="RayMarchingTestEntity_17">
-				<properties>
-					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="4d56b99f0cf80ff33ba135c30b9cd24b39320e2c"/>
-					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="9ae8b996d1af053ed34703429394ec2977eb339b"/>
-				</properties>
-				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 5.85987747703 7.82688530417 -0.418816590595 1.0</transform>
-			</node>
-			<node type="NodeDummy" id="1176330210" name="RayMarchingTestEntity_18">
-				<properties>
-					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="d2ead1e94fe5468f32af92adb912ae241413543e"/>
-					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="b4b924b81a36b905e16dfe4407b9af5b2f08ee85"/>
-				</properties>
-				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 2.51368243478 5.93559008326 1.13667812353 1.0</transform>
-			</node>
-			<node type="NodeDummy" id="1563614681" name="RayMarchingTestEntity_19">
-				<properties>
-					<property parent="9ea509c78e85552926842c2407ccc4a8da10b696" guid="5674ef432f4141f0944245a74f2a310879e90e20"/>
-					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="05cea0aaaca61d0952a6cd16df8e4180aa056aff"/>
-				</properties>
-				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 5.93176032056 5.09519297252 0.582814111777 1.0</transform>
-			</node>
-		</node>
-		<node type="NodeDummy" id="1321201936" name="VoxelsTest">
-			<properties>
-				<property parent="3dd4fa383868a6c53228dd3413ecc2011827bdc9" guid="cc150a31f2b985f47989bc9fb2893d7b9f0095e0">
-					<parameter name="valid_voxel_color">0 1 0 0.0784313753</parameter>
-				</property>
-				<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="a5bb9242f5e5407bc1ad9aec6b11fea72e0dcfbf"/>
-			</properties>
-			<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 0 0 0 1.0</transform>
-		</node>
-		<node type="NodeDummy" id="10292280" name="LINE_TESTER">
-			<properties>
-				<property parent="64b6329b3e3bfe561e43965112e17139c541183a" guid="35dc2e34860bca3eb2bbc76ec1d97f37247f8f37">
-					<parameter name="start_point">146727479</parameter>
-					<parameter name="end_point">1403083306</parameter>
-				</property>
-			</properties>
-			<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 0 0 0 1.0</transform>
-			<node type="NodeDummy" id="146727479" name="NodeDummy">
-				<properties>
-					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="455f21a5f0bd26cafe4b74737bd1ab08e658232a"/>
-				</properties>
-				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 0.103833946362 0.159131336042 -2.38418579102e-07 1.0</transform>
-			</node>
-			<node type="NodeDummy" id="1403083306" name="NodeDummy_1">
-				<properties>
-					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="045f0e861018decfebda465016d571d37c057881"/>
-				</properties>
-				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 2.1548893499 1.28733640098 1.82623250909 1.0</transform>
+				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 0 0 0 1.0</transform>
+				<node type="NodeDummy" id="146727479" name="NodeDummy">
+					<properties>
+						<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="455f21a5f0bd26cafe4b74737bd1ab08e658232a"/>
+					</properties>
+					<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 0.103833946362 0.159131336042 -2.38418579102e-07 1.0</transform>
+				</node>
+				<node type="NodeDummy" id="1403083306" name="NodeDummy_1">
+					<properties>
+						<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="045f0e861018decfebda465016d571d37c057881"/>
+					</properties>
+					<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 2.1548893499 1.28733640098 1.82623250909 1.0</transform>
+				</node>
 			</node>
 		</node>
 	</editor>
