@@ -56,8 +56,8 @@ export namespace VoxelProjectUnigine
 				auto points = RayTrace(Vec3_meters(testLineLP[0]), Vec3_meters(testLineLP[1]));
 				for (auto& p : points)
 				{
-					p = node->toWorld((Math::vec3)p);
-					Visualizer::renderPoint3D(p, 0.01, Math::vec4(1, 1, 0, 1));
+					const auto wP = node->toWorld(p);
+					Visualizer::renderPoint3D(wP, 0.01, Math::vec4(1, 1, 0, 1));
 				}
 			}
 		}
@@ -91,7 +91,7 @@ export namespace VoxelProjectUnigine
 		void RenderBlock(const VoxelProject::VoxelBlockBitset& voxelBlockBitset, const Unigine::Math::Mat4& blockWorldTransform)
 		{
 			constexpr float voxelSize_meters = 1.0f;
-			const Vec3_meters blockSize_meters(VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS * voxelSize_meters);
+			const Vec3_metersWorld blockSize_meters(VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS * voxelSize_meters);
 
 			{
 				auto localTransform = Mat4_identity;
@@ -103,7 +103,7 @@ export namespace VoxelProjectUnigine
 			VoxelSizeType voxelIndex = 0;
 			auto forEachCallback = [this, blockWorldTransform, voxelSize_meters, &voxelIndex](const bool bitValue)
 				{
-					auto localPos_meters = MathUtils::IndexToPos3d<Vec3_meters>(voxelIndex, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS);
+					auto localPos_meters = MathUtils::IndexToPos3d<Vec3_metersWorld>(voxelIndex, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS);
 					localPos_meters *= voxelSize_meters;
 
 					auto localTransform = Mat4_identity;
