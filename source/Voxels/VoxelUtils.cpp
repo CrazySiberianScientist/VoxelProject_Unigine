@@ -8,19 +8,25 @@ namespace VoxelProject
 	float CalcRayDelta(const Vec3_meters& startPointLocal_meters, const Vec3_meters& rayDirLocal)
 	{
 		auto calcLimit = [&rayDirLocal](const float v, const size_t index) {
-			return (float)(int)(v + copysign(1.0f, (float)rayDirLocal[index]));
+			//return (float)(int)(v + copysign(1.0f, rayDirLocal[index]));
+			const auto nextV = v + copysign(1.0f, rayDirLocal[index]);
+			return (rayDirLocal[index] >= 0.0) ? floor(nextV) : ceil(nextV);
 			};
 		const auto intersectLimits = MathUtils::MakeVecForEach<3>(startPointLocal_meters, calcLimit);
 
-		auto calcDistance = [&startPointLocal_meters, &rayDirLocal](const float v, const size_t index) {
-			const auto distance = (v - startPointLocal_meters[index]) / rayDirLocal[index];
+		auto calcDistance = [&startPointLocal_meters, &rayDirLocal](const float limit, const size_t index) {
+			const auto distance = (limit - startPointLocal_meters[index]) / rayDirLocal[index];
 			// Когда оно слишком мало, то прибавление этого числа не влияет на другое число из-за чего получается бесконечный цикл
-			return distance > FLT_EPSILON ? distance : FLT_MAX;
+			//return distance > FLT_EPSILON ? distance : FLT_MAX;
+			
+			assert(distance >= 0.0f);
+
+			return distance;
 			};
 		const auto distances = MathUtils::MakeVecForEach<3>(intersectLimits, calcDistance);
 
 		const float minDistance = std::min(distances[2], std::min(distances[0], distances[1]));
-		return minDistance;
+		return std::max(minDistance, FLT_EPSILON * 100);
 	}
 
 	std::vector<Vec3_meters> RayTrace(const Vec3_meters& startPointLocal, const Vec3_meters& rayDirLocal, const float maxDist)
