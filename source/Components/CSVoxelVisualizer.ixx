@@ -113,15 +113,7 @@ export namespace VoxelProjectUnigine
 					//Visualizer::renderPoint3D(worldPos, 0.1f, vec4_green);
 					const auto worldTransform = localTransform * blockWorldTransform;
 					
-					//Visualizer::renderSolidBox(worldTransform.getScale(), worldTransform, bitValue ? valid_voxel_color : invalid_voxel_color);
-					if (bitValue)
-					{
-						Visualizer::renderSolidBox(worldTransform.getScale(), worldTransform, valid_voxel_color);
-					}
-					else
-					{
-						Visualizer::renderBox(worldTransform.getScale(), worldTransform, invalid_voxel_color);
-					}
+					Visualizer::renderBox(worldTransform.getScale(), worldTransform, bitValue ? valid_voxel_color : invalid_voxel_color);
 
 					++voxelIndex;
 				};

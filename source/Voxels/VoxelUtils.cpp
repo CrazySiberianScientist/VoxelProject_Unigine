@@ -28,15 +28,22 @@ namespace VoxelProject
 	{
 		std::vector<Vec3_meters> points;
 
-		float currentDist = {};
-		auto currentPoint = startPointLocal;
-		//points.push_back(currentPoint);
-		for (;currentDist < maxDist;)
+		const auto speedVec = (Vec3_meters(1.0f) / rayDirLocal).abs();
+
+		auto currentVoxel = MetersToVoxels(startPointLocal);
+		auto currentPos = startPointLocal;
+		
+		Vec3_meters distancesVec(0.0f);
+		Vec3_voxels voxelStepVec(0);
+		for (int i = 0; i < 3; ++i)
 		{
-			currentDist += CalcRayDelta(currentPoint, rayDirLocal);
-			currentPoint = startPointLocal + rayDirLocal * currentDist;
-			points.push_back(currentPoint);
+			const auto signV = copysign(1.0f, rayDirLocal[i]);
+			voxelStepVec[i] = (int)signV;
+			
+			const auto deltaPos = -signV * (currentPos[i] - currentVoxel[i]) + (signV > 0.0f ? 1.0f : 0.0f);
 		}
+
+
 
 		return points;
 	}
