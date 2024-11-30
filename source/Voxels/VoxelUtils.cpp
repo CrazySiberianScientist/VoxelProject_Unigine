@@ -44,23 +44,29 @@ namespace VoxelProject
 			distances[i] = deltaPos * deltaDistances[i];
 		}
 
+		auto getMinIndex = [](const Vec3_meters& v)
+			{
+				int minIndex = 0;
+				for (int i = 0; i < 3; ++i)
+				{
+					minIndex = v[i] < v[minIndex] ? i : minIndex;
+				}
+				return minIndex;
+			};
+
 		while (true)
 		{
-			int minSideIndex = 0;
-			for (int i = 0; i < 3; ++i)
-			{
-				minSideIndex = distances[i] < distances[minSideIndex] ? i : minSideIndex;
-			}
+			const auto minDistIndex = getMinIndex(distances);
 
-			const float currentDist = distances[minSideIndex];
+			const float currentDist = distances[minDistIndex];
 			if (currentDist >= maxDist)
 			{
 				break;
 			}
 			points.push_back(startPointLocal + rayDirLocal * currentDist);
 
-			distances[minSideIndex] += deltaDistances[minSideIndex];
-			currentVoxel[minSideIndex] += voxelStep[minSideIndex];
+			distances[minDistIndex] += deltaDistances[minDistIndex];
+			currentVoxel[minDistIndex] += voxelStep[minDistIndex];
 		}
 
 		return points;
