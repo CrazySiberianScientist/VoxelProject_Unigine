@@ -34,7 +34,7 @@ namespace VoxelProject
 		auto currentPos = startPointLocal;
 		
 		Vec3_meters distances(0.0f);
-		Vec3_voxels voxelStep(0);
+		std::array<int32_t, 3> voxelStep{};
 		for (int i = 0; i < 3; ++i)
 		{
 			const auto signV = copysign(1.0f, rayDirLocal[i]);
