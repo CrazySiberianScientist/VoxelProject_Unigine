@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" class="light" dir="ltr"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <!-- sidebar iframe generated using mdBook
+
+        This is a frame, and not included directly in the page, to control the total size of the
+        book. The TOC contains an entry for each page, so if each page includes a copy of the TOC,
+        the total size of the page becomes O(n**2).
+
+        The frame is only used as a fallback when JS is turned off. When it's on, the sidebar is
+        instead added to the main page by `toc.js` instead. The JavaScript mode is better
+        because, when running in a `file:///` URL, the iframed page would not be Same-Origin as
+        the rest of the page, so the sidebar and the main page theme would fall out of sync.
+        -->
+        <meta charset="UTF-8">
+        <meta name="robots" content="noindex">
+        <!-- Custom HTML head -->
+        <link rel="alternate" type="application/atom+xml" href="https://tavianator.com/feed.atom" title="Atom Feed">
+        <link rel="alternate" type="application/feed+json" href="https://tavianator.com/feed.json" title="JSON Feed">
+        <link rel="alternate" type="application/rss+xml" href="https://tavianator.com/feed.rss" title="RSS Feed">
+        
+        <link rel="stylesheet" href="katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous" media="">
+        
+        <link rel="stylesheet" href="tavianator.css">
+        
+        <script async="" src="google-analytics_analytics.js"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-EBDQXGZ6R1');
+        </script>
+        
+        <script>
+        window.addEventListener("load", e => {
+            document.querySelectorAll(".feed-link").forEach(node => {
+                let debounce = false;
+                node.addEventListener("click", e => {
+                    if (!debounce) {
+                        debounce = true;
+                        navigator.clipboard
+                            .writeText(node.href)
+                            .then(() => {
+                                const i = node.firstChild;
+                                const prevClass = i.className;
+                                i.className = "fa fa-clipboard";
+                                const prevTitle = node.title;
+                                node.title = "Copied!";
+                                setTimeout(() => {
+                                    i.className = prevClass;
+                                    node.title = prevTitle;
+                                    debounce = false;
+                                }, 1000);
+                            });
+                    }
+                    e.preventDefault();
+                });
+            });
+        });
+        </script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+        <link rel="stylesheet" href="variables.css">
+        <link rel="stylesheet" href="general.css">
+        <link rel="stylesheet" href="chrome.css">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="font-awesome.css">
+        <link rel="stylesheet" href="fonts.css">
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body class="sidebar-iframe-inner">
+        <ol class="chapter"><li class="chapter-item expanded "><a href="https://tavianator.com/index.html" target="_parent">Home</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/projects/index.html" target="_parent">Projects</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="https://tavianator.com/projects/bfs.html" target="_parent">bfs</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/projects/acap.html" target="_parent">acap</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/projects/bistring.html" target="_parent">bistring</a></li></ol></li><li class="chapter-item expanded "><div>2024</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="https://tavianator.com/2024/percent.html" target="_parent">Rounding percentages</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2024/btrfs_bug.html" target="_parent">Bug hunting in Btrfs</a></li></ol></li><li class="chapter-item expanded "><div>2023</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="https://tavianator.com/2023/translucent.html" target="_parent">Translucent typedefs in C</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2023/bfs_3.0.html" target="_parent">bfs 3.0: the fastest find yet!</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2023/futex.html" target="_parent">You could have invented futexes</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2023/irregex.html" target="_parent">Irregular expressions</a></li></ol></li><li class="chapter-item expanded "><div>2022</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="https://tavianator.com/2022/ray_box_boundary.html" target="_parent">Fast, Branchless Ray/Bounding Box Intersections, Part 3: Boundaries</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2022/remote_reboots.html" target="_parent">Remote reboots with encrypted disks</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2022/parallel_graph_search.html" target="_parent">Parallelizing graph search with Rayon</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2022/long_division.html" target="_parent">Long division</a></li></ol></li><li class="chapter-item expanded "><div>2020</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="https://tavianator.com/2020/one_plus_one.html" target="_parent">Proving that 1 + 1 = 10 in Rust</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2020/oomify.html" target="_parent">OOMify</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2020/makeover.html" target="_parent">Makeover</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2020/porting_kd_forests.html" target="_parent">Porting k-d forests to Rust</a></li></ol></li><li class="chapter-item expanded "><div>2018</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="https://tavianator.com/2018/spawn_of_satan.html" target="_parent">spawn() of Satan</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2018/dhce.html" target="_parent">Cracking DHCE (Diffie-Hellman color exchange)</a></li></ol></li><li class="chapter-item expanded "><div>2017</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="https://tavianator.com/2017/bfs_3.html" target="_parent">bfs from the ground up, part 3: optimization</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2017/bfs_2.html" target="_parent">bfs from the ground up, part 2: parsing</a></li></ol></li><li class="chapter-item expanded "><div>2016</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="https://tavianator.com/2016/matrix_multiply.html" target="_parent">A quick trick for faster naïve matrix multiplication</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2016/bfs_1.html" target="_parent">bfs from the ground up, part 1: traversal</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2016/aesa.html" target="_parent">The Approximating and Eliminating Search Algorithm</a></li></ol></li><li class="chapter-item expanded "><div>2015</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="https://tavianator.com/2015/autoboxing.html" target="_parent">Java autoboxing performance</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2015/ray_box_nan.html" target="_parent">Fast, Branchless Ray/Bounding Box Intersections, Part 2: NaNs</a></li></ol></li><li class="chapter-item expanded "><div>2014</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="https://tavianator.com/2014/int_exp.html" target="_parent">Efficient Integer Exponentiation in C</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2014/alloca.html" target="_parent">Standards-compliant* alloca()</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2014/python_visitor.html" target="_parent">The Visitor Pattern in Python</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2014/ellipsoid_bounding_boxes.html" target="_parent">Exact Bounding Boxes for Spheres/Ellipsoids</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2014/ray_mesh.html" target="_parent">A Beautiful Ray/Mesh Intersection Algorithm</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2014/ray_triangle.html" target="_parent">A Beautiful Ray/Triangle Intersection Method</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2014/announcing_sangria.html" target="_parent">Announcing Sangria</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2014/kd_forests.html" target="_parent">k-d Forests</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2014/big_numbers.html" target="_parent">Big Numbers</a></li></ol></li><li class="chapter-item expanded "><div>2013</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="https://tavianator.com/2013/java_quirks.html" target="_parent">Java Generics Quirks</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2013/fair_and_square.html" target="_parent">Fair and Square, or How to Count to a Googol</a></li></ol></li><li class="chapter-item expanded "><div>2012</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="https://tavianator.com/2012/binary_trees.html" target="_parent">Iterating Over Binary Trees</a></li></ol></li><li class="chapter-item expanded "><div>2011</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="https://tavianator.com/2011/collisions.html" target="_parent">Collisions</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2011/ray_prtree.html" target="_parent">Ray / Priority R-Tree Intersection</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2011/priority_r_trees.html" target="_parent">Priority R-Trees</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2011/ray_box.html" target="_parent">Fast, Branchless Ray/Bounding Box Intersections</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2011/bcd.html" target="_parent">Fast Binary-Coded Decimal Addition and Subtraction</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2011/double_squares.html" target="_parent">Facebook Hacker Cup Qualification Round: Double Squares</a></li></ol></li><li class="chapter-item expanded "><div>2010</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="https://tavianator.com/2010/righteous_hack.html" target="_parent">Righteous hack: getting 2⁶³ - 1 points in a silly Facebook game</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2010/solving_cubic_polynomials.html" target="_parent">Solving Cubic Polynomials</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2010/solving_polynomials.html" target="_parent">Solving Polynomials</a></li><li class="chapter-item expanded "><a href="https://tavianator.com/2010/first.html" target="_parent">.com</a></li></ol></li></ol>
+    
+
+</body></html>

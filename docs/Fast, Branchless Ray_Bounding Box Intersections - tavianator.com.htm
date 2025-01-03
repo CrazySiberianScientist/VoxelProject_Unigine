@@ -1,0 +1,683 @@
+<!DOCTYPE html><html lang="en" class="light sidebar-visible" dir="ltr"><head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Fast, Branchless Ray/Bounding Box Intersections - tavianator.com</title>
+
+
+        <!-- Custom HTML head -->
+        <link rel="alternate" type="application/atom+xml" href="/feed.atom" title="Atom Feed">
+        <link rel="alternate" type="application/feed+json" href="/feed.json" title="JSON Feed">
+        <link rel="alternate" type="application/rss+xml" href="/feed.rss" title="RSS Feed">
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+        
+        <link rel="stylesheet" href="../css/tavianator.css">
+        
+        <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-EBDQXGZ6R1"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-EBDQXGZ6R1');
+        </script>
+        
+        <script>
+        window.addEventListener("load", e => {
+            document.querySelectorAll(".feed-link").forEach(node => {
+                let debounce = false;
+                node.addEventListener("click", e => {
+                    if (!debounce) {
+                        debounce = true;
+                        navigator.clipboard
+                            .writeText(node.href)
+                            .then(() => {
+                                const i = node.firstChild;
+                                const prevClass = i.className;
+                                i.className = "fa fa-clipboard";
+                                const prevTitle = node.title;
+                                node.title = "Copied!";
+                                setTimeout(() => {
+                                    i.className = prevClass;
+                                    node.title = prevTitle;
+                                    debounce = false;
+                                }, 1000);
+                            });
+                    }
+                    e.preventDefault();
+                });
+            });
+        });
+        </script>
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">tavianator.com</h1>
+
+                    <div class="right-buttons"><a class="sponsor" href="https://github.com/sponsors/tavianator" title="Sponsor"><i class="fa fa-heart" aria-hidden="true"></i></a><a class="feed-link" href="/feed.atom" title="Atom feed"><i class="fa fa-rss" aria-hidden="true"></i></a>
+                        <a href="https://github.com/tavianator/tavianator.com" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this site ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="fast-branchless-raybounding-box-intersections"><a class="header" href="#fast-branchless-raybounding-box-intersections">Fast, Branchless Ray/Bounding Box Intersections</a></h1>
+<div class="infobar">
+<p><i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2011-05-02">2011-05-02</time>
+<i class="fa fa-user" aria-hidden="true"></i> Tavian Barnes
+<a href="#comments"><i class="fa fa-comments" aria-hidden="true"></i> Comments</a></p>
+</div>
+<p><ins>(Update: <a href="../2015/ray_box_nan.html">part 2</a>, <a href="../2022/ray_box_boundary.html">part 3</a>)</ins></p>
+<p>Axis-aligned bounding boxes (AABBs) are universally used to bound finite objects in ray-tracing.
+Ray/AABB intersections are usually faster to calculate than exact ray/object intersections, and allow the construction of bounding volume hierarchies (BVHs) which reduce the number of objects that need to be considered for each ray.
+(More on BVHs in a later post.)
+This means that a ray-tracer spends a lot of its time calculating ray/AABB intersections, and therefore this code ought to be highly optimised.</p>
+<p>The fastest method for performing ray/AABB intersections is the <a href="http://www.siggraph.org/education/materials/HyperGraph/raytrace/rtinter3.htm">slab method</a>.
+The idea is to treat the box as the space inside of three pairs of parallel planes.
+The ray is clipped by each pair of parallel planes, and if any portion of the ray remains, it intersected the box.</p>
+<p style="text-align: center;">
+<img src="slab_method.gif">
+</p>
+<p>A simple implementation of this algorithm might look like this (in two dimensions for brevity):</p>
+<pre><code class="language-c">bool intersection(box b, ray r) {
+    double tmin = -INFINITY, tmax = INFINITY;
+
+    if (ray.n.x != 0.0) {
+        double tx1 = (b.min.x - r.x0.x)/r.n.x;
+        double tx2 = (b.max.x - r.x0.x)/r.n.x;
+
+        tmin = max(tmin, min(tx1, tx2));
+        tmax = min(tmax, max(tx1, tx2));
+    }
+
+    if (ray.n.y != 0.0) {
+        double ty1 = (b.min.y - r.x0.y)/r.n.y;
+        double ty2 = (b.max.y - r.x0.y)/r.n.y;
+
+        tmin = max(tmin, min(ty1, ty2));
+        tmax = min(tmax, max(ty1, ty2));
+    }
+
+    return tmax &gt;= tmin;
+}
+</code></pre>
+<p>However, those divisions take quite a bit of time.
+Since when ray-tracing, the same ray is tested against many AABBs, it makes sense to pre-calculate the inverses of the direction components of the ray.
+If we can rely on the IEEE 754 floating-point properties, this also implicitly handles the edge case where a component of the direction is zero - the <code>tx1</code> and <code>tx2</code> values (for example) will be infinities of opposite sign if the ray is within the slabs, thus leaving <code>tmin</code> and <code>tmax</code> unchanged.
+If the ray is outside the slabs, <code>tx1</code> and <code>tx2</code> will be infinities with the same sign, thus making <code>tmin == +inf</code> or <code>tmax == -inf</code>, and causing the test to fail.</p>
+<p>The final implementation would look like this:</p>
+<pre><code class="language-c">bool intersection(box b, ray r) {
+    double tx1 = (b.min.x - r.x0.x)*r.n_inv.x;
+    double tx2 = (b.max.x - r.x0.x)*r.n_inv.x;
+
+    double tmin = min(tx1, tx2);
+    double tmax = max(tx1, tx2);
+
+    double ty1 = (b.min.y - r.x0.y)*r.n_inv.y;
+    double ty2 = (b.max.y - r.x0.y)*r.n_inv.y;
+
+    tmin = max(tmin, min(ty1, ty2));
+    tmax = min(tmax, max(ty1, ty2));
+
+    return tmax &gt;= tmin;
+}
+</code></pre>
+<p>Since modern floating-point instruction sets can compute min and max without branches, this gives a ray/AABB intersection test with no branches or divisions.</p>
+<p>My implementation of this in my ray-tracer <a href="/dimension">Dimension</a> can be seen <a href="/cgit/dimension.git/tree/libdimension/bvh/bvh.c#n194">here</a>.</p>
+<hr>
+<h2 id="comments"><a class="header" href="#comments">Comments</a></h2>
+<blockquote>
+<p><strong>Phil</strong>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2012-04-01">2012-04-01</time></p>
+<p>This doesn't seem to work out for me for negative direction vectors.
+Looking forward, I can see a box that's there, but looking backwards, I again see the same box mirrored, even though in this direction it's not "there".
+Following the algorithm step by step manually for both a positive and a negative z-dir (with x-dir and y-dir set to 0) gives the same near and far planes in both directions:</p>
+<pre><code class="language-c">/*
+box = MIN 0,0,0  MAX 256,256,256
+ray POS 128,128,-512
+case 1: ray DIR 0,0,0.9 -- inverse: (inf,inf,1.1111)
+case 2: ray DIR 0,0,-0.9 -- inverse: (inf,inf,-1.1111)
+*/
+picker.tx1, picker.tx2 = (me.Min.X - ray.Pos.X) * ray.invDir.X, (me.Max.X - ray.Pos.X) * ray.invDir.X	//	-inf,inf			-inf,inf
+picker.ty1, picker.ty2 = (me.Min.Y - ray.Pos.Y) * ray.invDir.Y, (me.Max.Y - ray.Pos.Y) * ray.invDir.Y	//	-inf,inf			-inf,inf
+picker.tz1, picker.tz2 = (me.Min.Z - ray.Pos.Z) * ray.invDir.Z, (me.Max.Z - ray.Pos.Z) * ray.invDir.Z	//	-142.22,142.22		142.22,-142.22
+picker.txn, picker.txf = math.Min(picker.tx1, picker.tx2), math.Max(picker.tx1, picker.tx2)		//	-inf,inf			-inf,inf
+picker.tyn, picker.tyf = math.Min(picker.ty1, picker.ty2), math.Max(picker.ty1, picker.ty2)		//	-inf,inf			-inf,inf
+picker.tzn, picker.tzf = math.Min(picker.tz1, picker.tz2), math.Max(picker.tz1, picker.tz2)		//	-142.22,142.22		-142.22,142.22
+picker.tnear = math.Max(picker.txn, math.Max(picker.tyn, picker.tzn))					//	-142.22				-142.22
+picker.tfar = math.Min(picker.txf, math.Min(picker.tyf, picker.tzf))					//	142.22				142.22
+if picker.tfar &lt; picker.tnear {
+	return true
+}
+</code></pre>
+<blockquote>
+<p><i class="fa fa-user" aria-hidden="true"></i> <a href="/"><strong>Tavian Barnes</strong></a>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2012-04-03">2012-04-03</time></p>
+<p>Right, because the test is only for whether the line intersects the box at all.
+The line extends both forwards and backwards.
+Just add a tmax &gt;= 0 check.
+It's tmax, not tmin, since tmin will be &lt; 0 if the ray originates inside the box.</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><strong>Sergiy</strong>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2012-12-30">2012-12-30</time></p>
+<p>Thanks. Works nicely and fast. I updated it a bit, to use SSE (though Vectormath), floats only.</p>
+<p>https://gist.github.com/4412640#file-bbox-cpp-L14</p>
+<blockquote>
+<p><i class="fa fa-user" aria-hidden="true"></i> <a href="/"><strong>Tavian Barnes</strong></a>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2013-01-04">2013-01-04</time></p>
+<p>You're welcome!
+I can't see that gist though (says "OAuth failure").
+What kind of performance did the vectorisation give you?</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><a href="http://stolk.org/"><strong>Bram Stolk</strong></a>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2014-12-29">2014-12-29</time></p>
+<p>To get the actual intersection, would I just use tmin, and multiply it with ray dir, adding ray origin?
+And what if I'm just interested in which face was intersected? x+,x-,y+,y-,z+ or z-?</p>
+<blockquote>
+<p><i class="fa fa-user" aria-hidden="true"></i> <a href="/"><strong>Tavian Barnes</strong></a>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2015-01-11">2015-01-11</time></p>
+<p>Yes, that's what I'd do.
+Except if the ray origin is inside the box (tmin &lt; 0), you need to use tmax instead.</p>
+<p>To see what face was intersected, there's a few different ways.
+You can keep track of which slab is intersecting in the above algorithm at all times, but that slows it down.</p>
+<p>For a cube centered at the origin, a neat trick is to take the component of the intersection point with the largest absolute value.</p>
+<blockquote>
+<p><a href="http://stolk.org/"><strong>Bram Stolk</strong></a>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2015-01-11">2015-01-11</time></p>
+<p>Thanks Tavianator,</p>
+<p>Yeah, the cube-trick requires sorting. <br>
+So for now I test proximity to face within an epsilon. <br>
+If close enough to face, I assume that face was hit. <br>
+I can live with the few false positives, as I shoot over 100M photons each frame anyway.</p>
+<blockquote>
+<p><a href="http://stolk.org/"><strong>Bram Stolk</strong></a>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2015-01-11">2015-01-11</time></p>
+<p>Oops... that should be 100K photons of course.</p>
+<blockquote>
+<p><i class="fa fa-user" aria-hidden="true"></i> <a href="/"><strong>Tavian Barnes</strong></a>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2015-01-12">2015-01-12</time></p>
+<p>Haha I was <em>really</em> impressed for a second :)</p>
+<p>The cube trick does not require sorting, just selecting the max from three candidates.</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><strong>Francisco</strong>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2015-03-12">2015-03-12</time></p>
+<p>So if I return a vec3 with tmin, tmax and a float hit = step(tmin,tmax)*step(0,tmax), I basically know that if hit &gt; 0 then ro+rd*tmin is my lower bound intersection point (entry point) and ro+rd*tmax is my higher bound intersection point (exit point), right?
+However, if tmin &lt; 0, I'm inside the bounding box, which means I don't need the entry point and I can just use the ray origin as my starting point.</p>
+<blockquote>
+<p><i class="fa fa-user" aria-hidden="true"></i> <a href="/"><strong>Tavian Barnes</strong></a>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2015-03-12">2015-03-12</time></p>
+<p>Sorry, not sure what you mean by <code>step()</code>. You can get the starting point as <code>ro + td*max(tmin, 0.0)</code>.</p>
+<blockquote>
+<p><strong>Francisco</strong>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2015-04-01">2015-04-01</time></p>
+<p>step(edge,A) returns 1 if A &gt;= edge, 0 elsewise.
+So I know if it was a hit if tmax &gt;= tmin AND tmax &gt;= 0.
+Then we also know tmin is the closest intersection and tmax is the furthest.</p>
+<p>I implemented this in C++ and it works perfectly for any ray direction.
+However, in GLSL it seems to have problems with negative directions.</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><a href="http://jonolick.com/"><strong>Jon olick</strong></a>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2015-01-22">2015-01-22</time></p>
+<p>Something to consider here is that 0 * inf =nan which occurs when the ray starts exactly on the edge of a box</p>
+<blockquote>
+<p><i class="fa fa-user" aria-hidden="true"></i> <a href="/"><strong>Tavian Barnes</strong></a>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2015-01-31">2015-01-31</time></p>
+<p>True, if you want consistent handling of that case while staying branch-free, you have to do a little more work.
+This is worth another post actually, I'll write one up.</p>
+<blockquote>
+<p><strong>Josh</strong>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2017-08-14">2017-08-14</time></p>
+<p>Did you do another post?</p>
+<blockquote>
+<p><i class="fa fa-user" aria-hidden="true"></i> <a href="/"><strong>Tavian Barnes</strong></a>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2017-08-16">2017-08-16</time></p>
+<p>Yep: <a href="https://tavianator.com/2015/03/fast-branchless-raybounding-box-intersections-part-2-nans/">https://tavianator.com/2015/03/fast-branchless-raybounding-box-intersections-part-2-nans/</a></p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><strong>Chris</strong>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2015-03-08">2015-03-08</time></p>
+<p>Thanks for posting this (so long ago)!
+I used this in my own code, and wondered if it is possible to save 2 of the subtractions by taking advantage of the fact that min(x+a, y+a) = min(x,y)+a (for some constant a):</p>
+<pre><code class="language-c">r.offset = (r.n_inv.y * r.x0.y) - (r.n_inv.x * r.x0.x);
+
+bool
+intersection(box b, ray r)
+{
+  double tx1 = b.min.x * r.n_inv.x;
+  double tx2 = b.max.x * r.n_inv.x;
+
+  double tmin = min(tx1, tx2) + r.offset;
+  double tmax = max(tx1, tx2) + r.offset;
+
+  double ty1 = b.min.y * r.n_inv.y;
+  double ty2 = b.max.y * r.n_inv.y;
+
+  tmin = max(tmin, min(ty1, ty2));
+  tmax = min(tmax, max(ty1, ty2));
+
+  return tmax &gt;= tmin;
+}
+</code></pre>
+<blockquote>
+<p><i class="fa fa-user" aria-hidden="true"></i> <a href="/"><strong>Tavian Barnes</strong></a>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2015-03-11">2015-03-11</time></p>
+<p>I think that should work, but there's a couple bugs in your example code.
+And actually for the test as written you can omit <code>r.offset</code> entirely since it doesn't affect the <code>tmax &gt;= tmin</code> check at the end.
+But since you probably want a <code>tmax &gt;= 0.0</code> check too, this should work:</p>
+<pre><code class="language-c">r.offset = (r.n_inv.y * r.x0.y) + (r.n_inv.x * r.x0.x);
+
+bool
+intersection(box b, ray r)
+{
+  double tx1 = b.min.x * r.n_inv.x;
+  double tx2 = b.max.x * r.n_inv.x;
+
+  double tmin = min(tx1, tx2);
+  double tmax = max(tx1, tx2);
+
+  double ty1 = b.min.y * r.n_inv.y;
+  double ty2 = b.max.y * r.n_inv.y;
+
+  tmin = max(tmin, min(ty1, ty2));
+  tmax = min(tmax, max(ty1, ty2));
+
+  return tmax &gt;= max(tmin, r.offset);
+}
+</code></pre>
+<p>I'll try it out and see how much faster it is, thanks!</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><strong>Mario</strong>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2015-05-16">2015-05-16</time></p>
+<p>What if I want to know the 't' of the intersection?</p>
+<blockquote>
+<p><i class="fa fa-user" aria-hidden="true"></i> <a href="/"><strong>Tavian Barnes</strong></a>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2015-05-16">2015-05-16</time></p>
+<p><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><msub><mi>t</mi><mrow><mi>min</mi><mo>⁡</mo><mrow></mrow></mrow></msub></mrow><annotation encoding="application/x-tex">t = t_{\min{}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7651em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3175em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mop mtight"><span class="mtight">m</span><span class="mtight">i</span><span class="mtight">n</span></span><span class="mspace mtight" style="margin-right:0.1952em;"></span><span class="mord mtight"></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>, unless <span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>t</mi><mrow><mi>min</mi><mo>⁡</mo><mrow></mrow></mrow></msub><mo>&lt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">t_{\min{}} &lt; 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7651em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3175em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mop mtight"><span class="mtight">m</span><span class="mtight">i</span><span class="mtight">n</span></span><span class="mspace mtight" style="margin-right:0.1952em;"></span><span class="mord mtight"></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></span>, in which case you're inside the box and <span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><msub><mi>t</mi><mrow><mi>max</mi><mo>⁡</mo><mrow></mrow></mrow></msub></mrow><annotation encoding="application/x-tex">t = t_{\max{}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7651em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mop mtight"><span class="mtight">m</span><span class="mtight">a</span><span class="mtight">x</span></span><span class="mspace mtight" style="margin-right:0.1952em;"></span><span class="mord mtight"></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>.</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><a href="http://ocdy1001.blogspot.nl/"><strong>Cody Bloemhard</strong></a>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2015-05-29">2015-05-29</time></p>
+<p>Very useful! faster the any method i tried.
+not because of the !(use of divisions), but because the implementation of the slab method is far simpler than others do.
+They use things(slow things) like square roots, DOT products and lots of checks with points.
+now my raycasting method has the speed i wanted.
+Thanks for that.</p>
+</blockquote>
+<blockquote>
+<p><strong>Ciyo</strong>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2015-12-01">2015-12-01</time></p>
+<p>Hello, many thanks for this useful information!</p>
+<p>I have a question about the surface normal. Is there an easy way to get the normal of the intersection point?</p>
+<p>Thank you!</p>
+<blockquote>
+<p><strong>Phlimy</strong>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2016-09-06">2016-09-06</time></p>
+<p>I would really like to know too!</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><strong>Diego Sinay</strong>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2016-05-12">2016-05-12</time></p>
+<p>Hi, great read! <br>
+One quick question. <br>
+I had no problem using the first implementation for my ray-tracing algorithm, but can't implement that faster version since I can't get the inverse of the direction vector(doesn't it have to be squared?). <br>
+Any help is appreciated, Thanks!</p>
+<blockquote>
+<p><i class="fa fa-user" aria-hidden="true"></i> <a href="/"><strong>Tavian Barnes</strong></a>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2016-05-16">2016-05-16</time></p>
+<p>You can just compute (1/x, 1/y, 1/z) as the inverse. You don't have to square it.</p>
+<blockquote>
+<p><strong>SW</strong>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2018-02-27">2018-02-27</time></p>
+<p>I know this is from a couple of years but ago now, but I’m really confused by this.</p>
+<p>You say you can calculate the inverse of a ray with (1/x, 1/y, 1/z) but I don’t understand that.</p>
+<p>Suppose I had a ray going straight in the x direction (1,0,0). Wouldn’t this give:</p>
+<p>(1/1,1/0,1/0) = (1,0,0)</p>
+<p>Which is surely the same ray?</p>
+<p>Sorry if this is a stupid question!</p>
+<blockquote>
+<p><i class="fa fa-user" aria-hidden="true"></i> <a href="/"><strong>Tavian Barnes</strong></a>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2018-02-27">2018-02-27</time></p>
+<p>1/0 is not zero. In IEEE 754 arithmetic, it is +inf.</p>
+<blockquote>
+<p><strong>SW</strong>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2018-02-27">2018-02-27</time></p>
+<p>So the inverse of a ray going positive X direction is (1, +inf, +inf)? <br>
+I'm having a hard time understanding that! I'm trying to find some sources to explain this but comin up short. <br>
+I would have though the inverse ray would be (x*-1, y*-1, z*-1), making an inverse ray of positive X as (-1, 0, 0). Then it's a ray going in the opposite direction. <br>
+By the way, thank you for answering, I realise I'm probably asking really stupid questions.</p>
+<blockquote>
+<p><i class="fa fa-user" aria-hidden="true"></i> <a href="/"><strong>Tavian Barnes</strong></a>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2018-02-27">2018-02-27</time></p>
+<p>The "inverse" is not a ray at all.
+It's just three numbers that are the (multiplicative) inverses of the direction components.</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><a href="https://kleinfreund.de/"><strong>Phil</strong></a>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2016-06-23">2016-06-23</time></p>
+<p>Hey there,</p>
+<p>considering I have box with min(1,1,1) and max(2,2,2) and a ray with origin(3,3,3) and direction (2,2,2).
+Oh.
+Wait a second.
+I think I just answered my question.
+It's ray direction, not target position.</p>
+<p>If I want my ray to go from (3,3,3) towards the direction of point (2,2,2) I need a direction like (-1,-1,-1), correct?
+Oh my, this made me struggle way longer than it should have.</p>
+<p>Nevermind me. Thank you for the write-up in both articles. :)</p>
+</blockquote>
+<blockquote>
+<p><strong>Dave</strong>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2016-09-27">2016-09-27</time></p>
+<p>Does anyone know why this doesn't seem to work in GLSL for all angles?</p>
+<p>INFINITY is defined as <code>const float INFINITY = 1.0 / 0.0;</code></p>
+<pre><code class="language-c">float rayAABBIntersection (Ray ray, AABB aabb)
+{
+	float tx1 = (aabb.min.x - ray.origin.x)*ray.inverseDirection.x;
+	float tx2 = (aabb.max.x - ray.origin.x)*ray.inverseDirection.x;
+
+	float tmin = min(tx1, tx2);
+	float tmax = max(tx1, tx2);
+
+	float ty1 = (aabb.min.y - ray.origin.y)*ray.inverseDirection.y;
+	float ty2 = (aabb.max.y - ray.origin.y)*ray.inverseDirection.y;
+
+	tmin = max(tmin, min(ty1, ty2));
+	tmax = min(tmax, max(ty1, ty2));
+
+	float tz1 = (aabb.min.z - ray.origin.z)*ray.inverseDirection.z;
+	float tz2 = (aabb.max.z - ray.origin.z)*ray.inverseDirection.z;
+
+	tmin = max(tmin, min(tz1, tz2));
+	tmax = min(tmax, max(tz1, tz2));
+
+	if (tmin &gt; tmax)
+	{
+		return INFINITY;
+	}
+
+	if (tmin &lt; 0)
+	{
+		return tmax;
+	}
+
+	return tmin;
+}
+</code></pre>
+<blockquote>
+<p><i class="fa fa-user" aria-hidden="true"></i> <a href="/"><strong>Tavian Barnes</strong></a>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2016-09-29">2016-09-29</time></p>
+<p>What do you mean "doesn't work"?
+What happens?
+Do you have a numerical example that gets evaluated wrong?</p>
+</blockquote>
+<blockquote>
+<p><strong>skewed</strong>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2018-01-31">2018-01-31</time></p>
+<p><code>INFINITY is defined as const float INFINITY = 1.0 / 0.0;</code></p>
+<p>You can't divide by zero like this.
+The result is undefined in glsl, which means the implementation is free to do whatever nonsense it wants to when it encounters this statement (except - according to the spec - crash).</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><strong>Ali</strong>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2017-02-01">2017-02-01</time></p>
+<p>How to find the intersection points of a Cartesian grid and a boundary (e.g. a circle, an ellipse, an arbitrary shape)?
+I am interested in the intersection of the boundary with the cartesian grid.
+Any suggestion/algorithm, kindly email me.</p>
+</blockquote>
+<blockquote>
+<p><a href="http://www.io7m.com/"><strong>Mark R</strong></a>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2017-05-16">2017-05-16</time></p>
+<p>Hello.</p>
+<p>Having read both this and part 2, I'm unable to work out what changes I need to make in order to reliably detect intersections when a ray is exactly on the edge of an AABB.
+I have your implementation here with a simple failing test case:</p>
+<p><a href="https://github.com/io7m/raycast-issue-20170516">https://github.com/io7m/raycast-issue-20170516</a></p>
+<p>I've stepped through the code and tried making the changes you suggested in the other article (exchanging Math.max and Math.min for implementations that have the semantics of maxNumber and minNumber) but I can't seem to get it to work.</p>
+<p>Maybe I've misunderstood the intent of the other article: What changes do I need to make to reliably catch ray/edge intersections?
+I care less about efficiency and more about avoiding false negatives.</p>
+<blockquote>
+<p><i class="fa fa-user" aria-hidden="true"></i> <a href="/"><strong>Tavian Barnes</strong></a>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2017-05-17">2017-05-17</time></p>
+<p>If you're not concerned with efficiency too much, just take the "naïve" code from part 2 and swap <code>&lt;=</code>/<code>&gt;=</code> with <code>&lt;</code>/<code>&gt;</code>:</p>
+<pre><code class="language-c">bool intersection(box b, ray r) {
+    double tmin = -INFINITY, tmax = INFINITY;
+
+    for (int i = 0; i &lt; 3; ++i) {
+        if (ray.dir[i] != 0.0) {
+            double t1 = (b.min[i] - r.origin[i])/r.dir[i];
+            double t2 = (b.max[i] - r.origin[i])/r.dir[i];
+
+            tmin = max(tmin, min(t1, t2));
+            tmax = min(tmax, max(t1, t2));
+        } else if (ray.origin[i] &lt; b.min[i] || ray.origin[i] &gt; b.max[i]) {
+            return false;
+        }
+    }
+
+    return tmax &gt;= tmin &amp;&amp; tmax &gt;= 0.0;
+}
+</code></pre>
+<blockquote>
+<p><a href="http://www.io7m.com/"><strong>Mark R</strong></a>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2017-05-17">2017-05-17</time></p>
+<p>Ah, OK, thanks!</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><strong>Amomum</strong>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2017-06-09">2017-06-09</time></p>
+<p>Can you please explain what is this 'double t' parameter is?</p>
+<p><code>static inline bool dmnsn_ray_box_intersection(dmnsn_optimized_ray optray, dmnsn_aabb box, double t)</code></p>
+<p>It hurts me to say this but I believe that some of the functions do require comments about their input parameters.
+Or more obvious names.</p>
+<blockquote>
+<p><i class="fa fa-user" aria-hidden="true"></i> <a href="/"><strong>Tavian Barnes</strong></a>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2017-06-13">2017-06-13</time></p>
+<p>A common way of defining lines (see <code>dmnsn_ray</code>) is by the parametric formula <code>origin + t*direction</code>.
+Commonly we restrict <code>t &gt;= 0</code> to get a half-line starting from the given origin.
+So generally <code>t</code> specifies a position along a line.
+In this case, <code>t</code> is the closest object intersection found so far, so if the bounding box is farther away than <code>t</code>, we can ignore it.</p>
+<p>I agree that should be better documented! :)</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><strong>Kanzaki</strong>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2018-04-02">2018-04-02</time></p>
+<p>Hi, thanks a lot for sharing.</p>
+<p>I want to know how I can calculate the normal of my cube ?
+I know each side has its own.
+And I know I will only see 3 sides tops at a time.
+But I still don't know how to calculate it...
+Is it box-&gt;origin - intersection ? or box-&gt;origin - center_of_hit_side ?</p>
+<p>Thanks a lot.</p>
+<blockquote>
+<p><i class="fa fa-user" aria-hidden="true"></i> <a href="/"><strong>Tavian Barnes</strong></a>
+<i class="fa fa-clock-o" aria-hidden="true"></i> <time datetime="2018-04-07">2018-04-07</time></p>
+<p><a href="https://tavianator.com/fast-branchless-raybounding-box-intersections-part-2-nans/#comment-52153">https://tavianator.com/fast-branchless-raybounding-box-intersections-part-2-nans/#comment-52153</a></p>
+</blockquote>
+</blockquote>
+
+                    </main>
+
+                    
+                </div>
+            </div>
+
+            
+
+        </div>
+
+
+
+
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    
+
+</body></html>
