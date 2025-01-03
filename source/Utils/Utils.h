@@ -294,11 +294,15 @@ namespace Utils
 		{
 		}
 
+
+		// Закомментил это потому что в последней обнове VS какая-то обезьяна косорукая сломала компилятор и он тут несёт херню
+		/*
 		template<typename _Key>
 		auto& GetValue()
 		{
 			return std::get<Pack::GetTypeIndex<_Key, TypeTableComp>()>(data);
 		}
+		*/
 	};
 
 	template<size_t _keyValue, typename _ValueType>

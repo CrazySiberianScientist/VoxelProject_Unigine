@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<property version="2.19.0.2" name="CSRayMarchingTest" manual="1" parent_name="node_base">
+<property version="2.19.0.3" name="CSRayMarchingTest" manual="1" parent_name="node_base">
 	<parameter name="material" type="material"/>
 </property>

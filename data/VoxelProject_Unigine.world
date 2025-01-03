@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<world version="2.19.0.2">
+<world version="2.19.0.3">
 	<render_settings_path>guid://92a0ee7917704584f2b913132a497d56e78094bd</render_settings_path>
 	<data>
 		<user/>
@@ -470,7 +470,6 @@
 		<render_occlusion_queries_num_frames>5</render_occlusion_queries_num_frames>
 		<render_panorama_fisheye_fov>180</render_panorama_fisheye_fov>
 		<render_pre_post_materials_enabled>1</render_pre_post_materials_enabled>
-		<render_quadro_sync>0</render_quadro_sync>
 		<render_reflection_distance>1e+09</render_reflection_distance>
 		<render_reflection_dynamic>1</render_reflection_dynamic>
 		<render_reflection_dynamic_roughness_offset>0</render_reflection_dynamic_roughness_offset>
@@ -724,6 +723,7 @@
 		<composite_deferred_material_guid>guid://</composite_deferred_material_guid>
 		<debug_materials/>
 		<scriptable_materials/>
+		<render_sssss_taa>1</render_sssss_taa>
 	</render>
 	<physics>
 		<frozen_linear_velocity>0.0199999996</frozen_linear_velocity>
