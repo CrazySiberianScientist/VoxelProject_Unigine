@@ -56,7 +56,7 @@ add_executable(${target}
 	  "Components/CSRayMarchingTestEntity.h"
 	  "Components/CSRayMarchingTestEntity.cpp"
 	  "Voxels/VoxelProjectMacros.h"
-	  "Voxels/VoxelSpace.h/"
+	  "Voxels/VoxelSpace.h"
 	  "Voxels/VoxelStorage.h"
 	  "Voxels/VoxelTypes.h"
 	  "Utils/MathUtils.h"

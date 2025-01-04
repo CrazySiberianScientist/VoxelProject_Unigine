@@ -11,7 +11,7 @@ namespace GeomUtils
 {
 	// возвращает два `t` для точек пересечения, где point = startPoint + dir * t; Если t < 0, то пересечения нет
 	template <typename _Vec3, typename _ValueType = std::decay_t<decltype(_Vec3{} [0] ) >>
-	std::array<_ValueType, 2> IntersectRayAABB(const _Vec3& startPoint, const _Vec3& dir, const _Vec3& bbMin, const _Vec3& bbMax)
+	std::array<_ValueType, 2> IntersectLineAABB(const _Vec3& startPoint, const _Vec3& dir, const _Vec3& bbMin, const _Vec3& bbMax)
 	{
 		constexpr auto vecSize = 3;
 
@@ -28,6 +28,16 @@ namespace GeomUtils
 			tMax = std::max(std::min(t0, tMax), std::min(t1, tMax));
 		}
 
+		// return tmin < tmax;
 		return { tMin, tMax };
 	}
+
+	template <typename _Vec3, typename _ValueType = std::decay_t<decltype(_Vec3{}[0]) >>
+	bool CheckIntersectRayAABB(const _Vec3& startPoint, const _Vec3& dir, const _Vec3& bbMin, const _Vec3& bbMax)
+	{
+		const auto result = IntersectLineAABB<_Vec3, _ValueType>(startPoint, dir, bbMin, bbMax);
+		return result[0] < result[1];
+	}
+
+
 }
