@@ -5,6 +5,7 @@
 #include "Voxels/VoxelTypes.h"
 #include "Voxels/VoxelUtils.h"
 #include "Utils/ProjectUtilsMacros.h"
+#include "Utils/GeomUtils.h"
 #include "LogicOrders.h"
 
 #include "CSLineManipulator.h"
@@ -32,6 +33,8 @@ export namespace VoxelProjectUnigine
 
 
 		VoxelBlockBitset voxelBlock;
+		static constexpr float voxelSize_meters = 1.0f;
+		const Vec3_meters blockSize_meters { VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS * voxelSize_meters };
 
 		COMPONENT_INIT(InitPropParams, GlobalInitOrder::COMPONENT_FIELDS);
 		void InitPropParams()
@@ -53,6 +56,21 @@ export namespace VoxelProjectUnigine
 			{
 				const auto testLineWP = line_manipulator->GetWorldPoints();
 				const std::array testLineLP = { node->toLocal(testLineWP[0]), node->toLocal(testLineWP[1]) };
+
+				const auto lineDir = testLineLP[1] - testLineLP[0];
+				const auto lineLength = lineDir.lengthFast();
+				
+
+				if (const auto result = GeomUtils::IntersectSegmentAABB(testLineLP[0], lineDir / lineLength, {}, blockSize_meters, lineLength); result.isValid)
+				{
+					for (const auto& p : result.points)
+					{
+						const auto wP = node->toWorld(p);
+						Visualizer::renderPoint3D(wP, 0.2, Math::vec4(1, 0, 1, 1));
+					}
+					
+				}
+
 				auto points = RayTrace(Vec3_meters(testLineLP[0]), Vec3_meters(testLineLP[1]));
 				for (auto& p : points)
 				{
@@ -90,18 +108,17 @@ export namespace VoxelProjectUnigine
 
 		void RenderBlock(const VoxelProject::VoxelBlockBitset& voxelBlockBitset, const Unigine::Math::Mat4& blockWorldTransform)
 		{
-			constexpr float voxelSize_meters = 1.0f;
-			const Vec3_metersWorld blockSize_meters(VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS * voxelSize_meters);
+			
 
 			{
 				auto localTransform = Mat4_identity;
-				localTransform.setTranslate(blockSize_meters / 2);
-				Visualizer::renderBox(vec3(blockSize_meters), localTransform * blockWorldTransform, Math::vec4(1.0f, 1.0f, 0.0f, 0.6f));
+				localTransform.setTranslate(dvec3(blockSize_meters) / 2);
+				Visualizer::renderBox(blockSize_meters, localTransform * blockWorldTransform, Math::vec4(1.0f, 1.0f, 0.0f, 0.6f));
 			}
 
 			
 			VoxelSizeType voxelIndex = 0;
-			auto forEachCallback = [this, blockWorldTransform, voxelSize_meters, &voxelIndex](const bool bitValue)
+			auto forEachCallback = [this, blockWorldTransform, &voxelIndex](const bool bitValue)
 				{
 					auto localPos_meters = MathUtils::IndexToPos3d<Vec3_metersWorld>(voxelIndex, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS);
 					localPos_meters *= voxelSize_meters;

@@ -9,6 +9,13 @@
 
 namespace GeomUtils
 {
+	template<typename _Vec3>
+	struct IntersectResult
+	{
+		std::array<_Vec3,2> points;
+		bool isValid;
+	};
+
 	// возвращает два `t` для точек пересечения, где point = startPoint + dir * t; Если t < 0, то пересечения нет
 	template <typename _Vec3, typename _ValueType = std::decay_t<decltype(_Vec3{} [0] ) >>
 	std::array<_ValueType, 2> IntersectLineAABB(const _Vec3& startPoint, const _Vec3& dir, const _Vec3& bbMin, const _Vec3& bbMax)
@@ -38,19 +45,12 @@ namespace GeomUtils
 		return intersectLineResult[0] < intersectLineResult[1];
 	}
 
-	template<typename _Vec3>
-	struct IntersectRayResult
-	{
-		std::array<_Vec3,2> points;
-		bool isValid;
-	};
-
 	template <typename _Vec3, typename _ValueType = std::decay_t<decltype(_Vec3{}[0]) >>
 	auto IntersectRayAABB(const _Vec3& startPoint, const _Vec3& dir, const _Vec3& bbMin, const _Vec3& bbMax)
 	{
 		const auto intersectLineResult = IntersectLineAABB<_Vec3, _ValueType>(startPoint, dir, bbMin, bbMax);
 
-		IntersectRayResult<_Vec3> result;
+		IntersectResult<_Vec3> result;
 
 		result.points[0] = startPoint + (intersectLineResult[0] > _ValueType{}) * dir * intersectLineResult[0];
 		result.points[1] = startPoint + dir * intersectLineResult[1];
@@ -58,4 +58,19 @@ namespace GeomUtils
 
 		return result;
 	}
+
+	template <typename _Vec3, typename _ValueType = std::decay_t<decltype(_Vec3{}[0]) >>
+	auto IntersectSegmentAABB(const _Vec3& startPoint, const _Vec3& dir, const _Vec3& bbMin, const _Vec3& bbMax, const _ValueType &segmentLength)
+	{
+		const auto intersectLineResult = IntersectLineAABB<_Vec3, _ValueType>(startPoint, dir, bbMin, bbMax);
+
+		IntersectResult<_Vec3> result;
+
+		result.points[0] = intersectLineResult[0] > _ValueType{} ? (startPoint + dir * intersectLineResult[0]) : startPoint;
+		result.points[1] = startPoint + dir * (intersectLineResult[1] > segmentLength ? segmentLength : intersectLineResult[1]);
+		result.isValid = intersectLineResult[0] < intersectLineResult[1] && _ValueType{} <= intersectLineResult[1];
+
+		return result;
+	}
+
 }
