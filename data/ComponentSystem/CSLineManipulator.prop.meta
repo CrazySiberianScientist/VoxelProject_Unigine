@@ -2,7 +2,7 @@
 <asset version="2.19.0.3">
 	<guid>64b6329b3e3bfe561e43965112e17139c541183a</guid>
 	<type>property</type>
-	<hash>843986aa</hash>
+	<hash>32772a0d</hash>
 	<runtimes>
 		<runtime id="64b6329b3e3bfe561e43965112e17139c541183a" name="CSLineManipulator" link="0" type="4"/>
 	</runtimes>

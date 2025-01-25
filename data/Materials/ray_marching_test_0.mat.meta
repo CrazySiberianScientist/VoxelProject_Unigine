@@ -2,7 +2,7 @@
 <asset version="2.19.0.3">
 	<guid>4c49f7579c635a93bc6719d67f971365857d5525</guid>
 	<type>material</type>
-	<hash>1e1b0275</hash>
+	<hash>bfa60f7e</hash>
 	<runtimes>
 		<runtime id="4c49f7579c635a93bc6719d67f971365857d5525" name="ray_marching_test_0" link="0" type="5"/>
 	</runtimes>

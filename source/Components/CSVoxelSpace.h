@@ -25,7 +25,7 @@ namespace VoxelProjectUnigine
 		VoxelProject::VoxelSpace<VoxelStorageRoles::Pack> voxelSpace{ 1, 1.0f };
 
 	private:
-		COMPONENT_UPDATE(Init, GlobalInitOrder::COMMON_LOGIC);
+		COMPONENT_INIT(Init, GlobalInitOrder::COMMON_LOGIC);
 		void Init();
 
 		COMPONENT_UPDATE(Update, GlobalUpdateOrder::COMMON_LOGIC);

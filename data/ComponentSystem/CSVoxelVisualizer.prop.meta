@@ -2,7 +2,7 @@
 <asset version="2.19.0.3">
 	<guid>3dd4fa383868a6c53228dd3413ecc2011827bdc9</guid>
 	<type>property</type>
-	<hash>6158b95c</hash>
+	<hash>1fe4b283</hash>
 	<runtimes>
 		<runtime id="3dd4fa383868a6c53228dd3413ecc2011827bdc9" name="CSVoxelVisualizer" link="0" type="4"/>
 	</runtimes>

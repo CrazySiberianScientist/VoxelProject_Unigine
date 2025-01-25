@@ -1,0 +1,37 @@
+// More information on ULON format - https://developer.unigine.com/docs/code/formats/ulon_format
+// More information on scriptable materials - https://developer.unigine.com/docs/content/materials/scriptable
+BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
+{
+	Color my_color = [0.5 0.5 0.5 1.0]
+	
+
+	Pass block_distance_field
+	{
+		Vertex =
+		#{
+			#include <core/materials/shaders/render/common.h>
+
+			STRUCT(VERTEX_IN)
+				INIT_ATTRIBUTE(float4,0,POSITION)	// Vertex position
+				INIT_ATTRIBUTE(float4,1,TEXCOORD0)	// Vertex texcoord (uv)
+				INIT_ATTRIBUTE(float4,2,TEXCOORD1)	// Vertex basis tangent
+				INIT_ATTRIBUTE(float4,3,TEXCOORD2)	// Vertex color
+			END
+
+			// Our output vertex data
+			STRUCT(VERTEX_OUT)
+				INIT_POSITION		// Out projected position
+				INIT_OUT(float4,0)	// Texcoord (uv)
+				INIT_OUT(float3,1)	// Vertex direction
+			END
+
+			INIT_STRUCTURED_BUFFER(0, uint, voxelBlockIndices);
+
+
+			MAIN_BEGIN(VERTEX_OUT, VERTEX_IN)
+				
+			MAIN_END
+		#}
+	}
+}
+

@@ -1,4 +1,11 @@
-float3 sample_albedo(float2 uv)
-{
-	return float3(0,1,0);
-}
+#include <core/materials/shaders/render/common.h>
+
+STRUCT_FRAG_BEGIN
+	INIT_COLOR(float4)
+STRUCT_FRAG_END
+
+INIT_STRUCTURED_BUFFER(0, uint, voxelBlockData);
+
+MAIN_FRAG_BEGIN(FRAGMENT_IN)
+
+MAIN_FRAG_END
