@@ -4,18 +4,37 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 {
 	Color my_color = [0.5 0.5 0.5 1.0]
 	
-
 	Pass block_distance_field
+	{
+		Compute=
+		#{
+			#include <core/materials/shaders/render/common.h>
+			
+			INIT_RW_TEXTURE_R32F_3D(0, DISTANCE_FIELD);
+			
+			#define THREAD_GROUP_SIZE 8
+			#define VOXEL_MAX_DISTANCE2 THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE
+
+			MAIN_COMPUTE_BEGIN(THREAD_GROUP_SIZE, THREAD_GROUP_SIZE, THREAD_GROUP_SIZE)
+				
+				const uint3 voxelPos = GROUP_ID * THREAD_GROUP_SIZE + GROUP_THREAD_ID;
+				const float currentDistance = max(voxelPos.x, max(voxelPos.y, voxelPos.z)) / THREAD_GROUP_SIZE;
+				
+				TEXTURE_RW_STORE_R32U(DISTANCE_FIELD, voxelPos, currentDistance);
+				
+			MAIN_COMPUTE_END
+		#}
+	}
+
+	Pass block_distance_field_vertex
 	{
 		Vertex =
 		#{
 			#include <core/materials/shaders/render/common.h>
 
 			STRUCT(VERTEX_IN)
-				INIT_ATTRIBUTE(float4,0,POSITION)	// Vertex position
-				INIT_ATTRIBUTE(float4,1,TEXCOORD0)	// Vertex texcoord (uv)
-				INIT_ATTRIBUTE(float4,2,TEXCOORD1)	// Vertex basis tangent
-				INIT_ATTRIBUTE(float4,3,TEXCOORD2)	// Vertex color
+				INIT_INSTANCE
+				INIT_VERTEX_ID
 			END
 
 			// Our output vertex data
