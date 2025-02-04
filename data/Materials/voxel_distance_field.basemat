@@ -10,7 +10,7 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 		#{
 			#include <core/materials/shaders/render/common.h>
 			
-			INIT_RW_TEXTURE_R32F_3D(0, DISTANCE_FIELD);
+			INIT_RW_TEXTURE_R32F_3D(0, distanceFieldTexture);
 			
 			#define THREAD_GROUP_SIZE 8
 			#define VOXEL_MAX_DISTANCE2 THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE
@@ -20,7 +20,7 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				const uint3 voxelPos = GROUP_ID * THREAD_GROUP_SIZE + GROUP_THREAD_ID;
 				const float currentDistance = max(voxelPos.x, max(voxelPos.y, voxelPos.z)) / THREAD_GROUP_SIZE;
 				
-				TEXTURE_RW_STORE_R32U(DISTANCE_FIELD, voxelPos, currentDistance);
+				TEXTURE_RW_STORE_R32U(distanceFieldTexture, voxelPos, currentDistance);
 				
 			MAIN_COMPUTE_END
 		#}

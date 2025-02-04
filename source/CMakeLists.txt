@@ -66,7 +66,7 @@ add_executable(${target}
 	  "Voxels/VoxelUtils.h" 
 	  "Voxels/VoxelUtils.cpp"
 	  "Utils/FunctionUtils.h"
-	  "Utils/BitUtils.h" "Components/CSLineManipulator.h" "Utils/GeomUtils.h" "Utils/AlgoUtils.h" "Components/CSVoxelFieldMap.h" "Components/CSVoxelFieldMap.cpp")
+	  "Utils/BitUtils.h" "Components/CSLineManipulator.h" "Utils/GeomUtils.h" "Utils/AlgoUtils.h" "Components/CSVoxelDistanceField.h" "Components/CSVoxelDistanceField.cpp")
 
 target_include_directories(${target}
 	PRIVATE
