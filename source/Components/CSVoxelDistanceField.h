@@ -29,7 +29,7 @@ namespace VoxelProjectUnigine
 		COMPONENT_INIT(Init, GlobalInitOrder::COMMON_LOGIC);
 		void Init();
 
-		COMPONENT_INIT(Update, GlobalUpdateOrder::COMMON_LOGIC);
+		COMPONENT_UPDATE(Update, GlobalUpdateOrder::COMMON_LOGIC);
 		void Update();
 
 		void RenderCallback();

@@ -2,12 +2,12 @@
 <world version="2.19.0.3">
 	<render_settings_path>guid://92a0ee7917704584f2b913132a497d56e78094bd</render_settings_path>
 	<data>
-		<user/>
 		<unigine_editor>
 			<body>
 				<node_extensions/>
 			</body>
 		</unigine_editor>
+		<user/>
 	</data>
 	<sound>
 		<enabled>1</enabled>
@@ -458,7 +458,6 @@
 		<render_motion_blur_velocity_blur_samples>8</render_motion_blur_velocity_blur_samples>
 		<render_motion_blur_velocity_scale>0.75</render_motion_blur_velocity_scale>
 		<render_multithreaded>1</render_multithreaded>
-		<render_multithreaded_editor>0</render_multithreaded_editor>
 		<render_noise>0</render_noise>
 		<render_noise_intensity>0.0299999993</render_noise_intensity>
 		<render_object_distance>1e+09</render_object_distance>
@@ -596,6 +595,7 @@
 		<render_sssss_quality>3</render_sssss_quality>
 		<render_sssss_radius>0.0199999996</render_sssss_radius>
 		<render_sssss_resolution>1</render_sssss_resolution>
+		<render_sssss_taa>1</render_sssss_taa>
 		<render_sssss_taa_antialiasing_in_motion>0</render_sssss_taa_antialiasing_in_motion>
 		<render_sssss_taa_catmull_resampling>1</render_sssss_taa_catmull_resampling>
 		<render_sssss_taa_fix_flicker>1</render_sssss_taa_fix_flicker>
@@ -674,6 +674,7 @@
 		<render_transparent_multiple_env_probes>1</render_transparent_multiple_env_probes>
 		<render_upscale_dlss_mode>3</render_upscale_dlss_mode>
 		<render_upscale_dlss_preset>0</render_upscale_dlss_preset>
+		<render_upscale_fsr_auto_reactive_enabled>0</render_upscale_fsr_auto_reactive_enabled>
 		<render_upscale_fsr_auto_reactive_max>0.899999976</render_upscale_fsr_auto_reactive_max>
 		<render_upscale_fsr_auto_reactive_scale>5</render_upscale_fsr_auto_reactive_scale>
 		<render_upscale_fsr_auto_tc_scale>1</render_upscale_fsr_auto_tc_scale>
@@ -723,7 +724,6 @@
 		<composite_deferred_material_guid>guid://</composite_deferred_material_guid>
 		<debug_materials/>
 		<scriptable_materials/>
-		<render_sssss_taa>1</render_sssss_taa>
 	</render>
 	<physics>
 		<frozen_linear_velocity>0.0199999996</frozen_linear_velocity>
@@ -1013,6 +1013,9 @@
 						<parameter name="line_manipulator_node">10292280</parameter>
 					</property>
 					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="a5bb9242f5e5407bc1ad9aec6b11fea72e0dcfbf"/>
+					<property parent="19c0426103036a96ea2f22d60c692dec3f325fe1" guid="aff0e0fc45cb0e2d7c6331fb8c3965f03f27eb0b">
+						<parameter name="compute_material">91402d1379cdcfd41b0824fc8e07e91cec5857c4</parameter>
+					</property>
 				</properties>
 				<transform>1 0 0 0.0 0 1 0 0.0 0 0 1 0.0 0 0 0 1.0</transform>
 			</node>

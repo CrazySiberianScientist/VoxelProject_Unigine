@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<asset version="2.19.0.3">
+	<guid>19c0426103036a96ea2f22d60c692dec3f325fe1</guid>
+	<type>property</type>
+	<hash>86ff59ac</hash>
+	<runtimes>
+		<runtime id="19c0426103036a96ea2f22d60c692dec3f325fe1" name="CSVoxelDistanceField" link="0" type="4"/>
+	</runtimes>
+</asset>

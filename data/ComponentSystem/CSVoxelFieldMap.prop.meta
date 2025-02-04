@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<asset version="2.19.0.3">
+	<guid>fb6329a528610824eaebdf0e3186a26f31149ce1</guid>
+	<type>property</type>
+	<hash>a4249b61</hash>
+	<runtimes>
+		<runtime id="fb6329a528610824eaebdf0e3186a26f31149ce1" name="CSVoxelFieldMap" link="0" type="4"/>
+	</runtimes>
+</asset>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<asset version="2.19.0.3">
+	<guid>8bcfb3d3765de751d4302ade722870b96bc665de</guid>
+	<type>file</type>
+	<hash>1452f9d8</hash>
+	<runtimes>
+		<runtime id="8bcfb3d3765de751d4302ade722870b96bc665de" name="voxel_block_distance_field.vert" link="0"/>
+	</runtimes>
+</asset>

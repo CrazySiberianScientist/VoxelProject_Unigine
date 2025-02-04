@@ -18,9 +18,10 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 			MAIN_COMPUTE_BEGIN(THREAD_GROUP_SIZE, THREAD_GROUP_SIZE, THREAD_GROUP_SIZE)
 				
 				const uint3 voxelPos = GROUP_ID * THREAD_GROUP_SIZE + GROUP_THREAD_ID;
-				const float currentDistance = max(voxelPos.x, max(voxelPos.y, voxelPos.z)) / THREAD_GROUP_SIZE;
+				const float currentDistance = max(voxelPos.x, max(voxelPos.y, voxelPos.z)) / (float)THREAD_GROUP_SIZE;
 				
-				TEXTURE_RW_STORE_R32U(distanceFieldTexture, voxelPos, currentDistance);
+				TEXTURE_RW_STORE_R32F(distanceFieldTexture, voxelPos, currentDistance);
+				//TEXTURE_RW_STORE_R32F(distanceFieldTexture, voxelPos, 0.5f);
 				
 			MAIN_COMPUTE_END
 		#}
