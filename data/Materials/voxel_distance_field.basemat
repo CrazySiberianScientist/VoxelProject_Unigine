@@ -10,7 +10,7 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 		#{
 			#include <core/materials/shaders/render/common.h>
 			
-			INIT_RW_TEXTURE_R32F_3D(0, distanceFieldTexture);
+			INIT_RW_TEXTURE_RGBA8_3D(0, distanceFieldTexture);
 			
 			#define THREAD_GROUP_SIZE 8
 			#define VOXEL_MAX_DISTANCE2 THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE
@@ -18,10 +18,12 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 			MAIN_COMPUTE_BEGIN(THREAD_GROUP_SIZE, THREAD_GROUP_SIZE, THREAD_GROUP_SIZE)
 				
 				const uint3 voxelPos = GROUP_ID * THREAD_GROUP_SIZE + GROUP_THREAD_ID;
-				const float currentDistance = max(voxelPos.x, max(voxelPos.y, voxelPos.z)) / (float)THREAD_GROUP_SIZE;
+				//const float currentDistance = max(voxelPos.x, max(voxelPos.y, voxelPos.z)) / (float)THREAD_GROUP_SIZE;
+				//const float currentDistance = (voxelPos.x + voxelPos.y + voxelPos.z) / (float)(THREAD_GROUP_SIZE * 3);
+				const float currentDistance = (voxelPos.x + voxelPos.y + voxelPos.z) / 255.0f;
 				
-				TEXTURE_RW_STORE_R32F(distanceFieldTexture, voxelPos, currentDistance);
-				//TEXTURE_RW_STORE_R32F(distanceFieldTexture, voxelPos, 0.5f);
+				TEXTURE_RW_STORE_RGBA8(distanceFieldTexture, voxelPos, float4(currentDistance,0,0,0));
+				//TEXTURE_RW_STORE_R32F(distanceFieldTexture, voxelPos, 255.0f);
 				
 			MAIN_COMPUTE_END
 		#}

@@ -71,7 +71,8 @@ export namespace VoxelProjectUnigine
 					
 				}
 
-				auto points = RayTrace(Vec3_meters(testLineLP[0]), Vec3_meters(testLineLP[1]));
+				std::vector<Vec3_meters> points;
+				RayTrace(Vec3_meters(testLineLP[0]), Vec3_meters(testLineLP[1]), points);
 				for (auto& p : points)
 				{
 					const auto wP = node->toWorld(p);

@@ -9,6 +9,7 @@
 #include <any>
 #include <unordered_map>
 #include <concepts>
+#include <optional>
 
 namespace Utils
 {
@@ -370,4 +371,12 @@ namespace Utils
 			return this->collection.emplace(_key, CurrentType{ std::forward<_ConstructorArgs>(constructorArgs)...}).first->second;
 		}
 	};
+}
+
+namespace Utils
+{
+	static inline std::nullopt_t NULLOPT_STATIC = std::nullopt;
+	
+	template<typename _T>
+	constexpr bool IsNulloptV = std::is_same_v<std::decay_t<_T>, std::nullopt_t>;
 }

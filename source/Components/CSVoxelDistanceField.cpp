@@ -10,7 +10,7 @@ namespace VoxelProjectUnigine
 
 		distanceFieldTexture = Texture::create();
 		distanceFieldTexture->create3D(VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS
-			, Texture::FORMAT_R32F, Texture::FORMAT_USAGE_UNORDERED_ACCESS | Texture::FORMAT_USAGE_RENDER);
+			, Texture::FORMAT_RGBA8, Texture::FORMAT_USAGE_UNORDERED_ACCESS | Texture::FORMAT_USAGE_RENDER);
 		distanceFieldTexture->setDebugName("distanceFieldTexture");
 
 		renderTarget = RenderTarget::create();

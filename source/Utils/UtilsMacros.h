@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #define UTILS_ENUM_SEQUENCE(NAME, ...)\
 struct NAME{\
@@ -10,3 +10,5 @@ struct NAME{\
 #define UTILS_TYPE_TABLE_ELEMENT(KEY, VALUE)\
 struct KEY {};\
 template<> struct TypeTableElement<KEY> { VALUE value; };
+
+#define UTILS_IS_NULLOPT(VAR) Utils::IsNulloptV<decltype(VAR)>
