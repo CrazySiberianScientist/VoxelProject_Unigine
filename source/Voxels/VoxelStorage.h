@@ -60,13 +60,13 @@ namespace VoxelProject
 
 		void SetVoxel(const Vec3_voxels& localPos_voxels, const DataType& voxelValue)
 		{
-			const auto index = MathUtils::Pos3dToIndex(localPos_voxels, BLOCK_SIZE__VOXELS, BLOCK_SIZE__VOXELS);
+			const auto index = MathUtils::Pos3dToIndex(localPos_voxels, BLOCK_SIDE_SIZE__VOXELS, BLOCK_SIDE_SIZE__VOXELS);
 			data.Set(index, voxelValue);
 		}
 
 		DataType GetVoxel(const Vec3_voxels& localPos_voxels) const
 		{
-			const auto index = MathUtils::Pos3dToIndex(localPos_voxels, BLOCK_SIZE__VOXELS, BLOCK_SIZE__VOXELS);
+			const auto index = MathUtils::Pos3dToIndex(localPos_voxels, BLOCK_SIDE_SIZE__VOXELS, BLOCK_SIDE_SIZE__VOXELS);
 			return data.Get(index);
 		}
 

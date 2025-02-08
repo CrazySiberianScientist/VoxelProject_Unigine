@@ -45,7 +45,7 @@ export namespace VoxelProjectUnigine
 		COMPONENT_INIT(Init, GlobalInitOrder::COMMON_LOGIC);
 		void Init()
 		{
-			BlockTestFill(voxelBlock);
+			//BlockTestFill(voxelBlock);
 		}
 
 		COMPONENT_UPDATE(Update, GlobalUpdateOrder::COMMON_LOGIC);
@@ -72,11 +72,20 @@ export namespace VoxelProjectUnigine
 				}
 
 				std::vector<Vec3_meters> points;
-				RayTrace(Vec3_meters(testLineLP[0]), Vec3_meters(testLineLP[1]), points);
+				std::vector<Vec3_voxels> voxelsPos;
+				RayTrace(Vec3_meters(testLineLP[0]), Vec3_meters(testLineLP[1]), points, voxelsPos);
 				for (auto& p : points)
 				{
 					const auto wP = node->toWorld(p);
 					Visualizer::renderPoint3D(wP, 0.01, Math::vec4(1, 1, 0, 1));
+				}
+
+				{
+					voxelBlock.data.Fill(false);
+					for (const auto& voxelPos : voxelsPos)
+					{
+						voxelBlock.SetVoxel(voxelPos, true);
+					}
 				}
 			}
 		}
@@ -131,7 +140,10 @@ export namespace VoxelProjectUnigine
 					//Visualizer::renderPoint3D(worldPos, 0.1f, vec4_green);
 					const auto worldTransform = localTransform * blockWorldTransform;
 					
-					Visualizer::renderBox(worldTransform.getScale(), worldTransform, bitValue ? valid_voxel_color : invalid_voxel_color);
+					if (bitValue)
+						Visualizer::renderSolidBox(worldTransform.getScale(), worldTransform, valid_voxel_color);
+					else
+						Visualizer::renderBox(worldTransform.getScale(), worldTransform, invalid_voxel_color);
 
 					++voxelIndex;
 				};
