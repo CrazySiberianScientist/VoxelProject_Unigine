@@ -45,19 +45,31 @@ namespace GeomUtils
 		return intersectLineResult[0] < intersectLineResult[1];
 	}
 
+	template<typename _ValueType>
+	bool CheckIntersectLineTwoPoints(const std::array<_ValueType, 2>& intersectLineResult)
+	{
+		return intersectLineResult[0] < intersectLineResult[1] && _ValueType{} <= intersectLineResult[1];
+	}
+
 	template <typename _Vec3, typename _ValueType = std::decay_t<decltype(_Vec3{}[0]) >>
 	auto IntersectRayAABB(const _Vec3& startPoint, const _Vec3& dir, const _Vec3& bbMin, const _Vec3& bbMax)
 	{
 		const auto intersectLineResult = IntersectLineAABB<_Vec3, _ValueType>(startPoint, dir, bbMin, bbMax);
 
 		IntersectResult<_Vec3> result;
+		result.isValid = CheckIntersectLineTwoPoints(intersectLineResult);
 
-		result.points[0] = startPoint + (intersectLineResult[0] > _ValueType{}) * dir * intersectLineResult[0];
-		result.points[1] = startPoint + dir * intersectLineResult[1];
-		result.isValid = intersectLineResult[0] < intersectLineResult[1] && _ValueType{} <= intersectLineResult[1];
+		if (result.isValid)
+		{
+			result.points[0] = startPoint + dir * intersectLineResult[0] * (intersectLineResult[0] > _ValueType{});
+			result.points[1] = startPoint + dir * intersectLineResult[1];
+		}
+		
 
 		return result;
 	}
+
+
 
 	template <typename _Vec3, typename _ValueType = std::decay_t<decltype(_Vec3{}[0]) >>
 	auto IntersectSegmentAABB(const _Vec3& startPoint, const _Vec3& dir, const _Vec3& bbMin, const _Vec3& bbMax, const _ValueType &segmentLength)
@@ -65,10 +77,13 @@ namespace GeomUtils
 		const auto intersectLineResult = IntersectLineAABB<_Vec3, _ValueType>(startPoint, dir, bbMin, bbMax);
 
 		IntersectResult<_Vec3> result;
+		result.isValid = CheckIntersectLineTwoPoints(intersectLineResult) && (intersectLineResult[0] <= segmentLength);
 
-		result.points[0] = intersectLineResult[0] > _ValueType{} ? (startPoint + dir * intersectLineResult[0]) : startPoint;
-		result.points[1] = startPoint + dir * (intersectLineResult[1] > segmentLength ? segmentLength : intersectLineResult[1]);
-		result.isValid = intersectLineResult[0] < intersectLineResult[1] && _ValueType{} <= intersectLineResult[1];
+		if (result.isValid)
+		{
+			result.points[0] = startPoint + dir * intersectLineResult[0] * (intersectLineResult[0] > _ValueType{});
+			result.points[1] = startPoint + dir * (intersectLineResult[1] > segmentLength ? segmentLength : intersectLineResult[1]);
+		}
 
 		return result;
 	}

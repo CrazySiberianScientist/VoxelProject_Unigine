@@ -60,32 +60,34 @@ export namespace VoxelProjectUnigine
 				const auto lineDir = testLineLP[1] - testLineLP[0];
 				const auto lineLength = lineDir.lengthFast();
 				
-
-				if (const auto result = GeomUtils::IntersectSegmentAABB(testLineLP[0], lineDir / lineLength, {}, blockSize_meters, lineLength); result.isValid)
+				const auto intersectResult = GeomUtils::IntersectSegmentAABB(testLineLP[0], lineDir / lineLength, {}, blockSize_meters, lineLength);
+				if (intersectResult.isValid)
 				{
-					for (const auto& p : result.points)
+					for (const auto& p : intersectResult.points)
 					{
 						const auto wP = node->toWorld(p);
 						Visualizer::renderPoint3D(wP, 0.2, Math::vec4(1, 0, 1, 1));
 					}
-					
-				}
 
-				std::vector<Vec3_meters> points;
-				std::vector<Vec3_voxels> voxelsPos;
-				RayTrace(Vec3_meters(testLineLP[0]), Vec3_meters(testLineLP[1]), points, voxelsPos);
-				for (auto& p : points)
-				{
-					const auto wP = node->toWorld(p);
-					Visualizer::renderPoint3D(wP, 0.01, Math::vec4(1, 1, 0, 1));
-				}
 
-				{
-					voxelBlock.data.Fill(false);
-					for (const auto& voxelPos : voxelsPos)
+
+					std::vector<Vec3_meters> points;
+					std::vector<Vec3_voxels> voxelsPos;
+					RayTrace(Vec3_meters(intersectResult.points[0]), Vec3_meters(intersectResult.points[1]), points, voxelsPos);
+					for (auto& p : points)
 					{
-						voxelBlock.SetVoxel(voxelPos, true);
+						const auto wP = node->toWorld(p);
+						Visualizer::renderPoint3D(wP, 0.01, Math::vec4(1, 1, 0, 1));
 					}
+
+					{
+						voxelBlock.data.Fill(false);
+						for (const auto& voxelPos : voxelsPos)
+						{
+							voxelBlock.SetVoxel(voxelPos, true);
+						}
+					}
+
 				}
 			}
 		}
