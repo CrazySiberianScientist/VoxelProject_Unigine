@@ -21,11 +21,6 @@ namespace VoxelProject
 		auto currentVoxel = MetersToVoxels(startPointLocal);
 		auto currentPos = startPointLocal;
 
-		if (currentVoxel.x > 100000 || currentVoxel.y > 100000 || currentVoxel.z > 100000)
-		{
-			int akakak = 666;
-		}
-
 		Vec3_meters distances(0.0f);
 		std::array<int32_t, 3> voxelStep{};
 		for (int i = 0; i < 3; ++i)
@@ -58,16 +53,7 @@ namespace VoxelProject
 			}
 
 			distances[minDistIndex] += deltaDistances[minDistIndex];
-
-			if (voxelStep[0] > 100000 || voxelStep[1] > 100000 || voxelStep[2] > 100000)
-			{
-				int akakak = 666;
-			}
 			currentVoxel[minDistIndex] += voxelStep[minDistIndex];
-			if (currentVoxel.x > 100000 || currentVoxel.y > 100000 || currentVoxel.z > 100000)
-			{
-				int akakak = 666;
-			}
 
 			if constexpr (!UTILS_IS_NULLOPT(outPointsPos))
 				outPointsPos.push_back(startPointLocal + rayDirLocal * currentDist);
