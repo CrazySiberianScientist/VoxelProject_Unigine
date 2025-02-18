@@ -18,8 +18,14 @@ namespace VoxelProject
 	{
 		const auto deltaDistances = (Vec3_meters(1.0f) / rayDirLocal).abs();
 
-		auto currentVoxel = MetersToVoxels(startPointLocal);
 		auto currentPos = startPointLocal;
+		auto currentVoxel = MetersToVoxels(startPointLocal);
+
+		if constexpr (!UTILS_IS_NULLOPT(outPointsPos))
+			outPointsPos.push_back(currentPos);
+
+		if constexpr (!UTILS_IS_NULLOPT(outVoxelsPos))
+			outVoxelsPos.push_back(currentVoxel);
 
 		Vec3_meters distances(0.0f);
 		std::array<int32_t, 3> voxelStep{};
@@ -45,21 +51,21 @@ namespace VoxelProject
 		while (true)
 		{
 			const auto minDistIndex = getMinIndex(distances);
+			const auto currentDist = distances[minDistIndex];
 
-			const float currentDist = distances[minDistIndex];
 			if (currentDist >= maxDist)
 			{
 				break;
 			}
-
-			distances[minDistIndex] += deltaDistances[minDistIndex];
-			currentVoxel[minDistIndex] += voxelStep[minDistIndex];
 
 			if constexpr (!UTILS_IS_NULLOPT(outPointsPos))
 				outPointsPos.push_back(startPointLocal + rayDirLocal * currentDist);
 
 			if constexpr (!UTILS_IS_NULLOPT(outVoxelsPos))
 				outVoxelsPos.push_back(currentVoxel);
+
+			distances[minDistIndex] += deltaDistances[minDistIndex];
+			currentVoxel[minDistIndex] += voxelStep[minDistIndex];
 		}
 	}
 
