@@ -37,11 +37,13 @@ namespace VoxelProjectUnigine
 		void Update()
 		{
 			const auto& points = GetWorldPoints();
-			Visualizer::renderLine3D(points[0], points[1], line_color);
+			//Visualizer::renderLine3D(points[0], points[1], line_color);
 
-			const auto pointSize = 0.1f;
-			Visualizer::renderPoint3D(points[0], pointSize, start_color);
-			Visualizer::renderPoint3D(points[1], pointSize, end_color);
+			//const auto pointSize = 0.1f;
+			//Visualizer::renderPoint3D(points[0], pointSize, start_color);
+			//Visualizer::renderPoint3D(points[1], pointSize, end_color);
+
+			Visualizer::renderDirection(points[0], Vec3_meters(points[1] - points[0]), line_color, 0.05, false);
 		}
 	};
 }

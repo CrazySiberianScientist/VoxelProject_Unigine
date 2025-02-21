@@ -59,21 +59,26 @@ export namespace VoxelProjectUnigine
 
 				const auto lineDir = testLineLP[1] - testLineLP[0];
 				const auto lineLength = lineDir.lengthFast();
+				const auto lineNorm = lineDir / lineLength;
 				
-				const auto intersectResult = GeomUtils::IntersectSegmentAABB(testLineLP[0], lineDir / lineLength, {}, blockSize_meters, lineLength);
+				const auto intersectResult = GeomUtils::IntersectSegmentAABB(testLineLP[0], lineNorm, {}, blockSize_meters, lineLength);
 				if (intersectResult.isValid)
 				{
 					for (const auto& p : intersectResult.points)
 					{
 						const auto wP = node->toWorld(p);
-						Visualizer::renderPoint3D(wP, 0.2, Math::vec4(1, 0, 1, 1));
+						Visualizer::renderPoint3D(wP, 0.02, Math::vec4(1, 0, 1, 1));
 					}
 
 
 
 					std::vector<Vec3_meters> points;
 					std::vector<Vec3_voxels> voxelsPos;
-					RayTrace(Vec3_meters(intersectResult.points[0]), Vec3_meters(intersectResult.points[1]), points, voxelsPos);
+					constexpr auto correctionValue = FLT_EPSILON * 10;
+					Vec3_meters intersectShrinkedP0 = intersectResult.points[0] + lineNorm * correctionValue;
+					Vec3_meters intersectShrinkedP1 = intersectResult.points[1] - lineNorm * correctionValue;
+
+					RayTrace(intersectShrinkedP0, intersectShrinkedP1, points, voxelsPos);
 					for (auto& p : points)
 					{
 						const auto wP = node->toWorld(p);
