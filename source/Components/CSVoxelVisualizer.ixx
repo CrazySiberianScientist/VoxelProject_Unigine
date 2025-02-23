@@ -74,7 +74,7 @@ export namespace VoxelProjectUnigine
 
 					std::vector<Vec3_meters> points;
 					std::vector<Vec3_voxels> voxelsPos;
-					constexpr auto correctionValue = FLT_EPSILON * 10;
+					constexpr auto correctionValue = FLT_EPSILON * 1000;
 					Vec3_meters intersectShrinkedP0 = intersectResult.points[0] + lineNorm * correctionValue;
 					Vec3_meters intersectShrinkedP1 = intersectResult.points[1] - lineNorm * correctionValue;
 
@@ -130,7 +130,7 @@ export namespace VoxelProjectUnigine
 			{
 				auto localTransform = Mat4_identity;
 				localTransform.setTranslate(dvec3(blockSize_meters) / 2);
-				Visualizer::renderBox(blockSize_meters, localTransform * blockWorldTransform, Math::vec4(1.0f, 1.0f, 0.0f, 0.6f));
+				Visualizer::renderBox(blockSize_meters, blockWorldTransform * localTransform, Math::vec4(1.0f, 1.0f, 0.0f, 0.6f));
 			}
 
 			
@@ -145,7 +145,7 @@ export namespace VoxelProjectUnigine
 					
 					//const auto worldPos = localPos_meters * blockWorldTransform;
 					//Visualizer::renderPoint3D(worldPos, 0.1f, vec4_green);
-					const auto worldTransform = localTransform * blockWorldTransform;
+					const auto worldTransform = blockWorldTransform * localTransform;
 					
 					if (bitValue)
 						Visualizer::renderSolidBox(worldTransform.getScale(), worldTransform, valid_voxel_color);
