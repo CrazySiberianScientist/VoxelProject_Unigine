@@ -3,14 +3,18 @@
 BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 {
 	Color my_color = [0.5 0.5 0.5 1.0]
+	Int block_side_size__voxels = 8
 	
 	Pass block_distance_field
 	{
 		Compute=
 		#{
 			#include <core/materials/shaders/render/common.h>
+			#include <Shaders/voxels_utils.h>
 			
 			INIT_RW_TEXTURE_RGBA8_3D(0, distanceFieldTexture);
+			//INIT_STRUCTURED_BUFFER(1, uint, voxelsIndices);
+			INIT_STRUCTURED_BUFFER(1, uint, voxelBlockBitset);
 			
 			#define THREAD_GROUP_SIZE 8
 			#define VOXEL_MAX_DISTANCE2 THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE
