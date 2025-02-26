@@ -14,7 +14,6 @@ namespace Utils
 	template <std::unsigned_integral _T>
 	void SetBit(_T& value, const size_t bitIndex, const bool bitValue)
 	{
-		constexpr _T fullMask = ~_T{};
 		const _T mask = ~(1u << bitIndex);
 		value = (value & mask) | (_T(bitValue) << bitIndex);
 	}
