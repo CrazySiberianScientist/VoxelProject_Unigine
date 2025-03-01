@@ -5,16 +5,13 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 	Color my_color = [0.5 0.5 0.5 1.0]
 	Int block_side_size__voxels = 8
 	
-	Pass block_distance_field
+	Pass block_distance_field_test
 	{
 		Compute=
 		#{
 			#include <core/materials/shaders/render/common.h>
-			#include <Shaders/voxels_utils.h>
 			
 			INIT_RW_TEXTURE_RGBA8_3D(0, distanceFieldTexture);
-			//INIT_STRUCTURED_BUFFER(1, uint, voxelsIndices);
-			INIT_STRUCTURED_BUFFER(1, uint, voxelBlockBitset);
 			
 			#define THREAD_GROUP_SIZE 8
 			#define VOXEL_MAX_DISTANCE2 THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE
@@ -25,6 +22,32 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				//const float currentDistance = max(voxelPos.x, max(voxelPos.y, voxelPos.z)) / (float)THREAD_GROUP_SIZE;
 				//const float currentDistance = (voxelPos.x + voxelPos.y + voxelPos.z) / (float)(THREAD_GROUP_SIZE * 3);
 				const float currentDistance = (voxelPos.x + voxelPos.y + voxelPos.z) / 255.0f;
+				
+				TEXTURE_RW_STORE_RGBA8(distanceFieldTexture, voxelPos, float4(currentDistance,0,0,0));
+				//TEXTURE_RW_STORE_R32F(distanceFieldTexture, voxelPos, 255.0f);
+				
+			MAIN_COMPUTE_END
+		#}
+	}
+
+	Pass block_distance_field
+	{
+		Compute=
+		#{
+			#include <core/materials/shaders/render/common.h>
+			#include <Shaders/voxels_utils.hlsl>
+			
+			#define THREAD_GROUP_SIZE 8
+			#define VOXEL_MAX_DISTANCE2 THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE
+
+			INIT_RW_TEXTURE_RGBA8_3D(0, distanceFieldTexture);
+			INIT_STRUCTURED_BUFFER(1, uint, voxelBlockBitset);
+
+			MAIN_COMPUTE_BEGIN(THREAD_GROUP_SIZE, THREAD_GROUP_SIZE, THREAD_GROUP_SIZE)
+				
+				const uint3 voxelPos = GROUP_ID * THREAD_GROUP_SIZE + GROUP_THREAD_ID;
+				const int index = Pos3dToIndex(voxelPos, THREAD_GROUP_SIZE, THREAD_GROUP_SIZE);
+				//const bool voxelValue = GetBit()
 				
 				TEXTURE_RW_STORE_RGBA8(distanceFieldTexture, voxelPos, float4(currentDistance,0,0,0));
 				//TEXTURE_RW_STORE_R32F(distanceFieldTexture, voxelPos, 255.0f);
