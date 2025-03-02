@@ -14,5 +14,5 @@ bool BitsetGetBit(StructuredBuffer<uint> bitset, const uint bitIndex)
     const uint blockSize_bits = 32;
     const uint blockIndex = bitIndex / blockSize_bits;
     const uint bitIndexInBlock = bitIndex % blockSize_bits;
-    return GetBit(blocks[blockIndex], bitIndex);
+    return GetBit(bitset[blockIndex], bitIndex);
 }

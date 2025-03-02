@@ -6,6 +6,9 @@ namespace VoxelProjectUnigine
 
 	void CSVoxelDistanceField::Init()
 	{
+		PROJECT_UTILS_COMPONENT_PROP_INIT(voxel_space);
+		voxelBlock = &voxel_space->voxelBlock;
+
 		//Render::getEventEndPostMaterials().connect(this, &CSVoxelDistanceField::RenderCallback);
 
 		distanceFieldTexture = Texture::create();
@@ -18,17 +21,54 @@ namespace VoxelProjectUnigine
 
 	void CSVoxelDistanceField::Update()
 	{
-		renderTarget->bindUnorderedAccessTexture3D(0, distanceFieldTexture);
-		renderTarget->enableCompute();
-		compute_material->renderCompute("block_distance_field");
-		renderTarget->disable();
-		renderTarget->unbindUnorderedAccessTextures();
+		{
+			auto& voxelBlockData = voxelBlock->data.blocks;
+			voxelBlockBuffer->create(StructuredBuffer::USAGE_GPU_RESOURCE, voxelBlockData.data(), sizeof(uint32_t), voxelBlockData.size());
+			voxelBlockBuffer->setDebugName("voxelBlockBuffer");
+		}
+		
+		RenderState::saveState();
+		RenderState::clearStates();
+		{
+			RenderState::setStructuredBuffer(0, voxelBlockBuffer);
 
+			//renderTarget->bindStructuredBuffer(0, voxelBlockBuffer);
+			renderTarget->bindUnorderedAccessTexture3D(0, distanceFieldTexture);
+
+			renderTarget->enableCompute();
+			compute_material->renderCompute("block_distance_field");
+			renderTarget->disable();
+
+			//renderTarget->unbindStructuredBuffer(0);
+			renderTarget->unbindUnorderedAccessTextures();
+		}
+		RenderState::restoreState();
 		
 	}
 
 	void CSVoxelDistanceField::RenderCallback()
 	{
+		{
+			auto& voxelBlockData = voxelBlock->data.blocks;
+			voxelBlockBuffer->create(StructuredBuffer::USAGE_GPU_RESOURCE, voxelBlockData.data(), sizeof(uint32_t), voxelBlockData.size());
+		}
+		
+		//RenderState::saveState();
+		//RenderState::clearStates();
+		{
+			//RenderState::setStructuredBuffer(0, voxelBlockBuffer);
+
+			renderTarget->bindStructuredBuffer(1, voxelBlockBuffer);
+			renderTarget->bindUnorderedAccessTexture3D(0, distanceFieldTexture);
+
+			renderTarget->enableCompute();
+			compute_material->renderCompute("block_distance_field");
+			renderTarget->disable();
+
+			//renderTarget->unbindStructuredBuffer(1);
+			renderTarget->unbindUnorderedAccessTextures();
+		}
+		//RenderState::restoreState();
 	}
 
 }

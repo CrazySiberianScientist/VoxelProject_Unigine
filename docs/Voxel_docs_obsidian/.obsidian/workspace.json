@@ -14,7 +14,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Untextured_Raycaster.md",
+                "file": "Алгоритмы/Untextured_Raycaster.md",
                 "mode": "source",
                 "source": false
               },
@@ -64,8 +64,7 @@
               "title": "Пример вычислительного шейдера 3d текстуры"
             }
           }
-        ],
-        "currentTab": 3
+        ]
       },
       {
         "id": "e39655cfdd752e9f",
@@ -101,7 +100,8 @@
             "state": {
               "type": "file-explorer",
               "state": {
-                "sortOrder": "alphabetical"
+                "sortOrder": "alphabetical",
+                "autoReveal": false
               },
               "icon": "lucide-folder-closed",
               "title": "Файловый менеджер"
@@ -223,12 +223,12 @@
       "command-palette:Открыть палитру команд": false
     }
   },
-  "active": "b2516ce76156c2b6",
+  "active": "ac5475acb771edd5",
   "lastOpenFiles": [
+    "Шейдеры/Пример вычислительного шейдера 3d текстуры.md",
     "Шейдеры/Подбор оптимального размера группы потоков.md",
     "Алгоритмы/Алгоритмы.md",
     "Шейдеры",
-    "Шейдеры/Пример вычислительного шейдера 3d текстуры.md",
     "Алгоритмы",
     "Алгоритмы/Untextured_Raycaster.md",
     "Алгоритмы/Создание поля расстояний для вокселей.md",

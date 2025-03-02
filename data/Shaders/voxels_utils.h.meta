@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<asset version="2.19.0.3">
+	<guid>86984353ea2d5cd5f4bf3f371d7c0b2682e531a6</guid>
+	<type>script</type>
+	<hash>35b72bba</hash>
+	<runtimes>
+		<runtime id="86984353ea2d5cd5f4bf3f371d7c0b2682e531a6" name="voxels_utils.h" link="0"/>
+	</runtimes>
+</asset>
