@@ -25,8 +25,8 @@ namespace VoxelProjectUnigine
 		static constexpr float voxelSize_meters = 1.0f;
 		const VoxelProject::Vec3_meters blockSize_meters{ VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS * voxelSize_meters };
 
-		Unigine::TexturePtr distanceFieldTexture;
-		Unigine::RenderTargetPtr renderTarget;
+		Unigine::TexturePtr distanceFieldTexture = Texture::create();
+		Unigine::RenderTargetPtr renderTarget = RenderTarget::create();
 		Unigine::StructuredBufferPtr voxelBlockBuffer = Unigine::StructuredBuffer::create();
 		Unigine::StructuredBufferPtr voxelsIndices = Unigine::StructuredBuffer::create();
 		Unigine::StructuredBufferPtr voxelsIndicesSize = Unigine::StructuredBuffer::create();
