@@ -11,12 +11,12 @@ namespace VoxelProjectUnigine
 
 		//Render::getEventEndPostMaterials().connect(this, &CSVoxelDistanceField::RenderCallback);
 
-		distanceFieldTexture = Texture::create();
 		distanceFieldTexture->create3D(VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS
 			, Texture::FORMAT_RGBA8, Texture::FORMAT_USAGE_UNORDERED_ACCESS | Texture::FORMAT_USAGE_RENDER);
 		distanceFieldTexture->setDebugName("distanceFieldTexture");
 
-		renderTarget = RenderTarget::create();
+		voxelsIndices->create(StructuredBuffer::USAGE_GPU_RESOURCE, sizeof(uint32_t), VoxelBlockBitset::BLOCK_SIZE__VOXELS);
+		voxelsIndicesSize->create(StructuredBuffer::USAGE_GPU_RESOURCE, sizeof(uint32_t), 1);
 	}
 
 	void CSVoxelDistanceField::Update()
@@ -25,6 +25,12 @@ namespace VoxelProjectUnigine
 			auto& voxelBlockData = voxelBlock->data.blocks;
 			voxelBlockBuffer->create(StructuredBuffer::USAGE_GPU_RESOURCE, voxelBlockData.data(), sizeof(uint32_t), voxelBlockData.size());
 			voxelBlockBuffer->setDebugName("voxelBlockBuffer");
+
+			voxelsIndices->create(StructuredBuffer::USAGE_GPU_RESOURCE, sizeof(uint32_t), VoxelBlockBitset::BLOCK_SIZE__VOXELS);
+			voxelsIndices->setDebugName("voxelsIndices");
+
+			voxelsIndicesSize->create(StructuredBuffer::USAGE_GPU_RESOURCE, sizeof(uint32_t), 1);
+			voxelsIndicesSize->setDebugName("voxelsIndicesSize");
 		}
 		
 		RenderState::saveState();

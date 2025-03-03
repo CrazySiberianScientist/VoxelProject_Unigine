@@ -28,10 +28,12 @@ namespace VoxelProjectUnigine
 		Unigine::TexturePtr distanceFieldTexture;
 		Unigine::RenderTargetPtr renderTarget;
 		Unigine::StructuredBufferPtr voxelBlockBuffer = Unigine::StructuredBuffer::create();
+		Unigine::StructuredBufferPtr voxelsIndices = Unigine::StructuredBuffer::create();
+		Unigine::StructuredBufferPtr voxelsIndicesSize = Unigine::StructuredBuffer::create();
 
 		PROP_PARAM(Material, compute_material);
 
-		PROJECT_UTILS_COMPONENT_PROP(class CSVoxelVisualizer, voxel_space);
+		PROJECT_UTILS_COMPONENT_PROP(CSVoxelVisualizer, voxel_space);
 
 	private:
 		COMPONENT_INIT(Init, GlobalInitOrder::COMMON_LOGIC);
