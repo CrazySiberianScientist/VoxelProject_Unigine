@@ -45,15 +45,20 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 
 			INIT_STRUCTURED_BUFFER(0, uint, voxelBlockBuffer);
 			INIT_RW_STRUCTURED_BUFFER(1, uint, voxelsIndices);
+			INIT_RW_STRUCTURED_BUFFER(2, uint, voxelsIndicesSize);
 
 			MAIN_COMPUTE_BEGIN(THREAD_GROUP_SIZE, THREAD_GROUP_SIZE, THREAD_GROUP_SIZE)
 				
 				const uint3 voxelPos = GROUP_ID * THREAD_GROUP_SIZE + GROUP_THREAD_ID;
-				const int voxelIndex = Pos3dToIndex(voxelPos, THREAD_GROUP_SIZE, THREAD_GROUP_SIZE);
+				const uint voxelIndex = Pos3dToIndex(voxelPos, THREAD_GROUP_SIZE, THREAD_GROUP_SIZE);
 				const bool voxelValue = BitsetGetBit(voxelBlockBuffer, voxelIndex);
 				
-				const uint voxelsIndicesIndex = voxelsIndices.IncrementCounter();
-				voxelsIndices[voxelsIndicesIndex] = voxelIndex;
+				if (voxelValue)
+				{
+					uint voxelsIndicesIndex;
+					InterlockedAdd(voxelsIndicesSize[0], 1, voxelsIndicesIndex);
+					voxelsIndices[voxelsIndicesIndex] = voxelIndex;
+				}
 				
 				TEXTURE_RW_STORE_RGBA8(distanceFieldTexture, voxelPos, float4(voxelValue, 0,0,0));
 				//TEXTURE_RW_STORE_RGBA8(distanceFieldTexture, voxelPos, float4(index/512.0f, 0,0,0));
