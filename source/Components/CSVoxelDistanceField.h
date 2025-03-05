@@ -28,8 +28,7 @@ namespace VoxelProjectUnigine
 		Unigine::TexturePtr distanceFieldTexture = Unigine::Texture::create();
 		Unigine::RenderTargetPtr renderTarget = Unigine::RenderTarget::create();
 		Unigine::StructuredBufferPtr voxelBlockBuffer = Unigine::StructuredBuffer::create();
-		Unigine::StructuredBufferPtr voxelsIndices = Unigine::StructuredBuffer::create();
-		Unigine::StructuredBufferPtr voxelsIndicesSize = Unigine::StructuredBuffer::create();
+		Unigine::StructuredBufferPtr voxelsIndicesBuffer = Unigine::StructuredBuffer::create();
 
 		PROP_PARAM(Material, compute_material);
 
@@ -43,7 +42,9 @@ namespace VoxelProjectUnigine
 		void Update();
 
 		void RenderCallback();
-
+		
+		void CalcVisibleVoxels();
+		void CalcDistanceField(void* const data);
 		
 	};
 }

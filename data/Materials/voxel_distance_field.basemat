@@ -30,7 +30,44 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 		#}
 	}
 
-	Pass block_distance_field
+	Pass calc_voxel_indices
+	{
+		Compute=
+		#{
+			#include <core/materials/shaders/render/common.h>
+			#include <Shaders/voxels_utils.h>
+			#include <Shaders/bitset.h>
+			
+			#define THREAD_GROUP_SIZE 8
+			#define VOXEL_MAX_DISTANCE2 THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE
+
+			//INIT_RW_TEXTURE_RGBA8_3D(0, distanceFieldTexture);
+
+			INIT_STRUCTURED_BUFFER(0, uint, voxelBlockBuffer);
+			INIT_RW_STRUCTURED_BUFFER(1, uint, voxelsIndicesBuffer);
+
+			MAIN_COMPUTE_BEGIN(THREAD_GROUP_SIZE, THREAD_GROUP_SIZE, THREAD_GROUP_SIZE)
+				
+				const uint3 voxelPos = GROUP_ID * THREAD_GROUP_SIZE + GROUP_THREAD_ID;
+				const uint voxelIndex = Pos3dToIndex(voxelPos, THREAD_GROUP_SIZE, THREAD_GROUP_SIZE);
+				const bool voxelValue = BitsetGetBit(voxelBlockBuffer, voxelIndex);
+				
+				if (voxelValue)
+				{
+					uint voxelsIndicesIndex;
+					InterlockedAdd(voxelsIndicesBuffer[0], 1, voxelsIndicesIndex);
+					voxelsIndicesBuffer[voxelsIndicesIndex + 1] = voxelIndex;
+				}
+				
+				//TEXTURE_RW_STORE_RGBA8(distanceFieldTexture, voxelPos, float4(voxelValue, 0,0,0));
+				//TEXTURE_RW_STORE_RGBA8(distanceFieldTexture, voxelPos, float4(index/512.0f, 0,0,0));
+				//TEXTURE_RW_STORE_R32F(distanceFieldTexture, voxelPos, 255.0f);
+				
+			MAIN_COMPUTE_END
+		#}
+	}
+
+	Pass calc_distance_field
 	{
 		Compute=
 		#{
@@ -65,33 +102,6 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				//TEXTURE_RW_STORE_R32F(distanceFieldTexture, voxelPos, 255.0f);
 				
 			MAIN_COMPUTE_END
-		#}
-	}
-
-	Pass block_distance_field_vertex
-	{
-		Vertex =
-		#{
-			#include <core/materials/shaders/render/common.h>
-
-			STRUCT(VERTEX_IN)
-				INIT_INSTANCE
-				INIT_VERTEX_ID
-			END
-
-			// Our output vertex data
-			STRUCT(VERTEX_OUT)
-				INIT_POSITION		// Out projected position
-				INIT_OUT(float4,0)	// Texcoord (uv)
-				INIT_OUT(float3,1)	// Vertex direction
-			END
-
-			INIT_STRUCTURED_BUFFER(0, uint, voxelBlockIndices);
-
-
-			MAIN_BEGIN(VERTEX_OUT, VERTEX_IN)
-				
-			MAIN_END
 		#}
 	}
 }
