@@ -69,17 +69,13 @@ namespace VoxelProjectUnigine
 		}
 		RenderState::restoreState();
 
-		{
-			auto transferCallback = [this](void* data) {
-				const auto v = ((uint32_t*)data)[0];
-				Log::message("voxelsIndicesBufferSize: %u\n", v);
-				};
-			Render::asyncTransferStructuredBuffer(MakeCallback(transferCallback), nullptr, voxelsIndicesBufferSize);
-		}
+		Render::asyncTransferStructuredBuffer(MakeCallback(this, &CSVoxelDistanceField::CalcDistanceField), nullptr, voxelsIndicesBufferSize);
 	}
 
 	void CSVoxelDistanceField::CalcDistanceField(void* const data)
 	{
+		const auto v = ((uint32_t*)data)[0];
+		Log::message("voxelsIndicesBufferSize: %u\n", v);
 	}
 
 }
