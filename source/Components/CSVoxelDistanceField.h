@@ -29,6 +29,7 @@ namespace VoxelProjectUnigine
 		Unigine::RenderTargetPtr renderTarget = Unigine::RenderTarget::create();
 		Unigine::StructuredBufferPtr voxelBlockBuffer = Unigine::StructuredBuffer::create();
 		Unigine::StructuredBufferPtr voxelsIndicesBuffer = Unigine::StructuredBuffer::create();
+		Unigine::StructuredBufferPtr voxelsIndicesBufferSize = Unigine::StructuredBuffer::create();
 
 		PROP_PARAM(Material, compute_material);
 

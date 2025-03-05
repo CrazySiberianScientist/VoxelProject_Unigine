@@ -36,15 +36,17 @@ namespace VoxelProjectUnigine
 			voxelBlockBuffer->create(StructuredBuffer::USAGE_GPU_RESOURCE, voxelBlockData.data(), sizeof(uint32_t), voxelBlockData.size());
 			voxelBlockBuffer->setDebugName("voxelBlockBuffer");
 
-			// +1 элемент для хранения размера, voxelsIndicesBuffer[0] будет хранить размер буффера
-			constexpr auto voxelsIndicesSize = VoxelBlockBitset::BLOCK_SIZE__VOXELS + 1;
+			constexpr auto voxelsIndicesSize = VoxelBlockBitset::BLOCK_SIZE__VOXELS;
 			static const uint32_t* const emptyBuffer = [] {
 				auto v = new uint32_t[voxelsIndicesSize];
 				memset(v, 0, sizeof(uint32_t) * voxelsIndicesSize);
 				return v; }();
 
-				voxelsIndicesBuffer->create(StructuredBuffer::USAGE_GPU_RESOURCE, emptyBuffer, sizeof(uint32_t), VoxelBlockBitset::BLOCK_SIZE__VOXELS);
-				voxelsIndicesBuffer->setDebugName("voxelsIndicesBuffer");
+			voxelsIndicesBuffer->create(StructuredBuffer::USAGE_GPU_RESOURCE, emptyBuffer, sizeof(uint32_t), voxelsIndicesSize);
+			voxelsIndicesBuffer->setDebugName("voxelsIndicesBuffer");
+
+			voxelsIndicesBufferSize->create(StructuredBuffer::USAGE_GPU_RESOURCE, emptyBuffer, sizeof(uint32_t), 1);
+			voxelsIndicesBufferSize->setDebugName("voxelsIndicesBufferSize");
 		}
 
 		RenderState::saveState();
@@ -53,6 +55,7 @@ namespace VoxelProjectUnigine
 			RenderState::setStructuredBuffer(0, voxelBlockBuffer);
 
 			renderTarget->bindStructuredBuffer(1, voxelsIndicesBuffer);
+			renderTarget->bindStructuredBuffer(2, voxelsIndicesBufferSize);
 
 			//renderTarget->bindStructuredBuffer(0, voxelBlockBuffer);
 			renderTarget->bindUnorderedAccessTexture3D(0, distanceFieldTexture);
@@ -69,9 +72,9 @@ namespace VoxelProjectUnigine
 		{
 			auto transferCallback = [this](void* data) {
 				const auto v = ((uint32_t*)data)[0];
-				Log::message("voxelsIndicesSize: %u\n", v);
+				Log::message("voxelsIndicesBufferSize: %u\n", v);
 				};
-			Render::asyncTransferStructuredBuffer(MakeCallback(transferCallback), nullptr, voxelsIndicesBuffer);
+			Render::asyncTransferStructuredBuffer(MakeCallback(transferCallback), nullptr, voxelsIndicesBufferSize);
 		}
 	}
 

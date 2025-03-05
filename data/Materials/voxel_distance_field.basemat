@@ -45,6 +45,7 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 
 			INIT_STRUCTURED_BUFFER(0, uint, voxelBlockBuffer);
 			INIT_RW_STRUCTURED_BUFFER(1, uint, voxelsIndicesBuffer);
+			INIT_RW_STRUCTURED_BUFFER(2, uint, voxelsIndicesBufferSize);
 
 			MAIN_COMPUTE_BEGIN(THREAD_GROUP_SIZE, THREAD_GROUP_SIZE, THREAD_GROUP_SIZE)
 				
@@ -55,8 +56,8 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				if (voxelValue)
 				{
 					uint voxelsIndicesIndex;
-					InterlockedAdd(voxelsIndicesBuffer[0], 1, voxelsIndicesIndex);
-					voxelsIndicesBuffer[voxelsIndicesIndex + 1] = voxelIndex;
+					InterlockedAdd(voxelsIndicesBufferSize[0], 1, voxelsIndicesIndex);
+					voxelsIndicesBuffer[voxelsIndicesIndex] = voxelIndex;
 				}
 				
 				//TEXTURE_RW_STORE_RGBA8(distanceFieldTexture, voxelPos, float4(voxelValue, 0,0,0));
