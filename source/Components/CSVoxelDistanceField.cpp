@@ -15,8 +15,11 @@ namespace VoxelProjectUnigine
 		//Render::getEventEndPostMaterials().connect(this, &CSVoxelDistanceField::RenderCallback);
 
 		distanceFieldTexture->create3D(VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS
-			, Texture::FORMAT_RGBA8, Texture::FORMAT_USAGE_UNORDERED_ACCESS | Texture::FORMAT_USAGE_RENDER);
+			, Texture::FORMAT_R8, Texture::FORMAT_USAGE_UNORDERED_ACCESS | Texture::FORMAT_USAGE_RENDER);
 		distanceFieldTexture->setDebugName("distanceFieldTexture");
+
+		voxelBorderMesh->addIndices(0, 1, 2);
+		voxelBorderMesh->flushIndices();
 	}
 
 	void CSVoxelDistanceField::Update()
@@ -37,16 +40,16 @@ namespace VoxelProjectUnigine
 			voxelBlockBuffer->setDebugName("voxelBlockBuffer");
 
 			constexpr auto voxelsIndicesSize = VoxelBlockBitset::BLOCK_SIZE__VOXELS;
+
+			voxelsPositionsBuffer->create(StructuredBuffer::USAGE_GPU_RESOURCE, sizeof(uint32_t[4]), voxelsIndicesSize);
+			voxelsPositionsBuffer->setDebugName("voxelsPositionsBuffer");
+
 			static const uint32_t* const emptyBuffer = [] {
-				auto v = new uint32_t[voxelsIndicesSize];
-				memset(v, 0, sizeof(uint32_t) * voxelsIndicesSize);
+				auto v = new uint32_t[1];
+				memset(v, 0, sizeof(uint32_t) * 1);
 				return v; }();
-
-			voxelsIndicesBuffer->create(StructuredBuffer::USAGE_GPU_RESOURCE, emptyBuffer, sizeof(uint32_t), voxelsIndicesSize);
-			voxelsIndicesBuffer->setDebugName("voxelsIndicesBuffer");
-
-			voxelsIndicesBufferSize->create(StructuredBuffer::USAGE_GPU_RESOURCE, emptyBuffer, sizeof(uint32_t), 1);
-			voxelsIndicesBufferSize->setDebugName("voxelsIndicesBufferSize");
+			voxelsPositionsBufferSizeBuffer->create(StructuredBuffer::USAGE_GPU_RESOURCE, emptyBuffer, sizeof(uint32_t), 1);
+			voxelsPositionsBufferSizeBuffer->setDebugName("voxelsPositionsBufferSizeBuffer");
 		}
 
 		RenderState::saveState();
@@ -54,11 +57,11 @@ namespace VoxelProjectUnigine
 		{
 			RenderState::setStructuredBuffer(0, voxelBlockBuffer);
 
-			renderTarget->bindStructuredBuffer(1, voxelsIndicesBuffer);
-			renderTarget->bindStructuredBuffer(2, voxelsIndicesBufferSize);
+			renderTarget->bindStructuredBuffer(1, voxelsPositionsBuffer);
+			renderTarget->bindStructuredBuffer(2, voxelsPositionsBufferSizeBuffer);
 
 			//renderTarget->bindStructuredBuffer(0, voxelBlockBuffer);
-			renderTarget->bindUnorderedAccessTexture3D(0, distanceFieldTexture);
+			//renderTarget->bindUnorderedAccessTexture3D(0, distanceFieldTexture);
 
 			renderTarget->enableCompute();
 			compute_material->renderCompute("calc_voxel_indices");
@@ -69,13 +72,52 @@ namespace VoxelProjectUnigine
 		}
 		RenderState::restoreState();
 
-		Render::asyncTransferStructuredBuffer(MakeCallback(this, &CSVoxelDistanceField::CalcDistanceField), nullptr, voxelsIndicesBufferSize);
+		Render::asyncTransferStructuredBuffer(MakeCallback(this, &CSVoxelDistanceField::CalcDistanceField), nullptr, voxelsPositionsBufferSizeBuffer);
 	}
 
 	void CSVoxelDistanceField::CalcDistanceField(void* const data)
 	{
-		const auto v = ((uint32_t*)data)[0];
-		Log::message("voxelsIndicesBufferSize: %u\n", v);
+		//constexpr auto PASS_NAME = "calc_distance_field";
+		constexpr auto PASS_NAME = "block_distance_field";
+
+		const auto voxelsIndicesBufferSize = ((uint32_t*)data)[0];
+		Log::message("voxelsIndicesBufferSize: %u\n", voxelsIndicesBufferSize);
+
+		//renderTarget->bindStructuredBuffer(0, voxelsPositionsBuffer);
+		//renderTarget->bindUnorderedAccessTexture3D(0, distanceFieldTexture);
+
+		/*
+		renderTarget->enableCompute();
+		compute_material->renderCompute("calc_distance_field", voxelsIndicesBufferSize);
+		renderTarget->disable();
+
+		renderTarget->enable();
+		//voxelBorderMeshRender->renderInstancedSurface(MeshRender::MODE_TRIANGLES, 1)
+		renderTarget->disable();
+		renderTarget->unbindAll();
+		*/
+
+		renderTarget->bindStructuredBuffer(0, voxelsPositionsBuffer);
+		renderTarget->bindColorTexture3D(0, distanceFieldTexture);
+
+		/*
+		const auto pass = compute_material->getRenderPass(PASS_NAME);
+		const auto shader = compute_material->getShaderAsync(pass);
+		if (shader == nullptr)
+			return;
+
+		Renderer::setMaterial(pass, compute_material);
+		Renderer::setShaderParameters(pass, shader, compute_material, false);
+		*/
+
+		renderTarget->enable();
+		//voxelBorderMesh->renderInstancedSurface(MeshDynamic::MODE_TRIANGLES, 1);
+		compute_material->renderScreen(PASS_NAME);
+		renderTarget->disable();
+		renderTarget->unbindAll();
+
+		//Renderer::clearStates();
+		//Renderer::clearShader();
 	}
 
 }

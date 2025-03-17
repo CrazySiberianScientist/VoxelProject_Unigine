@@ -3,6 +3,7 @@
 #include <UnigineComponentSystem.h>
 #include <UnigineRender.h>
 #include <UnigineTextures.h>
+#include <UnigineMeshDynamic.h>
 
 #include "Utils/ProjectUtilsMacros.h"
 #include "Utils/UtilsMacros.h"
@@ -25,11 +26,16 @@ namespace VoxelProjectUnigine
 		static constexpr float voxelSize_meters = 1.0f;
 		const VoxelProject::Vec3_meters blockSize_meters{ VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS * voxelSize_meters };
 
-		Unigine::TexturePtr distanceFieldTexture = Unigine::Texture::create();
 		Unigine::RenderTargetPtr renderTarget = Unigine::RenderTarget::create();
+
+		Unigine::TexturePtr distanceFieldTexture = Unigine::Texture::create();
+
 		Unigine::StructuredBufferPtr voxelBlockBuffer = Unigine::StructuredBuffer::create();
-		Unigine::StructuredBufferPtr voxelsIndicesBuffer = Unigine::StructuredBuffer::create();
-		Unigine::StructuredBufferPtr voxelsIndicesBufferSize = Unigine::StructuredBuffer::create();
+		Unigine::StructuredBufferPtr voxelsPositionsBuffer = Unigine::StructuredBuffer::create();
+		Unigine::StructuredBufferPtr voxelsPositionsBufferSizeBuffer = Unigine::StructuredBuffer::create();
+
+		Unigine::MeshDynamicPtr voxelBorderMesh =  Unigine::MeshDynamic::create(Unigine::MeshDynamic::USAGE_DYNAMIC_ALL);
+
 
 		PROP_PARAM(Material, compute_material);
 

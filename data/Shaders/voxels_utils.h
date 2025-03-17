@@ -14,13 +14,14 @@ float3 IndexToPos3dFloat(const int index, const int xSize, const int ySize)
     return float3(x, y, z);
 }
 
-int3 IndexToPos3dInt(const int index, const int xSize, const int ySize)
+uint3 IndexToPos3dInt(const uint index, const uint xSize, const uint ySize)
 {
-    const int xySize = xSize * ySize;
-    const int z = index / xySize;
-    const int indexXY = index % xySize;
-    const int x = indexXY % xSize;
-    const int y = indexXY / xSize;
+    const uint xySize = xSize * ySize;
+    const uint z = index / xySize;
+    const uint indexXY = index % xySize;
+    const uint x = indexXY % xSize;
+    const uint y = indexXY / xSize;
 
-    return int3(x, y, z);
+    return uint3(x, y, z);
 }
+
