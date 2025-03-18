@@ -29,6 +29,7 @@ namespace VoxelProjectUnigine
 		Unigine::RenderTargetPtr renderTarget = Unigine::RenderTarget::create();
 
 		Unigine::TexturePtr distanceFieldTexture = Unigine::Texture::create();
+		Unigine::TexturePtr testTexture = Unigine::Texture::create();
 
 		Unigine::StructuredBufferPtr voxelBlockBuffer = Unigine::StructuredBuffer::create();
 		Unigine::StructuredBufferPtr voxelsPositionsBuffer = Unigine::StructuredBuffer::create();

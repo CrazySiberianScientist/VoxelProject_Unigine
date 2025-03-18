@@ -18,8 +18,12 @@ namespace VoxelProjectUnigine
 			, Texture::FORMAT_R8, Texture::FORMAT_USAGE_UNORDERED_ACCESS | Texture::FORMAT_USAGE_RENDER);
 		distanceFieldTexture->setDebugName("distanceFieldTexture");
 
-		voxelBorderMesh->addIndices(0, 1, 2);
-		voxelBorderMesh->flushIndices();
+		testTexture->create2D(VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS
+			, Texture::FORMAT_R8, Texture::FORMAT_USAGE_UNORDERED_ACCESS | Texture::FORMAT_USAGE_RENDER);
+		testTexture->setDebugName("testTexture");
+
+		//voxelBorderMesh->addIndices(0, 1, 2);
+		//voxelBorderMesh->flushIndices();
 	}
 
 	void CSVoxelDistanceField::Update()
@@ -29,7 +33,27 @@ namespace VoxelProjectUnigine
 
 	void CSVoxelDistanceField::RenderCallback()
 	{
+		constexpr auto PASS_NAME = "block_distance_field_test";
 
+		RenderState::saveState();
+		RenderState::clearStates();
+
+		auto renderTarget = Render::getTemporaryRenderTarget();
+
+
+		renderTarget->bindColorTexture3D(0, distanceFieldTexture);
+
+		renderTarget->enable();
+
+		compute_material->renderScreen(PASS_NAME);
+
+		renderTarget->disable();
+		renderTarget->unbindAll();
+
+
+		Render::releaseTemporaryRenderTarget(renderTarget);
+
+		RenderState::restoreState();
 	}
 
 	void CSVoxelDistanceField::CalcVisibleVoxels()
@@ -78,7 +102,7 @@ namespace VoxelProjectUnigine
 	void CSVoxelDistanceField::CalcDistanceField(void* const data)
 	{
 		//constexpr auto PASS_NAME = "calc_distance_field";
-		constexpr auto PASS_NAME = "block_distance_field";
+		constexpr auto PASS_NAME = "block_distance_field_test";
 
 		const auto voxelsIndicesBufferSize = ((uint32_t*)data)[0];
 		Log::message("voxelsIndicesBufferSize: %u\n", voxelsIndicesBufferSize);
@@ -97,8 +121,11 @@ namespace VoxelProjectUnigine
 		renderTarget->unbindAll();
 		*/
 
+		auto renderTarget = Render::getTemporaryRenderTarget();
+
 		renderTarget->bindStructuredBuffer(0, voxelsPositionsBuffer);
-		renderTarget->bindColorTexture3D(0, distanceFieldTexture);
+		renderTarget->bindColorTexture3D(1, distanceFieldTexture);
+		//renderTarget->bindColorTexture(0, testTexture);
 
 		/*
 		const auto pass = compute_material->getRenderPass(PASS_NAME);
@@ -118,6 +145,8 @@ namespace VoxelProjectUnigine
 
 		//Renderer::clearStates();
 		//Renderer::clearShader();
+
+		Render::releaseTemporaryRenderTarget(renderTarget);
 	}
 
 }
