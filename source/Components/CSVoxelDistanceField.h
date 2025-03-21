@@ -35,7 +35,7 @@ namespace VoxelProjectUnigine
 		Unigine::StructuredBufferPtr voxelsPositionsBuffer = Unigine::StructuredBuffer::create();
 		Unigine::StructuredBufferPtr voxelsPositionsBufferSizeBuffer = Unigine::StructuredBuffer::create();
 
-		Unigine::MeshDynamicPtr voxelBorderMesh =  Unigine::MeshDynamic::create(Unigine::MeshDynamic::USAGE_DYNAMIC_ALL);
+		Unigine::MeshDynamicPtr voxelBorderMesh = Unigine::MeshDynamic::create(Unigine::MeshDynamic::USAGE_DYNAMIC_ALL);
 
 
 		PROP_PARAM(Material, compute_material);
@@ -50,6 +50,7 @@ namespace VoxelProjectUnigine
 		void Update();
 
 		void RenderCallback();
+		void RenderCallbackTest0();
 		
 		void CalcVisibleVoxels();
 		void CalcDistanceField(void* const data);

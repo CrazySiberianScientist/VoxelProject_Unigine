@@ -107,7 +107,7 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 		#}
 	}
 
-	Pass block_distance_field
+	Pass block_distance_field_0
 	{
 		Vertex =
 		#{
@@ -173,11 +173,13 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 		#{
 			#include <core/materials/shaders/render/common.h>
 
+			
 			STRUCT(VERTEX_IN)
+				INIT_ATTRIBUTE(float4, 0, POSITION)
 				INIT_INSTANCE
 				INIT_VERTEX_ID
-				INIT_POSITION
 			END
+			
 
 			// Our output vertex data
 			STRUCT(FRAGMENT_IN)
@@ -185,24 +187,21 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 			END
 			
 
-			//INIT_STRUCTURED_BUFFER(0, float4, voxelsPositionsBuffer);
+			INIT_STRUCTURED_BUFFER(0, float4, voxelsPositionsBuffer);
 
-			//STATICARRAY(float3, trianglePos, 3)
-			//	float3(0.0f, 0.0f, 0.0f), float3(0.0f, 1.0f, 0.0f), float3(1.0f, 1.0f, 0.0f)
-			//ENDARRAY
+			STATICARRAY(float3, trianglePos, 3)
+				float3(-1.0f, -1.0f, 0.0f), float3( 1.0f, -1.0f, 0.0f), float3(-1.0f,  1.0f, -1.0f)
+			ENDARRAY
 
-			FRAGMENT_IN main(VERTEX_IN input)
-			{
-				FRAGMENT_IN output;
-				output.position = input.position;
-
+			MAIN_BEGIN(FRAGMENT_IN,VERTEX_IN)
+			
+				//OUT_POSITION = IN_ATTRIBUTE(0);
 				// VERTEX_IN_CUBE = 8
 				// instanceId -> voxelIndex
 				// vertexId -> kernelRadius * VERTEX_IN_CUBE
 				// currentKernelSize = vertexId / VERTEX_IN_CUBE
-				//OUT_POSITION = float4(trianglePos[IN_VERTEX_ID], 1);
-				return output;
-			}
+				output.position = float4(trianglePos[IN_VERTEX_ID] * 10, 0);			
+			MAIN_END
 			
 		#}
 
@@ -216,12 +215,12 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 
 			STRUCT_FRAG_BEGIN
 				//INIT_COLOR(float4)
-				INIT_MRT(float3, 1)
+				INIT_MRT(float, 1)
 			STRUCT_FRAG_END
 
 			FRAGMENT_OUT main(FRAGMENT_IN input) 
 			{
-				OUT_MRT(1) = float3(1.0f,0,0);
+				OUT_MRT(1) = 255.0f;
 				return output;
 			}
 		#}
