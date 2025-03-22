@@ -95,8 +95,8 @@ namespace VoxelProjectUnigine
 		auto renderTarget = Render::getTemporaryRenderTarget();
 
 		//renderTarget->bindStructuredBuffer(0, voxelsPositionsBuffer);
-		//renderTarget->bindColorTexture3D(1, distanceFieldTexture);
-		renderTarget->bindColorTexture(1, distanceFieldTexture);
+		renderTarget->bindColorTexture3D(1, distanceFieldTexture);
+		//renderTarget->bindColorTexture(1, distanceFieldTexture);
 		//renderTarget->bindColorTexture(1, testTexture);
 
 		

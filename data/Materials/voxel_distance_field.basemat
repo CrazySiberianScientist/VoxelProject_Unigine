@@ -182,7 +182,7 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 			
 
 			// Our output vertex data
-			STRUCT(FRAGMENT_IN)
+			STRUCT(VERTEX_OUT)
 				INIT_POSITION
 			END
 			
@@ -190,10 +190,10 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 			INIT_STRUCTURED_BUFFER(0, float4, voxelsPositionsBuffer);
 
 			STATICARRAY(float3, trianglePos, 3)
-				float3(-1.0f, -1.0f, 0.0f), float3( 1.0f, -1.0f, 0.0f), float3(-1.0f,  1.0f, -1.0f)
+				float3(-1.0f, -1.0f, 0.0f), float3( 1.0f, -1.0f, 0.0f), float3(-1.0f,  1.0f, 0.0f)
 			ENDARRAY
 
-			MAIN_BEGIN(FRAGMENT_IN,VERTEX_IN)
+			MAIN_BEGIN(VERTEX_OUT,VERTEX_IN)
 			
 				//OUT_POSITION = IN_ATTRIBUTE(0);
 				// VERTEX_IN_CUBE = 8
@@ -203,6 +203,43 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				output.position = float4(trianglePos[IN_VERTEX_ID] * 10, 0);			
 			MAIN_END
 			
+		#}
+
+		Geometry =
+		#{
+			#include <core/materials/shaders/render/common.h>
+
+			STRUCT(GEOMETRY_IN)
+				INIT_POSITION
+			END
+			
+			STRUCT(GEOMETRY_OUT)
+				INIT_POSITION
+				uint sliceIndex : SV_RenderTargetArrayIndex;
+			END
+
+			GEOM_MAX_VERTICES(3)
+
+			GEOM_TYPE_IN(TRIANGLE_IN)
+			GEOM_COUNT_IN(3)
+
+			GEOM_TYPE_OUT(TRIANGLE_OUT)
+
+			MAIN_GEOM_BEGIN(GEOMETRY_OUT, GEOMETRY_IN)
+				OUT_POSITION = IN_GEOM_POSITION(0);
+				output.sliceIndex = 7;
+				EMIT_VERTEX
+
+				OUT_POSITION = IN_GEOM_POSITION(1);
+				output.sliceIndex = 1;
+				EMIT_VERTEX
+
+				OUT_POSITION = IN_GEOM_POSITION(2);
+				output.sliceIndex = 7;
+				EMIT_VERTEX
+
+				END_PRIMITIVE
+			MAIN_GEOM_END
 		#}
 
 		Fragment =
