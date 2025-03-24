@@ -29,13 +29,10 @@ namespace VoxelProjectUnigine
 		Unigine::RenderTargetPtr renderTarget = Unigine::RenderTarget::create();
 
 		Unigine::TexturePtr distanceFieldTexture = Unigine::Texture::create();
-		Unigine::TexturePtr testTexture = Unigine::Texture::create();
 
 		Unigine::StructuredBufferPtr voxelBlockBuffer = Unigine::StructuredBuffer::create();
 		Unigine::StructuredBufferPtr voxelsPositionsBuffer = Unigine::StructuredBuffer::create();
 		Unigine::StructuredBufferPtr voxelsPositionsBufferSizeBuffer = Unigine::StructuredBuffer::create();
-
-		Unigine::MeshDynamicPtr voxelBorderMesh = Unigine::MeshDynamic::create(Unigine::MeshDynamic::USAGE_DYNAMIC_ALL);
 
 
 		PROP_PARAM(Material, compute_material);

@@ -44,7 +44,7 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 			//INIT_RW_TEXTURE_RGBA8_3D(0, distanceFieldTexture);
 
 			INIT_STRUCTURED_BUFFER(0, uint, voxelBlockBuffer);
-			INIT_RW_STRUCTURED_BUFFER(1, uint, voxelsPositionsBuffer);
+			INIT_RW_STRUCTURED_BUFFER(1, uint4, voxelsPositionsBuffer);
 			INIT_RW_STRUCTURED_BUFFER(2, uint, voxelsPositionsBufferSizeBuffer);
 
 			MAIN_COMPUTE_BEGIN(THREAD_GROUP_SIZE, THREAD_GROUP_SIZE, THREAD_GROUP_SIZE)
@@ -57,7 +57,7 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				{
 					uint voxelsPositionsIndex;
 					InterlockedAdd(voxelsPositionsBufferSizeBuffer[0], 1, voxelsPositionsIndex);
-					voxelsPositionsBuffer[voxelsPositionsIndex] = voxelIndex;
+					voxelsPositionsBuffer[voxelsPositionsIndex] = uint4(voxelPos,0);
 				}
 				
 				//TEXTURE_RW_STORE_RGBA8(distanceFieldTexture, voxelPos, float4(voxelValue, 0,0,0));
@@ -79,205 +79,21 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 			#define THREAD_GROUP_SIZE 8
 			#define VOXEL_MAX_DISTANCE2 THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE
 
-			INIT_RW_TEXTURE_RGBA8_3D(0, distanceFieldTexture);
-
-			INIT_RW_STRUCTURED_BUFFER(0, uint, voxelsIndicesBuffer);
+			INIT_RW_STRUCTURED_BUFFER(0, uint4, voxelsPositionsBuffer);
+			INIT_RW_TEXTURE_R32U_3D(1, distanceFieldTexture);
 
 			MAIN_COMPUTE_BEGIN(THREAD_GROUP_SIZE, THREAD_GROUP_SIZE, THREAD_GROUP_SIZE)
-				
 
-				/*
-				const uint3 voxelPos = GROUP_ID * THREAD_GROUP_SIZE + GROUP_THREAD_ID;
-				const uint voxelIndex = Pos3dToIndex(voxelPos, THREAD_GROUP_SIZE, THREAD_GROUP_SIZE);
-				const bool voxelValue = BitsetGetBit(voxelBlockBuffer, voxelIndex);
+				const uint3 voxelPos = voxelsPositionsBuffer[GROUP_ID.x];
 				
-				if (voxelValue)
-				{
-					uint voxelsIndicesIndex;
-					InterlockedAdd(voxelsIndicesSize[0], 1, voxelsIndicesIndex);
-					voxelsIndices[voxelsIndicesIndex] = voxelIndex;
-				}
 				
-				TEXTURE_RW_STORE_RGBA8(distanceFieldTexture, voxelPos, float4(voxelValue, 0,0,0));
+				//TEXTURE_RW_STORE_RGBA8(distanceFieldTexture, voxelPos, float4(voxelValue, 0,0,0));
 				//TEXTURE_RW_STORE_RGBA8(distanceFieldTexture, voxelPos, float4(index/512.0f, 0,0,0));
-				//TEXTURE_RW_STORE_R32F(distanceFieldTexture, voxelPos, 255.0f);
-				*/
+				TEXTURE_RW_STORE_R32U(distanceFieldTexture, voxelPos, 255);
 				
 			MAIN_COMPUTE_END
 		#}
 	}
 
-	Pass block_distance_field_0
-	{
-		Vertex =
-		#{
-			#include <core/materials/shaders/render/common.h>
-
-			STRUCT(VERTEX_IN)
-				INIT_INSTANCE
-				INIT_VERTEX_ID
-				INIT_POSITION
-			END
-
-			// Our output vertex data
-			STRUCT(FRAGMENT_IN)
-				INIT_POSITION
-			END
-			
-
-			//INIT_STRUCTURED_BUFFER(0, float4, voxelsPositionsBuffer);
-
-			//STATICARRAY(float3, trianglePos, 3)
-			//	float3(0.0f, 0.0f, 0.0f), float3(0.0f, 1.0f, 0.0f), float3(1.0f, 1.0f, 0.0f)
-			//ENDARRAY
-
-			FRAGMENT_IN main(VERTEX_IN input)
-			{
-				FRAGMENT_IN output;
-				output.position = input.position;
-
-				// VERTEX_IN_CUBE = 8
-				// instanceId -> voxelIndex
-				// vertexId -> kernelRadius * VERTEX_IN_CUBE
-				// currentKernelSize = vertexId / VERTEX_IN_CUBE
-				//OUT_POSITION = float4(trianglePos[IN_VERTEX_ID], 1);
-				return output;
-			}
-			
-		#}
-
-		Fragment =
-		#{
-			#include <core/materials/shaders/render/common.h>
-
-			STRUCT(FRAGMENT_IN)
-				INIT_POSITION
-			END
-
-			STRUCT_FRAG_BEGIN
-				//INIT_COLOR(float4)
-				INIT_MRT(float3, 1)
-			STRUCT_FRAG_END
-
-			FRAGMENT_OUT main(FRAGMENT_IN input) 
-			{
-				OUT_MRT(1) = float3(1.0f,0,0);
-				return output;
-			}
-		#}
-	}
-
-	Pass block_distance_field
-	{
-		Vertex =
-		#{
-			#include <core/materials/shaders/render/common.h>
-
-			
-			STRUCT(VERTEX_IN)
-				INIT_ATTRIBUTE(float4, 0, POSITION)
-				INIT_INSTANCE
-				INIT_VERTEX_ID
-			END
-			
-
-			// Our output vertex data
-			STRUCT(VERTEX_OUT)
-				INIT_POSITION
-			END
-			
-
-			INIT_STRUCTURED_BUFFER(0, float4, voxelsPositionsBuffer);
-
-			STATICARRAY(float3, trianglePos, 3)
-				float3(-1.0f, -1.0f, 0.0f), float3( 1.0f, -1.0f, 0.0f), float3(-1.0f,  1.0f, 0.0f)
-			ENDARRAY
-
-			MAIN_BEGIN(VERTEX_OUT,VERTEX_IN)
-			
-				//OUT_POSITION = IN_ATTRIBUTE(0);
-				// VERTEX_IN_CUBE = 8
-				// instanceId -> voxelIndex
-				// vertexId -> kernelRadius * VERTEX_IN_CUBE
-				// currentKernelSize = vertexId / VERTEX_IN_CUBE
-				output.position = float4(trianglePos[IN_VERTEX_ID] * 10, 0);			
-			MAIN_END
-			
-		#}
-
-		Geometry =
-		#{
-			#include <core/materials/shaders/render/common.h>
-
-			STRUCT(GEOMETRY_IN)
-				INIT_POSITION
-			END
-			
-			STRUCT(GEOMETRY_OUT)
-				INIT_POSITION
-				uint sliceIndex : SV_RenderTargetArrayIndex;
-			END
-
-			GEOM_MAX_VERTICES(3)
-
-			GEOM_TYPE_IN(TRIANGLE_IN)
-			GEOM_COUNT_IN(3)
-
-			GEOM_TYPE_OUT(TRIANGLE_OUT)
-
-			MAIN_GEOM_BEGIN(GEOMETRY_OUT, GEOMETRY_IN)
-				OUT_POSITION = IN_GEOM_POSITION(0);
-				output.sliceIndex = 7;
-				EMIT_VERTEX
-
-				OUT_POSITION = IN_GEOM_POSITION(1);
-				output.sliceIndex = 1;
-				EMIT_VERTEX
-
-				OUT_POSITION = IN_GEOM_POSITION(2);
-				output.sliceIndex = 7;
-				EMIT_VERTEX
-
-				END_PRIMITIVE
-			MAIN_GEOM_END
-		#}
-
-		Fragment =
-		#{
-			#include <core/materials/shaders/render/common.h>
-
-			STRUCT(FRAGMENT_IN)
-				INIT_POSITION
-			END
-
-			STRUCT_FRAG_BEGIN
-				//INIT_COLOR(float4)
-				INIT_MRT(float, 1)
-			STRUCT_FRAG_END
-
-			FRAGMENT_OUT main(FRAGMENT_IN input) 
-			{
-				OUT_MRT(1) = 255.0f;
-				return output;
-			}
-		#}
-	}
-
-	Pass block_distance_field_test
-	{
-		Fragment =
-		#{
-			#include <core/materials/shaders/render/common.h>
-
-			STRUCT_FRAG_BEGIN
-				//INIT_COLOR(float4)
-				INIT_MRT(float, 1)
-			STRUCT_FRAG_END
-
-			MAIN_FRAG_BEGIN(FRAGMENT_IN)
-				OUT_MRT(1) = 1;
-			MAIN_FRAG_END
-		#}
-	}
 }
 
