@@ -68,6 +68,29 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 		#}
 	}
 
+	Pass fill_distance_field_max_value
+	{
+		Compute=
+		#{
+			#include <core/materials/shaders/render/common.h>
+			#include <Shaders/voxels_utils.h>
+			#include <Shaders/bitset.h>
+			
+			#define THREAD_GROUP_SIZE 8
+			#define VOXEL_MAX_DISTANCE2 THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE
+
+			INIT_RW_STRUCTURED_BUFFER(0, uint4, voxelsPositionsBuffer);
+			INIT_RW_TEXTURE_R32U_3D(1, distanceFieldTexture);
+
+			MAIN_COMPUTE_BEGIN(THREAD_GROUP_SIZE, THREAD_GROUP_SIZE, THREAD_GROUP_SIZE)
+
+				const uint3 voxelPos = GROUP_THREAD_ID;
+				TEXTURE_RW_STORE_R32U(distanceFieldTexture, voxelPos, 255);
+				
+			MAIN_COMPUTE_END
+		#}
+	}
+
 	Pass calc_distance_field
 	{
 		Compute=
@@ -84,12 +107,15 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 
 			MAIN_COMPUTE_BEGIN(THREAD_GROUP_SIZE, THREAD_GROUP_SIZE, THREAD_GROUP_SIZE)
 
-				const uint3 voxelPos = voxelsPositionsBuffer[GROUP_ID.x];
+				const uint3 voxelPos = voxelsPositionsBuffer[GROUP_ID.x] + GROUP_THREAD_ID - uint3(THREAD_GROUP_SIZE, THREAD_GROUP_SIZE, THREAD_GROUP_SIZE) / 2;
 				
 				
 				//TEXTURE_RW_STORE_RGBA8(distanceFieldTexture, voxelPos, float4(voxelValue, 0,0,0));
 				//TEXTURE_RW_STORE_RGBA8(distanceFieldTexture, voxelPos, float4(index/512.0f, 0,0,0));
-				TEXTURE_RW_STORE_R32U(distanceFieldTexture, voxelPos, 255);
+				TEXTURE_RW_ATOMIC_MAX_R32U(distanceFieldTexture, voxelPos, 255);
+				//TEXTURE_RW_STORE_R32U(distanceFieldTexture, voxelPos, 255);
+				//uint ret = 0;
+				//InterlockedMin(s_rw_texture_distanceFieldTexture[voxelPos], 255, ret);
 				
 			MAIN_COMPUTE_END
 		#}
