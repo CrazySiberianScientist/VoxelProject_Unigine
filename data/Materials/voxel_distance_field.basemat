@@ -107,15 +107,12 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 
 			MAIN_COMPUTE_BEGIN(THREAD_GROUP_SIZE, THREAD_GROUP_SIZE, THREAD_GROUP_SIZE)
 
-				const uint3 voxelPos = voxelsPositionsBuffer[GROUP_ID.x] + GROUP_THREAD_ID - uint3(THREAD_GROUP_SIZE, THREAD_GROUP_SIZE, THREAD_GROUP_SIZE) / 2;
+				const int3 deltaPos = GROUP_THREAD_ID - uint3(THREAD_GROUP_SIZE, THREAD_GROUP_SIZE, THREAD_GROUP_SIZE) / 2;
+				const uint3 pos = voxelsPositionsBuffer[GROUP_ID.x] + deltaPos;
+				const uint dist = max(abs(deltaPos.x), max(abs(deltaPos.y), abs(deltaPos.z)));
 				
-				
-				//TEXTURE_RW_STORE_RGBA8(distanceFieldTexture, voxelPos, float4(voxelValue, 0,0,0));
-				//TEXTURE_RW_STORE_RGBA8(distanceFieldTexture, voxelPos, float4(index/512.0f, 0,0,0));
-				TEXTURE_RW_ATOMIC_MAX_R32U(distanceFieldTexture, voxelPos, 255);
-				//TEXTURE_RW_STORE_R32U(distanceFieldTexture, voxelPos, 255);
-				//uint ret = 0;
-				//InterlockedMin(s_rw_texture_distanceFieldTexture[voxelPos], 255, ret);
+				uint ret = 0;
+				InterlockedMin(s_rw_texture_distanceFieldTexture[pos], dist, ret);
 				
 			MAIN_COMPUTE_END
 		#}

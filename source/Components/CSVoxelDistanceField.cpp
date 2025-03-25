@@ -26,31 +26,6 @@ namespace VoxelProjectUnigine
 		CalcVisibleVoxels();
 	}
 
-	void CSVoxelDistanceField::RenderCallback()
-	{
-		constexpr auto PASS_NAME = "block_distance_field_test";
-
-		RenderState::saveState();
-		RenderState::clearStates();
-
-		auto renderTarget = Render::getTemporaryRenderTarget();
-
-
-		renderTarget->bindColorTexture3D(0, distanceFieldTexture);
-
-		renderTarget->enable();
-
-		compute_material->renderScreen(PASS_NAME);
-
-		renderTarget->disable();
-		renderTarget->unbindAll();
-
-
-		Render::releaseTemporaryRenderTarget(renderTarget);
-
-		RenderState::restoreState();
-	}
-
 	void CSVoxelDistanceField::CalcVisibleVoxels()
 	{
 		{
@@ -99,7 +74,9 @@ namespace VoxelProjectUnigine
 		constexpr auto PASS_NAME = "calc_distance_field";
 
 		const auto voxelsIndicesBufferSize = ((uint32_t*)data)[0];
-		Log::message("voxelsIndicesBufferSize: %u\n", voxelsIndicesBufferSize);
+		//Log::message("voxelsIndicesBufferSize: %u\n", voxelsIndicesBufferSize);
+
+		distanceFieldTexture->clearBuffer(Math::vec4(VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS / 2));
 
 		renderTarget->bindStructuredBuffer(0, voxelsPositionsBuffer);
 		renderTarget->bindUnorderedAccessTexture3D(1, distanceFieldTexture);
