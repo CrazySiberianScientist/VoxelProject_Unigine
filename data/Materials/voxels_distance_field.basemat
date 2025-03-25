@@ -41,8 +41,6 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 			#define THREAD_GROUP_SIZE 8
 			#define VOXEL_MAX_DISTANCE2 THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE
 
-			//INIT_RW_TEXTURE_RGBA8_3D(0, distanceFieldTexture);
-
 			INIT_STRUCTURED_BUFFER(0, uint, voxelBlockBuffer);
 			INIT_RW_STRUCTURED_BUFFER(1, uint4, voxelsPositionsBuffer);
 			INIT_RW_STRUCTURED_BUFFER(2, uint, voxelsPositionsBufferSizeBuffer);
@@ -59,10 +57,6 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 					InterlockedAdd(voxelsPositionsBufferSizeBuffer[0], 1, voxelsPositionsIndex);
 					voxelsPositionsBuffer[voxelsPositionsIndex] = uint4(voxelPos,0);
 				}
-				
-				//TEXTURE_RW_STORE_RGBA8(distanceFieldTexture, voxelPos, float4(voxelValue, 0,0,0));
-				//TEXTURE_RW_STORE_RGBA8(distanceFieldTexture, voxelPos, float4(index/512.0f, 0,0,0));
-				//TEXTURE_RW_STORE_R32F(distanceFieldTexture, voxelPos, 255.0f);
 				
 			MAIN_COMPUTE_END
 		#}

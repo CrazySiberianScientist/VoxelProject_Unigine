@@ -1014,7 +1014,7 @@
 					</property>
 					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="a5bb9242f5e5407bc1ad9aec6b11fea72e0dcfbf"/>
 					<property parent="19c0426103036a96ea2f22d60c692dec3f325fe1" guid="aff0e0fc45cb0e2d7c6331fb8c3965f03f27eb0b">
-						<parameter name="compute_material">91402d1379cdcfd41b0824fc8e07e91cec5857c4</parameter>
+						<parameter name="compute_material">5e236dffcabc5c8561b8ad07a677b76f3b07986a</parameter>
 						<parameter name="voxel_space_node">1321201936</parameter>
 					</property>
 				</properties>

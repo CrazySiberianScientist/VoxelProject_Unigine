@@ -1,0 +1,288 @@
+// More information on ULON format - https://developer.unigine.com/docs/code/formats/ulon_format
+// More information on scriptable materials - https://developer.unigine.com/docs/content/materials/scriptable
+BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
+{
+	Texture2D depth_texture <source=procedural internal=true>
+	Texture2D color_texture <source=procedural internal=true>
+	Texture2D screen_depth_texture <source=procedural internal=true>
+	
+	Color my_color = [0.5 0.5 0.5 1.0]
+
+	Int max_steps = 100
+	Float max_dist = 200.0
+	Float surface_dist = 0.0001
+	Float sphere_radius = 1.0
+	
+	Pass depth
+	{
+		Fragment =
+		#{
+			#include <core/materials/shaders/render/common.h>
+
+			INIT_STRUCTURED_BUFFER(0, float4, positions);
+
+			STRUCT_FRAG_BEGIN
+				//INIT_COLOR(float)
+				//INIT_CUSTOM_DEPTH(float)
+				INIT_MRT(float3, 1)
+			STRUCT_FRAG_END
+
+			// https://www.shadertoy.com/view/Ml3Gz8
+			// Polynomial smooth min (commented version)
+			// @input a: first value
+			// @input b: second value
+			// @float k: 'Smoothness value', usually in the range (0,1].
+			//           Values close to zero makes smin converge to min.
+			//           Warning: the function is NOT defined at k = 0!
+			//           Tip: negative values turn the funtion into smooth max!
+			float smin(float a, float b, float k)
+			{
+			
+			    // Compute the difference between the two values.
+			    // This is used to interpolate both values inside the range (-k, k).
+			    // Smaller ranges give a better approximation of the min function.
+			    float h = a - b;
+
+			    // The interval [-k, k] is mapped to [0, 1],
+			    // and clamping takes place only after this transformation.
+
+			    // Map [-k, k] to [0, 1] and clamp if outside the latter.
+			    h = clamp(0.5 + 0.5*h/k, 0.0, 1.0);    
+
+			    // Linearly interpolate the input values using h inside (0, 1).
+			    // The second term ensures continuous derivatives at the boundaries of [0,1],
+			    // but this is not completely obvious! See my blog post for details.
+			    return lerp(a, b, h) - k*h*(1.0-h);
+			}
+
+			float sdfSphere(float3 currentPos, float3 objectPos, float radius)
+			{
+				return length(objectPos - currentPos) - radius;
+			}
+
+			float sdfBox0(float3 p, float3 b)
+			{
+				float3 q = abs(p) - b;
+				return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);
+			}
+
+			float sdfBox(const float3 currentPos, const  float3 objectPos, const  float3 size)
+			{
+				const float4x4 worldTransform = matrix4Col(float3(1,0,0), float3(0,1,0), float3(0,0,1));
+				float4x4 viewTransform = mul(worldTransform, s_modelview);
+				colW(viewTransform, objectPos);
+
+				const float3 currentLocalPos = mul(inverse(viewTransform), float4(currentPos, 1));
+
+				float3 delta = abs(currentLocalPos) - size;
+				return length(max(delta,0.0)) + min(max(delta.x,max(delta.y,delta.z)),0.0);
+			}
+
+			float3 getAngleViewDirection(const float2 uv)
+			{
+				//const float halfFovV_deg = s_camera_fov / 2;
+				//const float halfFovH_deg = var_fov_h / 2;
+
+				const float halfFovV_deg = 60 / 2;
+				const float halfFovH_deg = 120 / 2;
+
+				const float2 fovRange_deg = float2(halfFovH_deg, halfFovV_deg);
+				const float2 anglePos_deg = 2.0 * (uv - float2(0.5,0.5)) * fovRange_deg;
+
+				float3x3 basis = float3x3(1, 0, 0,
+											0, 1, 0,
+											0, 0, 1);
+				basis = mul(mul(basis, rotateY(anglePos_deg.x)), rotateX(anglePos_deg.y));
+				return -rowZ(basis);
+			}
+
+			float3 getRayIntersectionSdfPoint(const float2 uv)
+			{
+				uint positionsNum;
+				uint positionsStride;
+				positions.GetDimensions(positionsNum, positionsStride);
+				
+				const float3 viewDirection = normalize(screenUVToViewDirection(uv));
+				//const float3 viewDirection = normalize(getAngleViewDirection(uv));
+
+				float currentDistance = var_surface_dist;
+
+				const float kAvgMinDist = 35.0f;
+				float avgMinDist = 0.0f;
+				float firstAvgMinDist = 0.0f;
+				const int avgStep = 20;
+				int currentAvgStep = 0;
+				
+				for (int step = 0; step < var_max_steps; ++step)
+				{
+					float3 currentPos = viewDirection * currentDistance;
+					float currentMinDist = FLT_MAX;
+					for (uint posIndex = 0; posIndex < positionsNum; ++posIndex)
+					{
+						const float3 spherePos = positions[posIndex].xyz;
+
+						/*
+						float3 dVec = currentPos - spherePos;
+						bool isNegative = dot(viewDirection, dVec) > -0.1;
+						if (isNegative) {
+							continue;
+						}
+						*/
+
+
+						const float dist = sdfSphere(currentPos, spherePos, var_sphere_radius);
+						//const float dist = sdfBox(currentPos, spherePos, float3(1,1,1));
+						//currentMinDist = min(dist, currentMinDist);
+						currentMinDist = smin(dist, currentMinDist, 0.2f);
+						//currentMinDist =  min(dist, lerp(dist, currentMinDist, 0.5));
+
+						
+
+						if (currentMinDist < var_surface_dist)
+						{
+							return float3(currentPos.xy, -currentPos.z);
+						}
+
+						
+					}
+
+					
+					avgMinDist += currentMinDist;
+					const float avgSurfDist = avgMinDist / (currentAvgStep + 1);
+					currentAvgStep += 1;
+					if (currentAvgStep % avgStep == 0) {
+						const float avgSurfDist = avgMinDist / (currentAvgStep + 1);
+						if (avgSurfDist < var_surface_dist * kAvgMinDist)
+						{
+							return float3(currentPos.xy, -currentPos.z);
+						}
+
+						currentAvgStep = 0;
+						avgMinDist = 0;
+					}
+
+					
+					
+					
+					currentDistance += currentMinDist;
+					if (currentPos.z > var_max_dist)
+					{
+						break;
+					}
+					
+				}
+
+				return float3(FLT_MAX, FLT_MAX, FLT_MAX);
+			}
+			
+			MAIN_FRAG_BEGIN(FRAGMENT_IN)
+				OUT_MRT(1) = getRayIntersectionSdfPoint(IN_UV);
+			MAIN_FRAG_END
+		#}
+	}
+
+	Pass depth_blur
+	{
+		Fragment =
+		#{
+			#include <core/materials/shaders/render/common.h>
+
+			STRUCT_FRAG_BEGIN
+				INIT_MRT(float3, 1)
+			STRUCT_FRAG_END
+
+			MAIN_FRAG_BEGIN(FRAGMENT_IN)
+				OUT_MRT(1) = float4(0,0,1,1);
+			MAIN_FRAG_END
+		#}
+	}
+
+	Pass color
+	{
+		Fragment =
+		#{
+			#include <core/materials/shaders/render/common.h>
+
+			STRUCT_FRAG_BEGIN
+				INIT_COLOR(float4)
+			STRUCT_FRAG_END
+
+			static const int KERNEL_SIZE = 9;
+
+			float getTextureKernelValue(TEXTURE_IN(texture), const float2 uv, const int channelIndex, const int kernElement)
+			{
+				static const float2 dxyKernel[KERNEL_SIZE] = {float2(-1, -1), float2(0, -1), float2(1, -1), 
+																float2(-1, 0), float2(0, 0), float2(1, 0),
+																float2(-1, 1), float2(0, 1), float2(1, 1)};
+
+				return TEXTURE_BIAS_ZERO(texture, uv +  s_viewport.zw * dxyKernel[kernElement])[channelIndex];
+			}
+
+			float convolute(TEXTURE_IN(texture), const float2 uv, const int channelIndex, float kernel[KERNEL_SIZE])
+			{
+				float sum = 0.0f;
+				for (int i = 0; i < KERNEL_SIZE; ++i)
+				{
+					sum += getTextureKernelValue(TEXTURE_OUT(texture), uv, channelIndex, i) * kernel[i];
+				}
+
+				return sum;
+			}
+
+			float blur(TEXTURE_IN(texture), const float2 uv, const int channelIndex)
+			{
+				static const float kernel[KERNEL_SIZE] = {1/16.f, 1/8.f, 1/16.f, 
+													1/8.f, 1/4.f, 1/8.f,
+													1/16.f, 1/8.f, 1/16.f};
+
+				return convolute(TEXTURE_OUT(texture), uv, channelIndex, kernel);
+			}
+
+			float3 calcNormalByDepth(const float2 uv)
+			{
+				const float uv_dx = s_viewport.z;
+				const float uv_dy = s_viewport.w;
+
+				float3 pos0 = TEXTURE_BIAS_ZERO(tex_depth_texture, uv).xyz;
+				float3 pos1 = TEXTURE_BIAS_ZERO(tex_depth_texture, uv + float2(uv_dx, 0)).xyz;
+				float3 pos2 = TEXTURE_BIAS_ZERO(tex_depth_texture, uv + float2(0, uv_dy)).xyz;
+				float3 pos3 = TEXTURE_BIAS_ZERO(tex_depth_texture, uv + float2(uv_dx, uv_dy)).xyz;
+
+				float3 normal0 = normalize(cross(pos1 - pos0, pos3 - pos0));
+				float3 normal1 = normalize(cross(pos3 - pos0, pos2 - pos0));
+				float3 normal = normal0 + normal1;
+
+				//float3 normal = sqrt(pow2(pos3 - pos0) + pow2(pos2 - pos0) + pow2(pos1 - pos0));
+
+				return normalize(normal);
+			}
+
+			float4 calcLight(const float3 normal, const float3 lightDirection)
+			{
+				return 1.0 - float4(dot(-lightDirection, normal).rrr, 1);
+				//return float4(1,1,1, 1);
+			}
+
+			MAIN_FRAG_BEGIN(FRAGMENT_IN)
+				const float3 normal = calcNormalByDepth(IN_UV);
+				const float3 lightDirection = float3(0,0,-1);
+
+				const float4 color = TEXTURE_BIAS_ZERO(tex_color_texture, IN_UV);
+				const float4 depth = TEXTURE_BIAS_ZERO(tex_depth_texture, IN_UV);
+				//const float4 screen_depth = float4(nativeDepthToLinearDepth(TEXTURE_BIAS_ZERO(tex_depth_texture, IN_UV).r, IN_UV), 0, 0, 1);
+				const float screen_depth = -nativeDepthToPositionVS(TEXTURE_BIAS_ZERO(tex_screen_depth_texture, IN_UV).r, IN_UV).z;
+
+				const float4 overlapColor = var_my_color * calcLight(normal, lightDirection);
+
+				bool isOverlap = depth.z < screen_depth;
+				OUT_COLOR = isOverlap ? overlapColor : color;
+				//OUT_COLOR = float4(sqrt(abs(calcNormalByDepth(IN_UV))) , 1);
+				//OUT_COLOR = float4(IN_UV, 0, 1);
+				//OUT_COLOR = float4(0, depth.z, 0,1);
+				//OUT_COLOR = float4(0, blur(TEXTURE_OUT(tex_depth_texture), IN_UV, 2), 0,1);
+				//OUT_COLOR = float4(0, var_max_steps0 / 255.0f, 0, 0);
+			MAIN_FRAG_END
+		#}
+	}
+}
+
