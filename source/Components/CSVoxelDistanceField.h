@@ -36,6 +36,7 @@ namespace VoxelProjectUnigine
 
 
 		PROP_PARAM(Material, compute_material);
+		PROP_PARAM(Material, voxel_render_material);
 
 		PROJECT_UTILS_COMPONENT_PROP(CSVoxelVisualizer, voxel_space);
 
@@ -47,7 +48,6 @@ namespace VoxelProjectUnigine
 		void Update();
 
 		void RenderCallback();
-		void RenderCallbackTest0();
 		
 		void CalcVisibleVoxels();
 		void CalcDistanceField(void* const data);

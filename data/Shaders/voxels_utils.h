@@ -25,3 +25,9 @@ uint3 IndexToPos3dInt(const uint index, const uint xSize, const uint ySize)
     return uint3(x, y, z);
 }
 
+/*
+uint3 VoxelRayTrace()
+{
+    
+}
+*/

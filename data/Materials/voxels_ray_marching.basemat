@@ -19,7 +19,12 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 		#{
 			#include <core/materials/shaders/render/common.h>
 
-			INIT_STRUCTURED_BUFFER(0, float4, positions);
+			CBUFFER(VoxelBlockTransform)
+				matrix screenSpaceToBlockLocal;
+			END
+
+
+			INIT_TEXTURE_3D(0, distanceFieldTexture);
 
 			STRUCT_FRAG_BEGIN
 				//INIT_COLOR(float)
@@ -98,10 +103,6 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 
 			float3 getRayIntersectionSdfPoint(const float2 uv)
 			{
-				uint positionsNum;
-				uint positionsStride;
-				positions.GetDimensions(positionsNum, positionsStride);
-				
 				const float3 viewDirection = normalize(screenUVToViewDirection(uv));
 				//const float3 viewDirection = normalize(getAngleViewDirection(uv));
 
@@ -120,14 +121,6 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 					for (uint posIndex = 0; posIndex < positionsNum; ++posIndex)
 					{
 						const float3 spherePos = positions[posIndex].xyz;
-
-						/*
-						float3 dVec = currentPos - spherePos;
-						bool isNegative = dot(viewDirection, dVec) > -0.1;
-						if (isNegative) {
-							continue;
-						}
-						*/
 
 
 						const float dist = sdfSphere(currentPos, spherePos, var_sphere_radius);
@@ -181,22 +174,6 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 		#}
 	}
 
-	Pass depth_blur
-	{
-		Fragment =
-		#{
-			#include <core/materials/shaders/render/common.h>
-
-			STRUCT_FRAG_BEGIN
-				INIT_MRT(float3, 1)
-			STRUCT_FRAG_END
-
-			MAIN_FRAG_BEGIN(FRAGMENT_IN)
-				OUT_MRT(1) = float4(0,0,1,1);
-			MAIN_FRAG_END
-		#}
-	}
-
 	Pass color
 	{
 		Fragment =
@@ -206,37 +183,6 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 			STRUCT_FRAG_BEGIN
 				INIT_COLOR(float4)
 			STRUCT_FRAG_END
-
-			static const int KERNEL_SIZE = 9;
-
-			float getTextureKernelValue(TEXTURE_IN(texture), const float2 uv, const int channelIndex, const int kernElement)
-			{
-				static const float2 dxyKernel[KERNEL_SIZE] = {float2(-1, -1), float2(0, -1), float2(1, -1), 
-																float2(-1, 0), float2(0, 0), float2(1, 0),
-																float2(-1, 1), float2(0, 1), float2(1, 1)};
-
-				return TEXTURE_BIAS_ZERO(texture, uv +  s_viewport.zw * dxyKernel[kernElement])[channelIndex];
-			}
-
-			float convolute(TEXTURE_IN(texture), const float2 uv, const int channelIndex, float kernel[KERNEL_SIZE])
-			{
-				float sum = 0.0f;
-				for (int i = 0; i < KERNEL_SIZE; ++i)
-				{
-					sum += getTextureKernelValue(TEXTURE_OUT(texture), uv, channelIndex, i) * kernel[i];
-				}
-
-				return sum;
-			}
-
-			float blur(TEXTURE_IN(texture), const float2 uv, const int channelIndex)
-			{
-				static const float kernel[KERNEL_SIZE] = {1/16.f, 1/8.f, 1/16.f, 
-													1/8.f, 1/4.f, 1/8.f,
-													1/16.f, 1/8.f, 1/16.f};
-
-				return convolute(TEXTURE_OUT(texture), uv, channelIndex, kernel);
-			}
 
 			float3 calcNormalByDepth(const float2 uv)
 			{
@@ -284,5 +230,35 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 			MAIN_FRAG_END
 		#}
 	}
+
+	Pass testTransform
+	{
+		Fragment =
+		#{
+			#include <core/materials/shaders/render/common.h>
+			#include <core/materials/shaders/api/matrix.h>
+			
+			CBUFFER(VoxelBlockTransform)
+				float4x4 screenSpaceToBlockLocal;
+			END
+
+			STRUCT_FRAG_BEGIN
+				INIT_COLOR(float4)
+			STRUCT_FRAG_END
+			
+			MAIN_FRAG_BEGIN(FRAGMENT_IN)
+				float4 color = TEXTURE_BIAS_ZERO(tex_color_texture, IN_UV);
+
+				//const float2 uv = IN_UV * 2;
+				//const int index = uv.x + (int)uv.y * 2;
+				//float4 color_mul = positions[index];
+
+				const float3 uvLocalPos = mul4(screenSpaceToBlockLocal, float3(IN_UV, 0));
+				const float length2Val = length2(uvLocalPos.xy);
+				color = (length2Val > 0.001f) ? color : float4(0,1,0,1);
+				
+				OUT_COLOR = color;
+			MAIN_FRAG_END
+		#}
 }
 

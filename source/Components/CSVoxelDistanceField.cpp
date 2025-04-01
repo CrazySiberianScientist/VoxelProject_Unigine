@@ -12,7 +12,7 @@ namespace VoxelProjectUnigine
 		PROJECT_UTILS_COMPONENT_PROP_INIT(voxel_space);
 		voxelBlock = &voxel_space->voxelBlock;
 
-		//Render::getEventEndPostMaterials().connect(this, &CSVoxelDistanceField::RenderCallbackTest0);
+		//Render::getEventEndPostMaterials().connect(this, &CSVoxelDistanceField::RenderCallbackTest);
 
 		distanceFieldTexture->create3D(VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS
 			, Texture::FORMAT_R32U, Texture::FORMAT_USAGE_UNORDERED_ACCESS | Texture::FORMAT_USAGE_RENDER);
@@ -24,6 +24,47 @@ namespace VoxelProjectUnigine
 	void CSVoxelDistanceField::Update()
 	{
 		CalcVisibleVoxels();
+	}
+
+	void CSVoxelDistanceField::RenderCallback()
+	{
+		constexpr auto PASS_NAME = "testTransform";
+
+		RenderState::saveState();
+		RenderState::clearStates();
+
+
+		{
+			auto currentScreenColorTexture = RenderState::getScreenColorTexture();
+
+			auto colorTexture = Render::getTemporaryTexture(currentScreenColorTexture);
+			colorTexture->copy(currentScreenColorTexture);
+
+
+			{
+				voxel_render_material->setTexture("color_texture", colorTexture);
+				const auto shader = voxel_render_material->getShaderForce(PASS_NAME);
+				//shader->setParameterArrayFloat4x4("screenSpaceToBlockLocal",)
+
+				auto rt = Render::getTemporaryRenderTarget();
+				rt->bindColorTexture(0, currentScreenColorTexture);
+				rt->enable();
+
+				voxel_render_material->renderScreen("color");
+
+				rt->disable();
+				rt->unbindAll();
+
+				voxel_render_material->setTexture("color_texture", nullptr);
+
+				Render::releaseTemporaryRenderTarget(rt);
+			}
+
+
+			Render::releaseTemporaryTexture(colorTexture);
+		}
+
+		RenderState::restoreState();
 	}
 
 	void CSVoxelDistanceField::CalcVisibleVoxels()
