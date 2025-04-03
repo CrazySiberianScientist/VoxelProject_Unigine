@@ -32,9 +32,11 @@ namespace VoxelProjectUnigine
 		constexpr auto PASS_NAME = "testTransform";
 
 		const auto &iModelviewMatrix = Math::mat4(Game::getPlayer()->getCamera()->getIModelview());
-		const auto &iProjectionMatrix = Math::inverse(Game::getPlayer()->getCamera()->getProjection());
+		const auto &iProjectionMatrix = Math::inverse4(Game::getPlayer()->getCamera()->getProjection());
 
-		const auto screenSpaceToBlockLocal = iModelviewMatrix * iProjectionMatrix;
+		const Math::mat4 blockIWorldTransform{ Math::inverse4(node->getWorldTransform()) };
+
+		const auto screenSpaceToBlockLocal = blockIWorldTransform * /*iProjectionMatrix **/ iModelviewMatrix;
 
 		RenderState::saveState();
 		RenderState::clearStates();
@@ -56,7 +58,7 @@ namespace VoxelProjectUnigine
 				rt->bindColorTexture(0, currentScreenColorTexture);
 				rt->enable();
 
-				voxel_render_material->renderScreen("color");
+				voxel_render_material->renderScreen(PASS_NAME);
 
 				rt->disable();
 				rt->unbindAll();

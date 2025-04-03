@@ -254,9 +254,13 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				//const int index = uv.x + (int)uv.y * 2;
 				//float4 color_mul = positions[index];
 
-				const float3 uvLocalPos = mul4(screenSpaceToBlockLocal, float3(IN_UV, 0));
-				const float length2Val = length2(uvLocalPos.xy);
-				color = (length2Val > 0.001f) ? color : float4(0,1,0,1);
+				//const float3 uvLocalPos = mul4(screenSpaceToBlockLocal, float3(IN_UV, 0));
+				const float3 worldPos = mul4(screenSpaceToBlockLocal, float3(0.0, 0.0, 0)) - float3(0.0, 0.0, 0);
+				const float maxV = max(abs(worldPos.x), max(abs(worldPos.y), abs(worldPos.z)));
+				const float maxDist = 1;
+				color = (maxV > maxDist) ? color : float4(0,maxV / maxDist,0,1);
+				//color = float4(IN_UV.x, IN_UV.y, 0, 1);
+				//color = float4(abs(worldPos), 1);
 				
 				OUT_COLOR = color;
 			MAIN_FRAG_END
