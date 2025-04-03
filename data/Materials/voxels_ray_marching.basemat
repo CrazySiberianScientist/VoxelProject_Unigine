@@ -236,6 +236,7 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 		Fragment =
 		#{
 			#include <core/materials/shaders/render/common.h>
+			#include <core/materials/shaders/api/common.h>
 			#include <core/materials/shaders/api/matrix.h>
 			
 			CBUFFER(VoxelBlockTransform)

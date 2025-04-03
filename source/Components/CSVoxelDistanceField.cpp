@@ -2,6 +2,7 @@
 
 #include <UnigineLog.h>
 #include <UnigineVisualizer.h>
+#include <UnigineGame.h>
 
 namespace VoxelProjectUnigine
 {
@@ -12,7 +13,7 @@ namespace VoxelProjectUnigine
 		PROJECT_UTILS_COMPONENT_PROP_INIT(voxel_space);
 		voxelBlock = &voxel_space->voxelBlock;
 
-		//Render::getEventEndPostMaterials().connect(this, &CSVoxelDistanceField::RenderCallbackTest);
+		Render::getEventEndPostMaterials().connect(this, &CSVoxelDistanceField::RenderCallback);
 
 		distanceFieldTexture->create3D(VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS
 			, Texture::FORMAT_R32U, Texture::FORMAT_USAGE_UNORDERED_ACCESS | Texture::FORMAT_USAGE_RENDER);
@@ -30,6 +31,11 @@ namespace VoxelProjectUnigine
 	{
 		constexpr auto PASS_NAME = "testTransform";
 
+		const auto &iModelviewMatrix = Math::mat4(Game::getPlayer()->getCamera()->getIModelview());
+		const auto &iProjectionMatrix = Math::inverse(Game::getPlayer()->getCamera()->getProjection());
+
+		const auto screenSpaceToBlockLocal = iModelviewMatrix * iProjectionMatrix;
+
 		RenderState::saveState();
 		RenderState::clearStates();
 
@@ -44,7 +50,7 @@ namespace VoxelProjectUnigine
 			{
 				voxel_render_material->setTexture("color_texture", colorTexture);
 				const auto shader = voxel_render_material->getShaderForce(PASS_NAME);
-				//shader->setParameterArrayFloat4x4("screenSpaceToBlockLocal",)
+				shader->setParameterFloat4x4("screenSpaceToBlockLocal", screenSpaceToBlockLocal);
 
 				auto rt = Render::getTemporaryRenderTarget();
 				rt->bindColorTexture(0, currentScreenColorTexture);
