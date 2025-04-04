@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<asset version="2.19.0.3">
-	<guid>93247e882f7a0e7d6f35ac94b681b542ce8654a3</guid>
-	<type>script</type>
-	<hash>499ab007</hash>
-	<runtimes>
-		<runtime id="93247e882f7a0e7d6f35ac94b681b542ce8654a3" name="bitset.h" link="0"/>
-	</runtimes>
-</asset>

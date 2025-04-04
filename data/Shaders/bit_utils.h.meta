@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<asset version="2.19.0.3">
+	<guid>0b81b72d1b81d081fcc7a425397891d7d0dbb19d</guid>
+	<type>script</type>
+	<hash>95a1fcfc</hash>
+	<runtimes>
+		<runtime id="0b81b72d1b81d081fcc7a425397891d7d0dbb19d" name="bit_utils.h" link="0"/>
+	</runtimes>
+</asset>

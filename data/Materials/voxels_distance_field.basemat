@@ -48,8 +48,8 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 			MAIN_COMPUTE_BEGIN(THREAD_GROUP_SIZE, THREAD_GROUP_SIZE, THREAD_GROUP_SIZE)
 				
 				const uint3 voxelPos = GROUP_ID * THREAD_GROUP_SIZE + GROUP_THREAD_ID;
-				const uint voxelIndex = Pos3dToIndex(voxelPos, THREAD_GROUP_SIZE, THREAD_GROUP_SIZE);
-				const bool voxelValue = BitsetGetBit(voxelBlockBuffer, voxelIndex);
+				const uint voxelIndex = VoxelsUtils__Pos3dToIndex(voxelPos, THREAD_GROUP_SIZE, THREAD_GROUP_SIZE);
+				const bool voxelValue = BitUtils__BitsetGetBit(voxelBlockBuffer, voxelIndex);
 				
 				if (voxelValue)
 				{
