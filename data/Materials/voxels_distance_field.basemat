@@ -36,7 +36,7 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 		#{
 			#include <core/materials/shaders/render/common.h>
 			#include <Shaders/voxels_utils.h>
-			#include <Shaders/bitset.h>
+			#include <Shaders/bit_utils.h>
 			
 			#define THREAD_GROUP_SIZE 8
 			#define VOXEL_MAX_DISTANCE2 THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE
@@ -68,7 +68,6 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 		#{
 			#include <core/materials/shaders/render/common.h>
 			#include <Shaders/voxels_utils.h>
-			#include <Shaders/bitset.h>
 			
 			#define THREAD_GROUP_SIZE 8
 			#define VOXEL_MAX_DISTANCE2 THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE
@@ -91,7 +90,6 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 		#{
 			#include <core/materials/shaders/render/common.h>
 			#include <Shaders/voxels_utils.h>
-			#include <Shaders/bitset.h>
 			
 			#define THREAD_GROUP_SIZE 8
 			#define VOXEL_MAX_DISTANCE2 THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE + THREAD_GROUP_SIZE*THREAD_GROUP_SIZE

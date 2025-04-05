@@ -238,6 +238,8 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 			#include <core/materials/shaders/render/common.h>
 			#include <core/materials/shaders/api/common.h>
 			#include <core/materials/shaders/api/matrix.h>
+
+			#include <Shaders/voxels_utils.h>
 			
 			CBUFFER(VoxelBlockTransform)
 				float4x4 screenSpaceToBlockLocal;
@@ -256,14 +258,27 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 
 				//const float3 uvLocalPos = mul4(screenSpaceToBlockLocal, float3(IN_UV, 0));
 				//const float3 viewDirection = normalize(screenUVToViewDirection(uv));
-				const float3 worldPos = mul4(screenSpaceToBlockLocal, float3(0.0, 0.0, 0)) - float3(0.0, 0.0, 0);
-				const float maxV = max(abs(worldPos.x), max(abs(worldPos.y), abs(worldPos.z)));
-				const float maxDist = 1;
-				color = (maxV > maxDist) ? color : float4(0,maxV / maxDist,0,1);
+				//const float3 worldPos = mul4(screenSpaceToBlockLocal, float3(0.0, 0.0, 0)) - float3(0.0, 0.0, 0);
+				//const float maxV = max(abs(worldPos.x), max(abs(worldPos.y), abs(worldPos.z)));
+				//const float maxDist = 1;
+				//color = (maxV > maxDist) ? color : float4(0,maxV / maxDist,0,1);
 				//color = float4(IN_UV.x, IN_UV.y, 0, 1);
 				//color = float4(abs(worldPos), 1);
 
-				float currentDistance = var_surface_dist;
+				//float currentDistance = var_surface_dist;
+
+				const float maxDistance = 100;
+
+				const float3 viewDir = normalize(screenUVToViewDirection(IN_UV));
+				const float3 viewDirBlockLocalStart = mul4(screenSpaceToBlockLocal, float3(0.0, 0.0, 0)).xyz;
+				const float3 viewDirBlockLocalEnd = mul4(screenSpaceToBlockLocal, viewDir).xyz;
+				const float3 viewDirBlockLocal = normalize(viewDirBlockLocalEnd - viewDirBlockLocalStart);
+
+				const float3 bbMin = float3(0,0,0);
+				const float3 bbMax = float3(8,8,8);
+				VoxelUtils__IntersectResult result = VoxelsUtils__IntersectSegmentAABB(viewDirBlockLocalStart, viewDirBlockLocal, bbMin, bbMax, maxDistance);
+
+				color = !result.isValid ? color : float4(0,1,0,1);
 				
 				OUT_COLOR = color;
 			MAIN_FRAG_END
