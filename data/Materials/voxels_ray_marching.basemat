@@ -284,5 +284,6 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				OUT_COLOR = color;
 			MAIN_FRAG_END
 		#}
+	}
 }
 

@@ -8,6 +8,13 @@
 
 namespace VoxelProject
 {
+	template<typename _Vec3Type>
+	auto RectangleDistance(const _Vec3Type& start, const _Vec3Type& end)
+	{
+		const auto delta = end - start;
+		return abs(delta[0]) + abs(delta[1]) + abs(delta[2]);
+	}
+
 	// Только для воксельной сетки с только положительными координатами
 	float CalcRayDelta(const Vec3_meters& startPointLocal_meters, const Vec3_meters& rayDirLocal);
 

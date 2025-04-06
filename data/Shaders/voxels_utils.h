@@ -7,6 +7,11 @@ struct VoxelUtils__IntersectResult
 	int isValid;
 };
 
+uint3 VoxelsUtils__MetersToVoxels(const float3 vec_meters)
+{
+	return uint3(vec_meters[0], vec_meters[1], vec_meters[2]);
+}
+
 uint VoxelsUtils__Pos3dToIndex(const uint3 pos3d, const int xSize, const int ySize)
 {
     return pos3d[0] + pos3d[1] * xSize + pos3d[2] * xSize * ySize;
@@ -72,9 +77,65 @@ VoxelUtils__IntersectResult VoxelsUtils__IntersectSegmentAABB(const float3 start
 }
 
 /*
-uint3 VoxelRayTrace()
+void VoxelUtils__RayTrace(const float3 startPointLocal, const float3 rayDirLocal, const float maxDist, RWTexture3D<uint> voxelData)
 {
-    
+	const float3 deltaDistances = abs(float3(1,1,1) / rayDirLocal);
+
+	float3 currentPos = startPointLocal;
+	uint3 currentVoxel = VoxelsUtils__MetersToVoxels(startPointLocal);
+
+	float3 distances = float3(0,0,0);
+	int3 voxelStep = int3(0,0,0);
+
+	unroll
+	for (int i = 0; i < 3; ++i)
+	{
+		const float signV = rayDirLocal[i] < 0 ? -1 : 1;
+		voxelStep[i] = (int)signV;
+
+		const auto deltaPos = -signV * (currentPos[i] - currentVoxel[i]) + (signV > 0.0f ? 1.0f : 0.0f);
+		distances[i] = deltaPos * deltaDistances[i];
+	}
+
+	auto getMinIndex = [](const Vec3_meters& v)
+		{
+			int minIndex = 0;
+			for (int i = 0; i < 3; ++i)
+			{
+				minIndex = v[i] < v[minIndex] ? i : minIndex;
+			}
+			return minIndex;
+		};
+
+	while (true)
+	{
+		const auto minDistIndex = getMinIndex(distances);
+		const auto currentDist = distances[minDistIndex];
+
+		if constexpr (!UTILS_IS_NULLOPT(outPointsPos))
+			outPointsPos.push_back(startPointLocal + rayDirLocal * currentDist);
+
+		if constexpr (!UTILS_IS_NULLOPT(outVoxelsPos))
+			outVoxelsPos.push_back(currentVoxel);
+
+		if (currentDist >= maxDist)
+		{
+			break;
+		}
+
+		distances[minDistIndex] += deltaDistances[minDistIndex];
+		currentVoxel[minDistIndex] += voxelStep[minDistIndex];
+	}
+}
+*/
+
+/*
+// Только для воксельной сетки с только положительными координатами
+void VoxelUtils__RayTrace(const Vec3_meters& startPointLocal, const Vec3_meters& endPointLocal
+	, _OutPointsPosType& outPointsPos = Utils::NULLOPT_STATIC, _OutVoxelsPosType& outVoxelsPos = Utils::NULLOPT_STATIC)
+{
+	const auto dir = endPointLocal - startPointLocal;
+	RayTrace(startPointLocal, Unigine::Math::normalize(dir), dir.length(), outPointsPos, outVoxelsPos);
 }
 */
 
