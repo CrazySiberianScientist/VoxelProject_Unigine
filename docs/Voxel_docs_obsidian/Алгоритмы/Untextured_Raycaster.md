@@ -19,11 +19,11 @@
 
 Raycasting is a rendering technique to create a 3D perspective in a 2D map. Back when computers were slower it wasn't possible to run real 3D engines in realtime, and raycasting was the first solution. Raycasting can go very fast, because only a calculation has to be done for every vertical line of the screen. The most well known game that used this technique, is of course Wolfenstein 3D.  
   
-![](https://lodev.org/cgtutor/images/wolf3d.jpg)  
+![[7bf16e75d37b6fb81e3ee358b8f4b0c6_MD5.jpg]]  
   
 The raycasting engine of Wolfenstein 3D was very limited, allowing it to run on a even a 286 computer: all the walls have the same height and are orthogonal squares on a 2D grid, as can be seen in this screenshot from a mapeditor for Wolf3D:  
   
-![](https://lodev.org/cgtutor/images/wolfmapedit.jpg)  
+![[617b5d00474a80a7870eb43b3e6daaad_MD5.jpg]]  
   
 Things like stairs, jumping or height differences are impossible to make with this engine. Later games such as Doom and Duke Nukem 3D also used raycasting, but much more advanced engines that allowed sloped walls, different heights, textured floors and ceilings, transparent walls, etc... The sprites (enemies, objects and goodies) are 2D images, but sprites aren't discussed in this tutorial for now.  
   
@@ -42,21 +42,21 @@ The basic idea of raycasting is as follows: the map is a 2D square grid, and eac
   
 For every x of the screen (i.e. for every vertical stripe of the screen), send out a ray that starts at the player location and with a direction that depends on both the player's looking direction, and the x-coordinate of the screen. Then, let this ray move forward on the 2D map, until it hits a map square that is a wall. If it hit a wall, calculate the distance of this hit point to the player, and use this distance to calculate how high this wall has to be drawn on the screen: the further away the wall, the smaller it's on screen, and the closer, the higher it appears to be. These are all 2D calculations. This image shows a top down overview of two such rays (red) that start at the player (green dot) and hit blue walls:  
   
-![](https://lodev.org/cgtutor/images/raycastgrid.gif)  
+![[3883d3df15853a1c3e1c2cc093632036_MD5.gif]]  
   
 To find the first wall that a ray encounters on its way, you have to let it start at the player's position, and then all the time, check whether or not the ray is inside a wall. If it's inside a wall (hit), then the loop can stop, calculate the distance, and draw the wall with the correct height. If the ray position is not in a wall, you have to trace it further: add a certain value to its position, in the direction of the direction of this ray, and for this new position, again check if it's inside a wall or not. Keep doing this until finally a wall is hit.  
   
 A human can immediatly see where the ray hits the wall, but it's impossible to find which square the ray hits immediatly with a single formula, because a computer can only check a finite number of positions on the ray. Many raycasters add a constant value to the ray each step, but then there's a chance that it may miss a wall! For example, with this red ray, its position was checked at every red spot:  
   
-![](https://lodev.org/cgtutor/images/raycastmiss.gif)  
+![[120e5fb59aac2043266dca08300582cd_MD5.gif]]  
   
 As you can see, the ray goes straight through the blue wall, but the computer didn't detect this, because it only checked at the positions with the red dots. The more positions you check, the smaller the chance that the computer won't detect a wall, but the more calculations are needed. Here the step distance was halved, so now he detects that the ray went through a wall, though the position isn't completely correct:  
   
-![](https://lodev.org/cgtutor/images/raycastmiss2.gif)  
+![[c7b6af8970c5f8a025f08ae3a34c7fe8_MD5.gif]]  
   
 For infinite precision with this method, an infinitely small step size, and thus an infinite number of calculations would be needed! That's pretty bad, but luckily, there's a better method that requires only very few calculations and yet will detect every wall: the idea is to check at every side of a wall the ray will encounter. We give each square width 1, so each side of a wall is an integer value and the places in between have a value after the point. Now the step size isn't constant, it depends on the distance to the next side:  
   
-![](https://lodev.org/cgtutor/images/raycasthit.gif)  
+![[6da54c2b6f80edbeff7af4ae54696539_MD5.gif]]  
   
 As you can see on the image above, the ray hits the wall exactly where we want it. In the way presented in this tutorial, an algorithm is used that's based on DDA or "Digital Differential Analysis". DDA is a fast algorithm typically used on square grids to find which squares a line hits (for example to draw a line on a screen, which is a grid of square pixels). So we can also use it to find which squares of the map our ray hits, and stop the algorithm once a square that is a wall is hit.  
   
@@ -64,7 +64,7 @@ Some raytracers work with Euclidean angles to represent the direction of the pla
   
 This method with vectors also requires an extra vector, which is the camera plane vector. In a true 3D engine, there's also a camera plane, and there this plane is really a 3D plane so two vectors (u and v) are required to represent it. Raycasting happens in a 2D map however, so here the camera plane isn't really a plane, but a line, and is represented with a single vector. The camera plane should always be perpendicular on the direction vector. The camera plane represents the surface of the computer screen, while the direction vector is perpendicular on it and points inside the screen. The position of the player, which is a single point, is a point in front of the camera plane. A certain ray of a certain x-coordinate of the screen, is then the ray that starts at this player position, and goes through that position on the screen or thus the camera plane.  
   
-![](https://lodev.org/cgtutor/images/raycastingcamera.gif)  
+![[a0b9aee933406e44cbbeade3a3c0456f_MD5.gif]]  
   
 The image above represents such a 2D camera. The green spot is the position (vector "pos"). The black line, ending in the black spot, represents the direction vector (vector "dir"), so the position of the black dot is pos+dir. The blue line represents the full camera plane, the vector from the black dot to the right blue dot represents the vector "plane", so the position of the right blue point is pos+dir+plane, and the posistion of the left blue dot is pos+dir-plane (these are all vector additions).  
   
@@ -74,21 +74,21 @@ The two outer lines, are the left and right border of the screen, and the angle 
   
 If the direction vector and the camera plane vector have the same length, the FOV will be 90°:  
   
-![](https://lodev.org/cgtutor/images/raycastingFOV90.gif)  
+![[b42dfe4c8a6844c856e48aeac0acb52a_MD5.gif]]  
   
 If the direction vector is much longer than the camera plane, the FOV will be much smaller than 90°, and you'll have a very narrow vision. You'll see everything more detailed though and there will be less depth, so this is the same as zooming in:  
   
-![](https://lodev.org/cgtutor/images/raycastingFOV0.gif)  
+![[3b550c3071eb3c84cee80744ab5dbe18_MD5.gif]]  
   
 If the direction vector is shorter than the camera plane, the FOV will be larger than 90° (180° is the maximum, if the direction vector is close to 0), and you'll have a much wider vision, like zooming out:  
   
-![](https://lodev.org/cgtutor/images/raycastingFOV180.gif)  
+![[faaea7c16d878ff7dee7a0b5002cd028_MD5.gif]]  
   
   
   
 When the player rotates, the camera has to rotate, so both the direction vector and the plane vector have to be rotated. Then, the rays will all automaticly rotate as well.  
   
-![](https://lodev.org/cgtutor/images/raycastingcamerarotate.gif)  
+![[6485d2acdfec09fc031bf7fb83065684_MD5.gif]]  
   
 To rotate a vector, multiply it with the rotation matrix  
   
@@ -159,7 +159,7 @@ sideDistX and sideDistY are initially the distance the ray has to travel from it
   
 deltaDistX and deltaDistY are the distance the ray has to travel to go from 1 x-side to the next x-side, or from 1 y-side to the next y-side. The following image shows the initial sideDistX, sideDistY and deltaDistX and deltaDistY:  
   
-![](https://lodev.org/cgtutor/images/raycastdelta.gif)  
+![[efd2a0eff71af21ae3587066e9689023_MD5.gif]]  
   
 When deriving deltaDistX geometrically you get, with Pythagoras, the formulas below. For the blue triangle (deltaDistX), one side has length 1 (as it is exactly one cell) and the other has length raydirY / raydirX because it is exaclty the amount of units the ray goes in the y-direction when taking 1 step in the X-direction. For the green triangle (deltaDistY), the formula is similar.
 
@@ -228,13 +228,13 @@ The following image shows why we take distance to camera plane instead of player
 
 In the image, the player is looking directly at the wall, and in that case you would expect the wall's bottom and top to form a perfectly horizontal line on the screen. However, the red rays all have a different lenght, so would compute different wall heights for different vertical stripes, hence the rounded effect. The green rays on the right all have the same length, so will give the correct result. The same still apllies for when the player rotates (then the camera plane is no longer horizontal and the green lines will have different lengths, but still with a constant change between each) and the walls become diagonal but straight lines on the screen. This explanation is somewhat handwavy but gives the idea.
 
-![perpWallDist](https://lodev.org/cgtutor/images/raycastdist.png)
+![[b927c19b4175e8b8d58df5e848cd8fc7_MD5.png]]
 
 Note that this part of the code isn't "fisheye correction", such a correction isn't needed for the way of raycasting used here, the fisheye effect is simply avoided by the way the distance is calculated here. It's even easier to calculate this perpendicular distance than the real distance, we don't even need to know the exact location where the wall was hit.
 
 This perpenducular distance is called "perpWallDist" in the code. One way to compute it is to use the formula for shortest distance from a point to a line, where the point is where the wall was hit, and the line is the camera plane:
 
-![perpWallDist](https://lodev.org/cgtutor/images/raycastperpwalldist2.png)
+![[1857f8ff13b2315473c66564a6b8a5f9_MD5.png]]
 
 However, it can be computed simpler than that: due to how deltaDist and sideDist were scaled by a factor of |rayDir| above, the length of sideDist already almost equals perpWallDist. We just need to subtract deltaDist once from it, going one step back, because in the DDA steps above we went one step further to end up inside the wall.  
   
@@ -272,7 +272,7 @@ The actual derivation:
 - 8: Combining steps 5 and 7 gives perpWallDist = yDist / rayDirY = (sideDistY - deltaDistY) / |rayDirY| / rayDirY.
 - 9: Given how cases for signs of sideDistY and deltaDistY in the code are handled the absolute value doesn't matter, and equals (sideDistY - deltaDistY), which is the formula used
 
-![perpWallDist](https://lodev.org/cgtutor/images/raycastperpwalldist.png)
+![[7a704ba77657f2b2fa2e578623658ecd_MD5.png]]
 
 [Thanks to Thomas van der Berg in 2016 for pointing out simplifications of the code (perpWallDist could be simplified and the value reused for wallX).  
 [Thanks to Roux Morgan in 2020 for helping to clarify the explanation of perpWallDist, the tutorial was lacking some information before this]  
@@ -322,11 +322,11 @@ To rotate, if the left or right arrow is pressed, both the direction vector and 
   
 This concludes the code of the untextured raycaster, the result looks like this, and you can walk around in the map:  
   
-![](https://lodev.org/cgtutor/images/raycasteruntextured.gif)  
+![[75e2937ee118f97fb104c1c8ff6edb07_MD5.gif]]  
   
 Here's an example of what happens if the camera plane isn't perpendicular to the direction vector, the world appears skewed:  
   
-![](https://lodev.org/cgtutor/images/raycastingskewed.gif)  
+![[48a8e120c12ae7fe25b03c1f2e330116_MD5.gif]]  
   
   
 
@@ -437,7 +437,7 @@ And here's again the keys, nothing has changed here either. If you like you can 
   
 Here's a few screenshots of the result:  
   
-![](https://lodev.org/cgtutor/images/raycasttexture1.gif) ![](https://lodev.org/cgtutor/images/raycasttexture2.gif) ![](https://lodev.org/cgtutor/images/raycasttexture3.gif)  
+![[cd9938931662ec2887aa65345e5ff3c7_MD5.gif]] ![[8c5a4c4697dff738e35f676e7f08fbc8_MD5.gif]] ![[a457a26910cd4114db52fae9d03bc4d1_MD5.gif]]  
   
 Note: Usually images are stored by horizontal scanlines, but for a raycaster the textures are drawn as vertical stripes. Therefore, to optimally use the cache of the CPU and avoid page misses, it might be more efficient to store the textures in memory vertical stripe by vertical stripe, instead of per horizontal scanline. To do this, after generating the textures, swap their X and Y by (this code only works if texWidth and texHeight are the same):  
   
@@ -461,7 +461,7 @@ When getting the pixel from the texture then, use the following code instead:
 
 Instead of just generating some textures, let's load a few from images instead! For example the following 8 textures, which come from Wolfenstein 3D and are copyright by ID Software.  
   
-![](https://lodev.org/cgtutor/images/wolftextures.png)  
+![[9856f4bdf8918d8d55ee7e89a69b805d_MD5.png]]  
   
 Just replace the part of the code that generates the texture patterns with the following (and make sure those textures are in the correct path). You can download the textures [here](https://lodev.org/cgtutor/files/wolftex.zip).  
   
@@ -472,7 +472,7 @@ Just replace the part of the code that generates the texture patterns with the f
 
   
   
-![](https://lodev.org/cgtutor/images/wolftex1.gif) ![](https://lodev.org/cgtutor/images/wolftex2.gif)  
+![[87d83d4761803a142629a69470081158_MD5.gif]] ![[5b6b6f00ddbbf1a4ff8a08aa19b63773_MD5.gif]]  
   
 In the original Wolfenstein 3D, the colors of one side was also made darker than the color of the other side of a wall to create the shadow effect, but they used a seperate texture every time, a dark and a light one. Here however, only one texture is used for each wall and the line of code that divided R, G and B through 2 is what makes the y-sides darker.  
   
