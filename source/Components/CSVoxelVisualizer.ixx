@@ -61,7 +61,9 @@ export namespace VoxelProjectUnigine
 				const auto lineLength = lineDir.lengthFast();
 				const auto lineNorm = lineDir / lineLength;
 				
-				const auto intersectResult = GeomUtils::IntersectSegmentAABB(testLineLP[0], lineNorm, {}, blockSize_meters, lineLength);
+				constexpr auto correctionValue = FLT_EPSILON * 1000;
+				const Vec3_meters correctionBorder(correctionValue);
+				const auto intersectResult = GeomUtils::IntersectSegmentAABB(testLineLP[0], lineNorm, correctionBorder, blockSize_meters - correctionBorder, lineLength);
 				if (intersectResult.isValid)
 				{
 					for (const auto& p : intersectResult.points)
@@ -74,7 +76,8 @@ export namespace VoxelProjectUnigine
 
 					std::vector<Vec3_meters> points;
 					std::vector<Vec3_voxels> voxelsPos;
-					constexpr auto correctionValue = FLT_EPSILON * 1000;
+					//constexpr auto correctionValue = FLT_EPSILON * 1000;
+					constexpr auto correctionValue = 0.0f;
 					Vec3_meters intersectShrinkedP0 = intersectResult.points[0] + lineNorm * correctionValue;
 					Vec3_meters intersectShrinkedP1 = intersectResult.points[1] - lineNorm * correctionValue;
 
