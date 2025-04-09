@@ -78,4 +78,6 @@ namespace VoxelProject
 		const auto dir = endPointLocal - startPointLocal;
 		RayTrace(startPointLocal, Unigine::Math::normalize(dir), dir.length(), outPointsPos, outVoxelsPos);
 	}
+
+	Vec3_voxelsDiff ShiftRectangleDistance(const Vec3_meters& direction, const VoxelSizeType shiftValue);
 }

@@ -23,4 +23,10 @@ namespace VoxelProject
 		constexpr auto MAX_DISTANCE = FLT_EPSILON * 100;
 		return std::max(minDistance, MAX_DISTANCE);
 	}
+
+	Vec3_voxelsDiff ShiftRectangleDistance(const Vec3_meters& direction, const VoxelSizeType shiftValue)
+	{
+		const auto t = shiftValue / (abs(direction[0]) + abs(direction[1]) + abs(direction[2]));
+		return MetersToVoxels(direction * t);
+	}
 }

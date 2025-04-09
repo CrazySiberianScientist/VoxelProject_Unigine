@@ -13,6 +13,9 @@
 
 namespace Utils
 {
+	template<typename _CollectionType>
+	using CollectionElementType = std::decay_t<decltype(_CollectionType{}[0])>;
+
 	template<typename _T>
 	using SubscriptOperatorResultValueType = std::remove_cvref_t<decltype(std::declval<_T>()[{}])>;
 

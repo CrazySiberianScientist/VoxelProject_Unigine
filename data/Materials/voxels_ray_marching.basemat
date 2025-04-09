@@ -285,5 +285,54 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 			MAIN_FRAG_END
 		#}
 	}
+
+	Pass testColor
+	{
+		Fragment =
+		#{
+			#include <core/materials/shaders/render/common.h>
+			#include <core/materials/shaders/api/common.h>
+			#include <core/materials/shaders/api/matrix.h>
+
+			#include <Shaders/voxels_utils.h>
+			
+			CBUFFER(VoxelBlockTransform)
+				float4x4 screenSpaceToBlockLocal;
+			END
+
+			INIT_RW_TEXTURE_R32U_3D(1, distanceFieldTexture);
+
+			STRUCT_FRAG_BEGIN
+				INIT_COLOR(float4)
+			STRUCT_FRAG_END
+			
+			MAIN_FRAG_BEGIN(FRAGMENT_IN)
+				float4 color = TEXTURE_BIAS_ZERO(tex_color_texture, IN_UV);
+
+
+				const float maxDistance = 100;
+
+				const float3 viewDir = normalize(screenUVToViewDirection(IN_UV));
+				const float3 viewDirBlockLocalStart = mul4(screenSpaceToBlockLocal, float3(0.0, 0.0, 0)).xyz;
+				const float3 viewDirBlockLocalEnd = mul4(screenSpaceToBlockLocal, viewDir).xyz;
+				// Я так и не понял почему надо начало с концом местами менять, наверное из-за каких-то матриц и то что пространство камеры смотрит в -Z
+				const float3 viewDirBlockLocal = normalize(viewDirBlockLocalStart - viewDirBlockLocalEnd);
+
+				const float3 bbMin = float3(0,0,0);
+				const float3 bbMax = float3(8,8,8);
+				VoxelUtils__IntersectResult result = VoxelsUtils__IntersectSegmentAABB(viewDirBlockLocalStart, viewDirBlockLocal, bbMin, bbMax, maxDistance);
+
+				if (result.isValid)
+				{
+					while (true)
+					{
+
+					}
+				}
+				
+				OUT_COLOR = color;
+			MAIN_FRAG_END
+		#}
+	}
 }
 
