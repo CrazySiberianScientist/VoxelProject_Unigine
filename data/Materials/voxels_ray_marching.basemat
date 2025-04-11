@@ -322,23 +322,29 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				const float3 correctionBorder = float3(correctionValue, correctionValue, correctionValue);
 				const float3 bbMin = float3(0,0,0);
 				const float3 bbMax = float3(8,8,8);
-				VoxelUtils__IntersectResult result = VoxelsUtils__IntersectSegmentAABB(viewDirBlockLocalStart, viewDirBlockLocal, bbMin + correctionBorder, bbMax - correctionBorder, maxDistance);
+				const VoxelUtils__IntersectResult result = VoxelsUtils__IntersectSegmentAABB(viewDirBlockLocalStart, viewDirBlockLocal, bbMin + correctionBorder, bbMax - correctionBorder, maxDistance);
+				const float distanceLimit = length(result.points[0] - result.points[1]);
 
 				if (result.isValid)
 				{
-					float3 currentPos = result.points[0] - bbMin;
-					while (true)
+					const float3 currentPos = result.points[0] - bbMin;
+					float currentDistance = 0.0f;
+					uint currentMaxDistance_voxels = 0;
+					while (currentDistance <= distanceLimit)
 					{
-						uint3 currentPos_voxels = VoxelsUtils__MetersToVoxels(currentPos);
-						const uint currentDistance_voxels = distanceFieldTexture[currentPos_voxels];
+						uint3 currentPos_voxels = VoxelsUtils__MetersToVoxels(currentPos + viewDirBlockLocal * currentDistance);
+						const uint currentDistance_voxels = s_rw_texture_distanceFieldTexture[currentPos_voxels];
 						if (currentDistance_voxels == 0)
 						{
-							color = float4(0,1,0,1);
+							//color = float4(0,1,0,1);
+							color = float4(1,0,0,1);
 							break;
 						}
-						//VoxelsUtils__ShiftRectangleDistance(viewDirBlockLocal, currentDistance_voxels);
+						currentDistance += VoxelsUtils__ShiftRectangleDistance(viewDirBlockLocal, currentDistance_voxels);
 
+						currentMaxDistance_voxels = max(currentMaxDistance_voxels, currentDistance_voxels);
 					}
+					//color = float4(currentMaxDistance_voxels/8.0f,0,0,1);
 				}
 				
 				OUT_COLOR = color;

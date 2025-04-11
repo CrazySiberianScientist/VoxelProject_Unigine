@@ -13,7 +13,7 @@ namespace VoxelProjectUnigine
 		PROJECT_UTILS_COMPONENT_PROP_INIT(voxel_space);
 		voxelBlock = &voxel_space->voxelBlock;
 
-		//Render::getEventEndPostMaterials().connect(this, &CSVoxelDistanceField::RenderCallback);
+		Render::getEventEndPostMaterials().connect(this, &CSVoxelDistanceField::RenderCallback);
 
 		distanceFieldTexture->create3D(VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS
 			, Texture::FORMAT_R32U, Texture::FORMAT_USAGE_UNORDERED_ACCESS | Texture::FORMAT_USAGE_RENDER);
@@ -29,7 +29,8 @@ namespace VoxelProjectUnigine
 
 	void CSVoxelDistanceField::RenderCallback()
 	{
-		constexpr auto PASS_NAME = "testTransform";
+		//constexpr auto PASS_NAME = "testTransform";
+		constexpr auto PASS_NAME = "testColor";
 
 		const auto &iModelviewMatrix = Math::mat4(Game::getPlayer()->getCamera()->getIModelview());
 		const auto &iProjectionMatrix = Math::inverse4(Game::getPlayer()->getCamera()->getProjection());
@@ -56,6 +57,7 @@ namespace VoxelProjectUnigine
 
 				auto rt = Render::getTemporaryRenderTarget();
 				rt->bindColorTexture(0, currentScreenColorTexture);
+				rt->bindUnorderedAccessTexture3D(1, distanceFieldTexture);
 				rt->enable();
 
 				voxel_render_material->renderScreen(PASS_NAME);

@@ -101,7 +101,8 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 
 				const int3 deltaPos = GROUP_THREAD_ID - uint3(THREAD_GROUP_SIZE, THREAD_GROUP_SIZE, THREAD_GROUP_SIZE) / 2;
 				const uint3 pos = voxelsPositionsBuffer[GROUP_ID.x] + deltaPos;
-				const uint dist = max(abs(deltaPos.x), max(abs(deltaPos.y), abs(deltaPos.z)));
+				//const uint dist = max(abs(deltaPos.x), max(abs(deltaPos.y), abs(deltaPos.z)));
+				const uint dist = abs(deltaPos.x) + abs(deltaPos.y) + abs(deltaPos.z);
 				
 				uint ret = 0;
 				InterlockedMin(s_rw_texture_distanceFieldTexture[pos], dist, ret);

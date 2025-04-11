@@ -76,10 +76,10 @@ VoxelUtils__IntersectResult VoxelsUtils__IntersectSegmentAABB(const float3 start
 	return result;
 }
 
-int3 VoxelsUtils__ShiftRectangleDistance(const float3 direction, const uint shiftValue)
+float VoxelsUtils__ShiftRectangleDistance(const float3 direction, const uint shiftValue)
 {
 	const float t = (shiftValue + 1) / (abs(direction[0]) + abs(direction[1]) + abs(direction[2]));
-	return VoxelsUtils__MetersToVoxels(direction * t);
+	return t;
 }
 
 /*
