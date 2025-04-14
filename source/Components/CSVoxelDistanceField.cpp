@@ -13,7 +13,7 @@ namespace VoxelProjectUnigine
 		PROJECT_UTILS_COMPONENT_PROP_INIT(voxel_space);
 		voxelBlock = &voxel_space->voxelBlock;
 
-		Render::getEventEndPostMaterials().connect(this, &CSVoxelDistanceField::RenderCallback);
+		//Render::getEventEndPostMaterials().connect(this, &CSVoxelDistanceField::RenderCallback);
 
 		distanceFieldTexture->create3D(VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS
 			, Texture::FORMAT_R32U, Texture::FORMAT_USAGE_UNORDERED_ACCESS | Texture::FORMAT_USAGE_RENDER);

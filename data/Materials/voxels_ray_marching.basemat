@@ -342,7 +342,7 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 						}
 						currentDistance += VoxelsUtils__ShiftRectangleDistance(viewDirBlockLocal, currentDistance_voxels);
 
-						currentMaxDistance_voxels = max(currentMaxDistance_voxels, currentDistance_voxels);
+						//currentMaxDistance_voxels = max(currentMaxDistance_voxels, currentDistance_voxels);
 					}
 					//color = float4(currentMaxDistance_voxels/8.0f,0,0,1);
 				}

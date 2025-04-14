@@ -128,7 +128,7 @@ export namespace VoxelProjectUnigine
 
 		void RenderBlock(const VoxelProject::VoxelBlockBitset& voxelBlockBitset, const Unigine::Math::Mat4& blockWorldTransform)
 		{
-			
+			//return;
 
 			{
 				auto localTransform = Mat4_identity;
@@ -141,19 +141,19 @@ export namespace VoxelProjectUnigine
 			auto forEachCallback = [this, blockWorldTransform, &voxelIndex](const bool bitValue)
 				{
 					auto localPos_meters = MathUtils::IndexToPos3d<Vec3_metersWorld>(voxelIndex, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS, VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS);
-					localPos_meters *= voxelSize_meters;
+					//localPos_meters *= voxelSize_meters;
 
 					auto localTransform = Mat4_identity;
-					localTransform.setTranslate(localPos_meters + voxelSize_meters / 2);
+					localTransform.setTranslate(localPos_meters + dvec3_one / 2);
 					
 					//const auto worldPos = localPos_meters * blockWorldTransform;
 					//Visualizer::renderPoint3D(worldPos, 0.1f, vec4_green);
 					const auto worldTransform = blockWorldTransform * localTransform;
 					
 					if (bitValue)
-						Visualizer::renderSolidBox(worldTransform.getScale(), worldTransform, valid_voxel_color);
+						Visualizer::renderSolidBox(vec3_one, worldTransform, valid_voxel_color);
 					else
-						Visualizer::renderBox(worldTransform.getScale(), worldTransform, invalid_voxel_color);
+						Visualizer::renderBox(vec3_one, worldTransform, invalid_voxel_color);
 
 					++voxelIndex;
 				};

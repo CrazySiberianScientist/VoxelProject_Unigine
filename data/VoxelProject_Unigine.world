@@ -1009,7 +1009,7 @@
 			<node type="NodeDummy" id="1321201936" name="VOXELS_TEST">
 				<properties>
 					<property parent="3dd4fa383868a6c53228dd3413ecc2011827bdc9" guid="cc150a31f2b985f47989bc9fb2893d7b9f0095e0">
-						<parameter name="valid_voxel_color">0 1 0 0.0784313753</parameter>
+						<parameter name="valid_voxel_color">0 1 0 0.0392156877</parameter>
 						<parameter name="line_manipulator_node">10292280</parameter>
 					</property>
 					<property parent="fc5ad76dab7187daf7cc461e62de288f23bd09d3" guid="a5bb9242f5e5407bc1ad9aec6b11fea72e0dcfbf"/>

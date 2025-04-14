@@ -35,7 +35,8 @@ export namespace VoxelProjectUnigine
 			switch (currentType)
 			{
 			case TRANSLATE: currentType = ROTATE; break;
-			case ROTATE: currentType = TRANSLATE; break;
+			case ROTATE: currentType = SCALE; break;
+			case SCALE: currentType = TRANSLATE; break;
 			default: break;
 			}
 
