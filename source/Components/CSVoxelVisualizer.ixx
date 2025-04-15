@@ -81,12 +81,37 @@ export namespace VoxelProjectUnigine
 					Vec3_meters intersectShrinkedP0 = intersectResult.points[0] + lineNorm * correctionValue;
 					Vec3_meters intersectShrinkedP1 = intersectResult.points[1] - lineNorm * correctionValue;
 
+					
 					RayTrace(intersectShrinkedP0, intersectShrinkedP1, 2, points, voxelsPos);
 					for (auto& p : points)
 					{
 						const auto wP = node->toWorld(p);
 						Visualizer::renderPoint3D(wP, 0.01, Math::vec4(1, 1, 0, 1));
 					}
+					
+					/*{
+						const auto startPos = intersectShrinkedP0;
+						auto rayDir = intersectShrinkedP1 - intersectShrinkedP0;
+						const auto maxDist = rayDir.length();
+						rayDir /= maxDist;
+
+						//voxelsPos.push_back(MetersToVoxels(currentPos));
+
+						float currentDist = 0.0f;
+						while (currentDist < maxDist)
+						{
+							const auto currentPos = startPos + rayDir * currentDist;
+							{
+								const auto wP = node->toWorld(currentPos);
+								Visualizer::renderPoint3D(wP, 0.01, Math::vec4(1, 1, 0, 1));
+							}
+							
+
+							const auto deltaDist = RayMarchStep(currentPos, rayDir, 1);
+							currentDist += deltaDist;
+						}
+					}
+					*/
 
 					{
 						voxelBlock.data.Fill(false);

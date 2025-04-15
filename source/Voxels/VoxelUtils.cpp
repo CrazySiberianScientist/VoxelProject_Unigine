@@ -24,7 +24,7 @@ namespace VoxelProject
 		return std::max(minDistance, MAX_DISTANCE);
 	}
 
-	MeterSizeType RayTraceStep(const Vec3_meters& currentPointLocal, const Vec3_meters& rayDirLocal, const MeterSizeType maxDist, const VoxelSizeType step_voxels)
+	MeterSizeType RayMarchStep(const Vec3_meters& currentPointLocal, const Vec3_meters& rayDirLocal, const VoxelSizeType step_voxels)
 	{
 		const auto deltaDistances = abs(Vec3_meters(step_voxels) / rayDirLocal);
 

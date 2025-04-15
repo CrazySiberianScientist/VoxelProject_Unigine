@@ -80,7 +80,7 @@ namespace VoxelProject
 		RayTrace(startPointLocal, Unigine::Math::normalize(dir), dir.length(), voxelSize_meters, outPointsPos, outVoxelsPos);
 	}
 
-	MeterSizeType RayTraceStep(const Vec3_meters& currentPointLocal, const Vec3_meters& rayDirLocal, const MeterSizeType maxDist, const VoxelSizeType step_voxels = 1);
+	MeterSizeType RayMarchStep(const Vec3_meters& currentPointLocal, const Vec3_meters& rayDirLocal, const VoxelSizeType step_voxels = 1);
 
 	Vec3_voxelsDiff ShiftRectangleDistance(const Vec3_meters& direction, const VoxelSizeType shiftValue);
 }
