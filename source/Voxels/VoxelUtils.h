@@ -20,22 +20,22 @@ namespace VoxelProject
 
 	// Только для воксельной сетки с только положительными координатами
 	template<typename _OutPointsPosType = std::nullopt_t, typename _OutVoxelsPosType = std::nullopt_t>
-	void RayTrace(const Vec3_meters& startPointLocal, const Vec3_meters& rayDirLocal, const float maxDist
+	void RayTrace(const Vec3_meters& startPointLocal, const Vec3_meters& rayDirLocal, const MeterSizeType maxDist, const MeterSizeType voxelSize_meters = 1
 		, _OutPointsPosType& outPointsPos = Utils::NULLOPT_STATIC, _OutVoxelsPosType& outVoxelsPos = Utils::NULLOPT_STATIC)
 	{
-		const auto deltaDistances = (Vec3_meters(1.0f) / rayDirLocal).abs();
+		const auto deltaDistances = abs(Vec3_meters(1) / rayDirLocal);
 
-		auto currentPos = startPointLocal;
-		auto currentVoxel = MetersToVoxels(startPointLocal);
+		auto currentPos = startPointLocal / voxelSize_meters;
+		auto currentVoxel = MetersToVoxels(currentPos);
 
 		Vec3_meters distances(0.0f);
-		std::array<int32_t, 3> voxelStep{};
+		std::array<VoxelDiffSizeType, 3> voxelStep{};
 		for (int i = 0; i < 3; ++i)
 		{
 			const auto signV = copysign(1.0f, rayDirLocal[i]);
 			voxelStep[i] = (int)signV;
 
-			const auto deltaPos = -signV * (currentPos[i] - currentVoxel[i]) + (signV > 0.0f ? 1.0f : 0.0f);
+			const auto deltaPos = -signV * (currentPos[i] - currentVoxel[i]) + (signV > 0.0f ? 1 : 0);
 			distances[i] = deltaPos * deltaDistances[i];
 		}
 
@@ -55,12 +55,12 @@ namespace VoxelProject
 			const auto currentDist = distances[minDistIndex];
 
 			if constexpr (!UTILS_IS_NULLOPT(outPointsPos))
-				outPointsPos.push_back(startPointLocal + rayDirLocal * currentDist);
+				outPointsPos.push_back(startPointLocal + rayDirLocal * currentDist * voxelSize_meters);
 
 			if constexpr (!UTILS_IS_NULLOPT(outVoxelsPos))
 				outVoxelsPos.push_back(currentVoxel);
 
-			if (currentDist >= maxDist)
+			if (currentDist >= (maxDist / voxelSize_meters))
 			{
 				break;
 			}
@@ -72,11 +72,11 @@ namespace VoxelProject
 
 	// Только для воксельной сетки с только положительными координатами
 	template<typename _OutPointsPosType = std::nullopt_t, typename _OutVoxelsPosType = std::nullopt_t>
-	void RayTrace(const Vec3_meters& startPointLocal, const Vec3_meters& endPointLocal
+	void RayTrace(const Vec3_meters& startPointLocal, const Vec3_meters& endPointLocal, const MeterSizeType voxelSize_meters = 1
 		, _OutPointsPosType& outPointsPos = Utils::NULLOPT_STATIC, _OutVoxelsPosType& outVoxelsPos = Utils::NULLOPT_STATIC)
 	{
 		const auto dir = endPointLocal - startPointLocal;
-		RayTrace(startPointLocal, Unigine::Math::normalize(dir), dir.length(), outPointsPos, outVoxelsPos);
+		RayTrace(startPointLocal, Unigine::Math::normalize(dir), dir.length(), voxelSize_meters, outPointsPos, outVoxelsPos);
 	}
 
 	Vec3_voxelsDiff ShiftRectangleDistance(const Vec3_meters& direction, const VoxelSizeType shiftValue);

@@ -81,7 +81,7 @@ export namespace VoxelProjectUnigine
 					Vec3_meters intersectShrinkedP0 = intersectResult.points[0] + lineNorm * correctionValue;
 					Vec3_meters intersectShrinkedP1 = intersectResult.points[1] - lineNorm * correctionValue;
 
-					RayTrace(intersectShrinkedP0, intersectShrinkedP1, points, voxelsPos);
+					RayTrace(intersectShrinkedP0, intersectShrinkedP1, 2, points, voxelsPos);
 					for (auto& p : points)
 					{
 						const auto wP = node->toWorld(p);
