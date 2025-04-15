@@ -82,24 +82,28 @@ float VoxelsUtils__ShiftRectangleDistance(const float3 direction, const uint shi
 	return t;
 }
 
-/*
-void VoxelUtils__RayTrace(const float3 startPointLocal, const float3 rayDirLocal, const float maxDist, RWTexture3D<uint> voxelData)
+void VoxelsUtils__RayTrace(const float3 startPointLocal, const float3 rayDirLocal, const float maxDist, const float currentDist, const float voxelSize_meters = 1)
 {
-	const float3 deltaDistances = abs(float3(1,1,1) / rayDirLocal);
 
-	float3 currentPos = startPointLocal;
-	uint3 currentVoxel = VoxelsUtils__MetersToVoxels(startPointLocal);
+}
 
-	float3 distances = float3(0,0,0);
-	int3 voxelStep = int3(0,0,0);
+/*
+void RayTrace(const Vec3_meters& startPointLocal, const Vec3_meters& rayDirLocal, const MeterSizeType maxDist, const MeterSizeType voxelSize_meters = 1
+	, _OutPointsPosType& outPointsPos = Utils::NULLOPT_STATIC, _OutVoxelsPosType& outVoxelsPos = Utils::NULLOPT_STATIC)
+{
+	const auto deltaDistances = abs(Vec3_meters(1) / rayDirLocal);
 
-	unroll
+	auto currentPos = startPointLocal / voxelSize_meters;
+	auto currentVoxel = MetersToVoxels(currentPos);
+
+	Vec3_meters distances(0.0f);
+	std::array<VoxelDiffSizeType, 3> voxelStep{};
 	for (int i = 0; i < 3; ++i)
 	{
-		const float signV = rayDirLocal[i] < 0 ? -1 : 1;
+		const auto signV = copysign(1.0f, rayDirLocal[i]);
 		voxelStep[i] = (int)signV;
 
-		const auto deltaPos = -signV * (currentPos[i] - currentVoxel[i]) + (signV > 0.0f ? 1.0f : 0.0f);
+		const auto deltaPos = -signV * (currentPos[i] - currentVoxel[i]) + (signV > 0.0f ? 1 : 0);
 		distances[i] = deltaPos * deltaDistances[i];
 	}
 
@@ -119,12 +123,12 @@ void VoxelUtils__RayTrace(const float3 startPointLocal, const float3 rayDirLocal
 		const auto currentDist = distances[minDistIndex];
 
 		if constexpr (!UTILS_IS_NULLOPT(outPointsPos))
-			outPointsPos.push_back(startPointLocal + rayDirLocal * currentDist);
+			outPointsPos.push_back(startPointLocal + rayDirLocal * currentDist * voxelSize_meters);
 
 		if constexpr (!UTILS_IS_NULLOPT(outVoxelsPos))
 			outVoxelsPos.push_back(currentVoxel);
 
-		if (currentDist >= maxDist)
+		if (currentDist >= (maxDist / voxelSize_meters))
 		{
 			break;
 		}

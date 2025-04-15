@@ -23,7 +23,7 @@ namespace VoxelProject
 	void RayTrace(const Vec3_meters& startPointLocal, const Vec3_meters& rayDirLocal, const MeterSizeType maxDist, const MeterSizeType voxelSize_meters = 1
 		, _OutPointsPosType& outPointsPos = Utils::NULLOPT_STATIC, _OutVoxelsPosType& outVoxelsPos = Utils::NULLOPT_STATIC)
 	{
-		const auto deltaDistances = abs(Vec3_meters(1) / rayDirLocal);
+		const auto deltaDistances = abs(Vec3_meters(voxelSize_meters) / rayDirLocal);
 
 		auto currentPos = startPointLocal / voxelSize_meters;
 		auto currentVoxel = MetersToVoxels(currentPos);
@@ -49,18 +49,19 @@ namespace VoxelProject
 				return minIndex;
 			};
 
+
 		while (true)
 		{
 			const auto minDistIndex = getMinIndex(distances);
 			const auto currentDist = distances[minDistIndex];
 
 			if constexpr (!UTILS_IS_NULLOPT(outPointsPos))
-				outPointsPos.push_back(startPointLocal + rayDirLocal * currentDist * voxelSize_meters);
+				outPointsPos.push_back(startPointLocal + rayDirLocal * currentDist);
 
 			if constexpr (!UTILS_IS_NULLOPT(outVoxelsPos))
 				outVoxelsPos.push_back(currentVoxel);
 
-			if (currentDist >= (maxDist / voxelSize_meters))
+			if (currentDist >= maxDist)
 			{
 				break;
 			}
