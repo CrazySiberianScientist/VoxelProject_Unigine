@@ -24,6 +24,26 @@ namespace VoxelProject
 		return std::max(minDistance, MAX_DISTANCE);
 	}
 
+	MeterSizeType RayTraceStep(const Vec3_meters& currentPointLocal, const Vec3_meters& rayDirLocal, const MeterSizeType maxDist, const VoxelSizeType step_voxels)
+	{
+		const auto deltaDistances = abs(Vec3_meters(step_voxels) / rayDirLocal);
+
+		auto currentPos = currentPointLocal / step_voxels;
+		auto currentVoxel = MetersToVoxels(currentPos);
+
+		auto minDist = FLT_MAX;
+		for (int i = 0; i < 3; ++i)
+		{
+			const auto signV = copysign(1.0f, rayDirLocal[i]);
+			const auto deltaPos = -signV * (currentPos[i] - currentVoxel[i]) + (signV > 0.0f ? 1 : 0);
+			const auto currentDist = deltaPos * deltaDistances[i];
+
+			minDist = std::min(currentDist, minDist);
+		}
+
+		return minDist;
+	}
+
 	Vec3_voxelsDiff ShiftRectangleDistance(const Vec3_meters& direction, const VoxelSizeType shiftValue)
 	{
 		const auto t = shiftValue / (abs(direction[0]) + abs(direction[1]) + abs(direction[2]));
