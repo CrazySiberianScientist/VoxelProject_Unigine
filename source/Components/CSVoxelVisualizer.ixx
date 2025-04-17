@@ -51,7 +51,7 @@ export namespace VoxelProjectUnigine
 		COMPONENT_UPDATE(Update, GlobalUpdateOrder::COMMON_LOGIC);
 		void Update()
 		{
-			RenderBlock(voxelBlock, node->getWorldTransform());
+			//RenderBlock(voxelBlock, node->getWorldTransform());
 
 			{
 				const auto testLineWP = line_manipulator->GetWorldPoints();
@@ -81,15 +81,16 @@ export namespace VoxelProjectUnigine
 					Vec3_meters intersectShrinkedP0 = intersectResult.points[0] + lineNorm * correctionValue;
 					Vec3_meters intersectShrinkedP1 = intersectResult.points[1] - lineNorm * correctionValue;
 
-					/*
-					RayTrace(intersectShrinkedP0, intersectShrinkedP1, 2, points, voxelsPos);
+					
+					RayTrace(intersectShrinkedP0, intersectShrinkedP1, 1, points, voxelsPos);
 					for (auto& p : points)
 					{
 						const auto wP = node->toWorld(p);
 						Visualizer::renderPoint3D(wP, 0.01, Math::vec4(1, 1, 0, 1));
 					}
-					*/
 					
+					
+					/*
 					{
 						const auto startPos = intersectShrinkedP0;
 						auto rayDir = intersectShrinkedP1 - intersectShrinkedP0;
@@ -110,12 +111,12 @@ export namespace VoxelProjectUnigine
 							
 
 							//const auto deltaDist = RayMarchStep(currentPos, rayDir, 1);
-							const auto deltaDist = RayMarchStep(currentPos, rayDir, 1) + FLT_EPSILON * 10;
+							const auto deltaDist = RayMarchStep(currentPos, rayDir, 2) + FLT_EPSILON * 10;
 
 							currentDist += deltaDist;
 						}
 					}
-					
+					*/
 
 					{
 						voxelBlock.data.Fill(false);
@@ -157,8 +158,6 @@ export namespace VoxelProjectUnigine
 
 		void RenderBlock(const VoxelProject::VoxelBlockBitset& voxelBlockBitset, const Unigine::Math::Mat4& blockWorldTransform)
 		{
-			//return;
-
 			{
 				auto localTransform = Mat4_identity;
 				localTransform.setTranslate(dvec3(blockSize_meters) / 2);

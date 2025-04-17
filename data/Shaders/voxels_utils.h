@@ -82,71 +82,27 @@ float VoxelsUtils__ShiftRectangleDistance(const float3 direction, const uint shi
 	return t;
 }
 
-void VoxelsUtils__RayTrace(const float3 startPointLocal, const float3 rayDirLocal, const float maxDist, const float currentDist, const float voxelSize_meters = 1)
+
+float VoxelsUtils__RayMarchStep(const float3 currentPointLocal, const float3 rayDirLocal, const int step_voxels)
 {
+	const float3 deltaDistances = abs(float3(step_voxels, step_voxels, step_voxels) / rayDirLocal);
 
-}
+	const float3 currentPos = currentPointLocal / step_voxels;
+	const uint3 currentVoxel = VoxelsUtils__MetersToVoxels(currentPos);
 
-/*
-void RayTrace(const Vec3_meters& startPointLocal, const Vec3_meters& rayDirLocal, const MeterSizeType maxDist, const MeterSizeType voxelSize_meters = 1
-	, _OutPointsPosType& outPointsPos = Utils::NULLOPT_STATIC, _OutVoxelsPosType& outVoxelsPos = Utils::NULLOPT_STATIC)
-{
-	const auto deltaDistances = abs(Vec3_meters(1) / rayDirLocal);
+	float minDist = FLT_MAX;
 
-	auto currentPos = startPointLocal / voxelSize_meters;
-	auto currentVoxel = MetersToVoxels(currentPos);
-
-	Vec3_meters distances(0.0f);
-	std::array<VoxelDiffSizeType, 3> voxelStep{};
+	unroll
 	for (int i = 0; i < 3; ++i)
 	{
-		const auto signV = copysign(1.0f, rayDirLocal[i]);
-		voxelStep[i] = (int)signV;
+		const float signV = rayDirLocal[i] > 0.0f ? 1 : -1;
+		const float3 deltaPos = -signV * (currentPos[i] - currentVoxel[i]) + (signV > 0.0f ? 1 : 0);
+		const float currentDist = deltaPos * deltaDistances[i];
 
-		const auto deltaPos = -signV * (currentPos[i] - currentVoxel[i]) + (signV > 0.0f ? 1 : 0);
-		distances[i] = deltaPos * deltaDistances[i];
+		minDist = min(currentDist, minDist);
 	}
 
-	auto getMinIndex = [](const Vec3_meters& v)
-		{
-			int minIndex = 0;
-			for (int i = 0; i < 3; ++i)
-			{
-				minIndex = v[i] < v[minIndex] ? i : minIndex;
-			}
-			return minIndex;
-		};
-
-	while (true)
-	{
-		const auto minDistIndex = getMinIndex(distances);
-		const auto currentDist = distances[minDistIndex];
-
-		if constexpr (!UTILS_IS_NULLOPT(outPointsPos))
-			outPointsPos.push_back(startPointLocal + rayDirLocal * currentDist * voxelSize_meters);
-
-		if constexpr (!UTILS_IS_NULLOPT(outVoxelsPos))
-			outVoxelsPos.push_back(currentVoxel);
-
-		if (currentDist >= (maxDist / voxelSize_meters))
-		{
-			break;
-		}
-
-		distances[minDistIndex] += deltaDistances[minDistIndex];
-		currentVoxel[minDistIndex] += voxelStep[minDistIndex];
-	}
+	return minDist;
 }
-*/
-
-/*
-// Только для воксельной сетки с только положительными координатами
-void VoxelUtils__RayTrace(const Vec3_meters& startPointLocal, const Vec3_meters& endPointLocal
-	, _OutPointsPosType& outPointsPos = Utils::NULLOPT_STATIC, _OutVoxelsPosType& outVoxelsPos = Utils::NULLOPT_STATIC)
-{
-	const auto dir = endPointLocal - startPointLocal;
-	RayTrace(startPointLocal, Unigine::Math::normalize(dir), dir.length(), outPointsPos, outVoxelsPos);
-}
-*/
 
 #endif
