@@ -329,25 +329,27 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 				{
 					const float3 startPos = result.points[0] - bbMin;
 					float currentDistance = 0.0f;
-					uint currentMaxDistance_voxels = 0;
+					uint currentMinDistance_voxels = UINT_MAX;
 					while (currentDistance <= distanceLimit)
 					{
 						const float3 currentPos = startPos + viewDirBlockLocal * currentDistance;
 						uint3 currentPos_voxels = VoxelsUtils__MetersToVoxels(currentPos);
 
 						const uint currentDistance_voxels = s_rw_texture_distanceFieldTexture[currentPos_voxels];
+
+						//currentMinDistance_voxels = min(currentMinDistance_voxels, currentDistance_voxels);
+
 						if (currentDistance_voxels == 0)
 						{
-							//color = float4(0,1,0,1);
-							color = float4(1,0,0,1);
+							color = float4(0,1,0,1);
+							//color = float4(1,0,0,1);
 							break;
 						}
 						currentDistance += VoxelsUtils__RayMarchStep(currentPos, viewDirBlockLocal, currentDistance_voxels) + 1e-5;
 
-						//currentMaxDistance_voxels = max(currentMaxDistance_voxels, currentDistance_voxels);
 					}
 					
-					//color = float4(currentMaxDistance_voxels/8.0f,0,0,1);
+					//color = float4(currentMinDistance_voxels/8.0f,0,0,1);
 				}
 				
 				OUT_COLOR = color;
