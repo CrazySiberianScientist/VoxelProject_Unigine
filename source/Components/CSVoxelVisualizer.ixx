@@ -96,7 +96,6 @@ export namespace VoxelProjectUnigine
 						const auto maxDist = rayDir.length();
 						rayDir /= maxDist;
 
-						//voxelsPos.push_back(MetersToVoxels(currentPos));
 
 						float currentDist = 0.0f;
 						while (currentDist < maxDist)
@@ -105,10 +104,14 @@ export namespace VoxelProjectUnigine
 							{
 								const auto wP = node->toWorld(currentPos);
 								Visualizer::renderPoint3D(wP, 0.01, Math::vec4(1, 1, 0, 1));
+
+								voxelsPos.push_back(MetersToVoxels(currentPos));
 							}
 							
 
-							const auto deltaDist = RayMarchStep(currentPos, rayDir, 2);
+							//const auto deltaDist = RayMarchStep(currentPos, rayDir, 1);
+							const auto deltaDist = RayMarchStep(currentPos, rayDir, 1) + FLT_EPSILON * 10;
+
 							currentDist += deltaDist;
 						}
 					}
