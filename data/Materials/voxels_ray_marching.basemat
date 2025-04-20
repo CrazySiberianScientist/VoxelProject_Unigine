@@ -330,6 +330,7 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 					const float3 startPos = result.points[0] - bbMin;
 					float currentDistance = 0.0f;
 					uint currentMinDistance_voxels = UINT_MAX;
+
 					while (currentDistance <= distanceLimit)
 					{
 						const float3 currentPos = startPos + viewDirBlockLocal * currentDistance;
@@ -338,7 +339,7 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 						const uint currentDistance_voxels = s_rw_texture_distanceFieldTexture[currentPos_voxels];
 
 						//currentMinDistance_voxels = min(currentMinDistance_voxels, currentDistance_voxels);
-
+						
 						if (currentDistance_voxels == 0)
 						{
 							color = float4(0,1,0,1);
@@ -346,7 +347,6 @@ BaseMaterial <preview_hidden=1 var_prefix=var texture_prefix=tex>
 							break;
 						}
 						currentDistance += VoxelsUtils__RayMarchStep(currentPos, viewDirBlockLocal, currentDistance_voxels) + 1e-5;
-
 					}
 					
 					//color = float4(currentMinDistance_voxels/8.0f,0,0,1);

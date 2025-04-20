@@ -86,9 +86,7 @@ float VoxelsUtils__ShiftRectangleDistance(const float3 direction, const uint shi
 float VoxelsUtils__RayMarchStep(const float3 currentPointLocal, const float3 rayDirLocal, const int step_voxels)
 {
 	const float3 deltaDistances = abs(float3(step_voxels, step_voxels, step_voxels) / rayDirLocal);
-
 	const float3 currentPos = currentPointLocal / step_voxels;
-	const uint3 currentVoxel = VoxelsUtils__MetersToVoxels(currentPos);
 
 	float minDist = FLT_MAX;
 
@@ -96,7 +94,7 @@ float VoxelsUtils__RayMarchStep(const float3 currentPointLocal, const float3 ray
 	for (int i = 0; i < 3; ++i)
 	{
 		const float signV = rayDirLocal[i] > 0.0f ? 1 : -1;
-		const float3 deltaPos = -signV * (currentPos[i] - currentVoxel[i]) + (signV > 0.0f ? 1 : 0);
+		const float3 deltaPos = -signV * frac(currentPos[i]) + (signV > 0.0f ? 1 : 0);
 		const float currentDist = deltaPos * deltaDistances[i];
 
 		minDist = min(currentDist, minDist);
