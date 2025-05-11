@@ -1008,7 +1008,9 @@
 			</node>
 			<node type="NodeDummy" id="1321201936" name="VOXELS_TEST">
 				<properties>
+					<property parent="3cadd9d1e9129fa57ed53ddb2eef2d6dd41375f1" guid="0cabd3c6cecc248bee5653f0bd1a3de5216712aa"/>
 					<property parent="3dd4fa383868a6c53228dd3413ecc2011827bdc9" guid="cc150a31f2b985f47989bc9fb2893d7b9f0095e0">
+						<parameter name="voxel_space_node">1321201936</parameter>
 						<parameter name="valid_voxel_color">0 1 0 0.0392156877</parameter>
 						<parameter name="line_manipulator_node">10292280</parameter>
 					</property>

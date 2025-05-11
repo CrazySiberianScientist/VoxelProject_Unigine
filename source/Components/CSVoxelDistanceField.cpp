@@ -4,6 +4,8 @@
 #include <UnigineVisualizer.h>
 #include <UnigineGame.h>
 
+#include "CSVoxelSpace.h"
+
 namespace VoxelProjectUnigine
 {
 	using namespace Unigine;

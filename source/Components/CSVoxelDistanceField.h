@@ -38,7 +38,7 @@ namespace VoxelProjectUnigine
 		PROP_PARAM(Material, compute_material);
 		PROP_PARAM(Material, voxel_render_material);
 
-		PROJECT_UTILS_COMPONENT_PROP(CSVoxelVisualizer, voxel_space);
+		PROJECT_UTILS_COMPONENT_PROP(CSVoxelSpace, voxel_space);
 
 	private:
 		COMPONENT_INIT(Init, GlobalInitOrder::COMMON_LOGIC);

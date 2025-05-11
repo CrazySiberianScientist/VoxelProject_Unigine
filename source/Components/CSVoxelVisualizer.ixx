@@ -9,6 +9,7 @@
 #include "LogicOrders.h"
 
 #include "CSLineManipulator.h"
+#include "CSVoxelSpace.h"
 
 #include <span>
 
@@ -25,6 +26,7 @@ export namespace VoxelProjectUnigine
 		PROJECT_UTILS_COMPONENT_DEFINE(CSVoxelVisualizer, Unigine::ComponentBase);
 
 	public:
+		PROJECT_UTILS_COMPONENT_PROP(CSVoxelSpace, voxel_space);
 
 		PROP_PARAM(Color, valid_voxel_color, Unigine::Math::vec4(0.0f, 1.0f, 0.0f, 0.2f));
 		PROP_PARAM(Color, invalid_voxel_color, Unigine::Math::vec4(0.0f, 0.0f, 0.0f, 0.2f));
@@ -32,13 +34,13 @@ export namespace VoxelProjectUnigine
 		PROJECT_UTILS_COMPONENT_PROP(CSLineManipulator, line_manipulator);
 
 
-		VoxelBlockBitset voxelBlock;
 		static constexpr float voxelSize_meters = 1.0f;
 		const Vec3_meters blockSize_meters { VoxelBlockBitset::BLOCK_SIDE_SIZE__VOXELS * voxelSize_meters };
 
 		COMPONENT_INIT(InitPropParams, GlobalInitOrder::COMPONENT_FIELDS);
 		void InitPropParams()
 		{
+			PROJECT_UTILS_COMPONENT_PROP_INIT(voxel_space);
 			PROJECT_UTILS_COMPONENT_PROP_INIT(line_manipulator);
 		}
 
@@ -119,10 +121,10 @@ export namespace VoxelProjectUnigine
 					*/
 
 					{
-						voxelBlock.data.Fill(false);
+						voxel_space->voxelBlock.data.Fill(false);
 						for (const auto& voxelPos : voxelsPos)
 						{
-							voxelBlock.SetVoxel(voxelPos, true);
+							voxel_space->voxelBlock.SetVoxel(voxelPos, true);
 						}
 					}
 
