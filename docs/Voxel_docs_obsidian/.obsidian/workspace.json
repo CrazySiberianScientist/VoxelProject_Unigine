@@ -49,9 +49,23 @@
               "icon": "lucide-file",
               "title": "Пример вычислительного шейдера 3d текстуры"
             }
+          },
+          {
+            "id": "3cc78c91ea1f5c47",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Implementing a GPU Voxel Octree Path Tracer.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Implementing a GPU Voxel Octree Path Tracer"
+            }
           }
         ],
-        "currentTab": 1
+        "currentTab": 3
       },
       {
         "id": "e39655cfdd752e9f",
@@ -212,21 +226,22 @@
       "obsidian-importer:Open Importer": false
     }
   },
-  "active": "200121e4aa443426",
+  "active": "3cc78c91ea1f5c47",
   "lastOpenFiles": [
-    "Шейдеры/Пример вычислительного шейдера 3d текстуры.md",
+    "d3ff6ecc33283dcf42573102f63b65a1_MD5.jpg",
+    "Implementing a GPU Voxel Octree Path Tracer.md",
+    "12c18fdf4cc43e1b0b935780c1e82c0d_MD5.jpg",
+    "4b22b5f2315e1fefb215ddf4074c8488_MD5.jpg",
+    "4469575d40f4d6f8c55a0ede5684d082_MD5.jpg",
+    "1310ac6f7bd61a8302b7130a9bd49a47_MD5.jpg",
+    "4cb61914e7327ac33cd2dabb77a13ce1_MD5.jpg",
+    "2d447e6b7af59d7235385512f5102a25_MD5.jpg",
+    "af7a836fd5e6abf4ad4068864e60a5fc_MD5.jpg",
+    "92c52013ccedc100de379352fcdfa19d_MD5.jpg",
+    "df143cd8e07395b2d37fef3b642d400d_MD5.jpg",
     "Алгоритмы/Raymarching.md",
+    "Шейдеры/Пример вычислительного шейдера 3d текстуры.md",
     "HTML import/Introduction to Acceleration Structures.md",
-    "HTML import/Attachments/teapotstadium.png",
-    "HTML import/Attachments/triangleoverlap1.png",
-    "HTML import/Attachments/gridtraversal6.png",
-    "HTML import/Attachments/triangleoverlap2.png",
-    "HTML import/Attachments/gridtraversal5.png",
-    "HTML import/Attachments/gridtraversal4.png",
-    "HTML import/Attachments/dda5.png",
-    "HTML import/Attachments/dda4.png",
-    "HTML import/Attachments/dda3.gif",
-    "HTML import/Attachments/gridtraversal2.png",
     "HTML import/Attachments",
     "HTML import",
     "Алгоритмы/Создание поля расстояний для вокселей.md",

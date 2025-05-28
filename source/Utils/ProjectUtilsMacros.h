@@ -29,4 +29,4 @@ PROP_PARAM(Node, NAME##_node);\
 class TYPE *NAME = nullptr;
 
 #define PROJECT_UTILS_COMPONENT_PROP_INIT(NAME)\
-(NAME = ComponentSystem::get()->getComponent<std::remove_pointer<decltype(NAME)>::type>(NAME##_node), NAME)
+NAME = Unigine::ComponentSystem::get()->getComponent<std::remove_pointer<decltype(NAME)>::type>(NAME##_node.get() ? NAME##_node : getNode());\

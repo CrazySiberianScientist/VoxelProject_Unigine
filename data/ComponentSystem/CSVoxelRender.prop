@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<property version="2.19.0.3" name="CSVoxelRender" manual="1" parent_name="node_base">
+	<parameter name="voxel_distance_field_node" type="node">0</parameter>
+	<parameter name="voxel_render_material" type="material"/>
+</property>
